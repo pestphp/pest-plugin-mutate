@@ -28,6 +28,11 @@
             "Pest\\Mutate\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Fixtures\\": "tests/Fixtures"
+        }
+    },
     "minimum-stability": "dev",
     "prefer-stable": true,
     "config": {
