@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pest\Mutate;
 
 use Pest\Contracts\Plugins\HandlesArguments;
+use Pest\Mutate\Options\CoveredOnlyOption;
 use Pest\Mutate\Options\MinMsiOption;
 use Pest\Mutate\Options\MutateOption;
 use Pest\Plugins\Concerns\HandleArguments;
@@ -24,8 +25,9 @@ class Plugin implements HandlesArguments
     public Config $config;
 
     private const OPTIONS = [
-        MinMsiOption::class,
         MutateOption::class,
+        MinMsiOption::class,
+        CoveredOnlyOption::class,
     ];
 
     /**
@@ -62,6 +64,10 @@ class Plugin implements HandlesArguments
 
         if ($input->hasOption(MinMsiOption::ARGUMENT)) {
             $this->config->minMSI = (float) $input->getOption(MinMsiOption::ARGUMENT); // @phpstan-ignore-line
+        }
+
+        if ($input->hasOption(CoveredOnlyOption::ARGUMENT)) {
+            $this->config->coveredOnly = $input->getOption(CoveredOnlyOption::ARGUMENT) !== 'false';
         }
 
         if (! $input->hasOption(MutateOption::ARGUMENT)) {
