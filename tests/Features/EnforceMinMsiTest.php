@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Pest\Mutate\Plugin;
+use Pest\Mutate\Plugins\Mutate;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 it('sets MSI threshold if --min argument is passed', function () {
-    $plugin = new Plugin(new ConsoleOutput());
+    $plugin = new Mutate(new ConsoleOutput());
 
     expect($plugin->config->minMSI)->toEqual(0.0);
 

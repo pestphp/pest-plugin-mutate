@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-use Pest\Mutate\Plugin;
+use Pest\Mutate\Plugins\Mutate;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 it('enables covered only option if --covered-only argument is passed', function () {
-    $plugin = new Plugin(new ConsoleOutput());
+    $plugin = new Mutate(new ConsoleOutput());
 
     expect($plugin->config->coveredOnly)->toBeFalse();
 

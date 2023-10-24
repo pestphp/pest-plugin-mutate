@@ -46,7 +46,7 @@
     "extra": {
         "pest": {
             "plugins": [
-                "Pest\\Mutate\\Plugin"
+                "Pest\\Mutate\\Plugins\\Mutate"
             ]
         }
     },

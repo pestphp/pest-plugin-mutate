@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Pest\Mutate;
+namespace Pest\Mutate\Plugins;
 
 use Pest\Contracts\Plugins\HandlesArguments;
+use Pest\Mutate\Config;
 use Pest\Mutate\Options\CoveredOnlyOption;
 use Pest\Mutate\Options\MinMsiOption;
 use Pest\Mutate\Options\MutateOption;
@@ -18,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @final
  */
-class Plugin implements HandlesArguments
+class Mutate implements HandlesArguments
 {
     use HandleArguments;
 
