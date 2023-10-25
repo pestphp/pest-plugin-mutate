@@ -35,6 +35,16 @@ it('overrides global values on a non default profile', function () {
     expect($this->profile->minMSI)->toEqual(2.0);
 });
 
+it('sets the paths if --paths argument is passed', function () {
+    expect($this->profile->paths)->toEqual([]);
+
+    $this->plugin->handleArguments(['--mutate', '--paths=src']);
+    expect($this->profile->paths)->toEqual(['src']);
+
+    $this->plugin->handleArguments(['--mutate', '--paths=src/path-1,src/path-2']);
+    expect($this->profile->paths)->toEqual(['src/path-1', 'src/path-2']);
+});
+
 it('sets MSI threshold if --min argument is passed', function () {
     expect($this->profile->minMSI)->toEqual(0.0);
 

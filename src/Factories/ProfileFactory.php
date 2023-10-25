@@ -16,6 +16,16 @@ class ProfileFactory
         $this->profile = Profiles::get($name);
     }
 
+    /**
+     * @param  array<int, string>|string  ...$paths
+     */
+    public function paths(array|string ...$paths): self
+    {
+        $this->profile->paths = array_merge(...array_map(fn (string|array $path): array => is_string($path) ? [$path] : $path, $paths));
+
+        return $this;
+    }
+
     public function min(float $minMSI): self
     {
         $this->profile->minMSI = $minMSI;
@@ -23,7 +33,7 @@ class ProfileFactory
         return $this;
     }
 
-    public function coveredOnly(bool $coveredOnly): self
+    public function coveredOnly(bool $coveredOnly = true): self
     {
         $this->profile->coveredOnly = $coveredOnly;
 
