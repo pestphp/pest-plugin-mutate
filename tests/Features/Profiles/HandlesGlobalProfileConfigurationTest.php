@@ -45,7 +45,7 @@ test('globally configure paths', function () {
 
 test('globally configure mutators', function () {
     expect($this->profile->mutators)
-        ->toEqual(\Pest\Mutate\Mutators\DefaultSet::mutators());
+        ->toEqual(\Pest\Mutate\Mutators\Sets\DefaultSet::mutators());
 
     mutate()
         ->mutators(\Pest\Mutate\Mutators::SET_ARITHMETIC);

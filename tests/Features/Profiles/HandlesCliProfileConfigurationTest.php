@@ -46,7 +46,7 @@ it('sets the paths if --paths argument is passed', function () {
 });
 
 it('sets the mutators if --mutators argument is passed', function () {
-    expect($this->profile->mutators)->toEqual(\Pest\Mutate\Mutators\DefaultSet::mutators());
+    expect($this->profile->mutators)->toEqual(\Pest\Mutate\Mutators\Sets\DefaultSet::mutators());
 
     $this->plugin->handleArguments(['--mutate', '--mutators=SetArithmetic']);
     expect($this->profile->mutators)->toEqual([\Pest\Mutate\Mutators\Arithmetic\PlusToMinus::class, \Pest\Mutate\Mutators\Arithmetic\MinusToPlus::class]);

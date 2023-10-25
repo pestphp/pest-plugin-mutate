@@ -24,15 +24,6 @@
 - [ ] Automatically skip "Arch" tests
 - [ ] Awesome docs: "Why to use" and "How to use"
 
-# To discuss with Nuno
-- [ ] Are there any ideas you don't agree? Is there something missing?
-- [ ] What will change with Pest v3?
-- [ ] Found no way to add methods to the TestCall from a Plugin (required for `->mutate()`)
-- [ ] Is it okay to modify the Pest core?
-- [ ] Move repository to PestPHP organization?
-- [ ] Your role?
-- [ ] Laracon Talk?
-
 # Current Tasks
 - [] Add Arch tests: ensure every mutator and set has a corresponding constant
 

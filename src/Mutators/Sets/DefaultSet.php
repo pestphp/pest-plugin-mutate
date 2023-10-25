@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Pest\Mutate\Mutators\Arithmetic;
+namespace Pest\Mutate\Mutators\Sets;
 
 use Pest\Mutate\Contracts\MutatorSet;
 
-class SetArithmetic implements MutatorSet
+class DefaultSet implements MutatorSet
 {
     /**
      * {@inheritDoc}
@@ -14,8 +14,8 @@ class SetArithmetic implements MutatorSet
     public static function mutators(): array
     {
         return [
-            PlusToMinus::class,
-            MinusToPlus::class,
+            ...ArithmeticSet::mutators(),
+            ...ConditionalsSet::mutators(),
         ];
     }
 }

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Pest\Mutate;
 
 use Pest\Mutate\Contracts\Mutator;
-use Pest\Mutate\Mutators\DefaultSet;
+use Pest\Mutate\Mutators\Sets\DefaultSet;
 
 class Profile
 {
