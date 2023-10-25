@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Plugins;
 
+use Pest\Contracts\Plugins\AddsOutput;
+use Pest\Contracts\Plugins\Bootable;
 use Pest\Contracts\Plugins\HandlesArguments;
-use Pest\Mutate\Config;
+use Pest\Mutate\Contracts\MutationTester;
 use Pest\Mutate\Options\CoveredOnlyOption;
 use Pest\Mutate\Options\MinMsiOption;
 use Pest\Mutate\Options\MutateOption;
+use Pest\Mutate\Profiles;
 use Pest\Plugins\Concerns\HandleArguments;
+use Pest\Support\Container;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,11 +23,11 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @final
  */
-class Mutate implements HandlesArguments
+class Mutate implements AddsOutput, Bootable, HandlesArguments
 {
     use HandleArguments;
 
-    public Config $config;
+    private static bool $enabled = false;
 
     private const OPTIONS = [
         MutateOption::class,
@@ -37,7 +41,17 @@ class Mutate implements HandlesArguments
     public function __construct(
         private readonly OutputInterface $output
     ) {
-        $this->config = new Config();
+        //
+    }
+
+    public function boot(): void
+    {
+        Container::getInstance()->add(MutationTester::class, new \Pest\Mutate\Tester\MutationTester($this->output));
+    }
+
+    public static function enable(): void
+    {
+        self::$enabled = true;
     }
 
     /**
@@ -63,35 +77,38 @@ class Mutate implements HandlesArguments
 
         $input = new ArgvInput($filteredArguments, $inputDefinition);
 
-        if ($input->hasOption(MinMsiOption::ARGUMENT)) {
-            $this->config->minMSI = (float) $input->getOption(MinMsiOption::ARGUMENT); // @phpstan-ignore-line
-        }
-
-        if ($input->hasOption(CoveredOnlyOption::ARGUMENT)) {
-            $this->config->coveredOnly = $input->getOption(CoveredOnlyOption::ARGUMENT) !== 'false';
-        }
-
         if (! $input->hasOption(MutateOption::ARGUMENT)) {
             return $arguments;
         }
 
+        $profile = Profiles::get($input->getOption(MutateOption::ARGUMENT) ?? 'default'); // @phpstan-ignore-line
+
+        if ($input->hasOption(MinMsiOption::ARGUMENT)) {
+            $profile->minMSI = (float) $input->getOption(MinMsiOption::ARGUMENT); // @phpstan-ignore-line
+        }
+
+        if ($input->hasOption(CoveredOnlyOption::ARGUMENT)) {
+            $profile->coveredOnly = $input->getOption(CoveredOnlyOption::ARGUMENT) !== 'false';
+        }
+
         $this->runMutationTesting();
+
+        return $arguments;
     }
 
-    private function runMutationTesting(): never
+    private function runMutationTesting(): void
     {
-        $this->output->writeln('Running mutation tests...');
-
-        $exitCode = 0;
-
-        $this->exit($exitCode);
+        Container::getInstance()->get(MutationTester::class) // @phpstan-ignore-line
+            ->run();
     }
 
-    /**
-     * Exits the process with the given code.
-     */
-    private function exit(int $code): never
+    public function addOutput(int $exitCode): int
     {
-        exit($code);
+        // TODO: this is probably the wrong place to run mutation testing
+        if (self::$enabled) {
+            $this->runMutationTesting();
+        }
+
+        return $exitCode;
     }
 }

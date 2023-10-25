@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Pest\Mutate\Mutators\Arithmetic\ArithmeticMinusToPlus;
 
 it('mutates a binary minus to plus', function () {
-    expect(mutate(ArithmeticMinusToPlus::class, <<<'CODE'
+    expect(mutateCode(ArithmeticMinusToPlus::class, <<<'CODE'
         <?php
 
         1 - 1;

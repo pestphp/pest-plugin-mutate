@@ -9,4 +9,4 @@ it('has survival mutants', function (int $age, bool $isAdult) {
     [10, false],
     [17, false],
     [25, true],
-])->group('survival');
+]);

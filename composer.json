@@ -27,7 +27,10 @@
     "autoload": {
         "psr-4": {
             "Pest\\Mutate\\": "src/"
-        }
+        },
+        "files": [
+            "src/Functions.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {

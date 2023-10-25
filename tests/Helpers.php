@@ -8,7 +8,7 @@ use PhpParser\NodeVisitorAbstract;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
 
-function mutate(string $mutator, string $code): string
+function mutateCode(string $mutator, string $code): string
 {
     $stmts = (new ParserFactory)->create(ParserFactory::PREFER_PHP7)->parse($code);
 
