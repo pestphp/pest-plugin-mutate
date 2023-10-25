@@ -10,19 +10,19 @@ use PhpParser\Node;
 use PhpParser\Node\Expr\BinaryOp\Minus;
 use PhpParser\Node\Expr\BinaryOp\Plus;
 
-class ArithmeticPlusToMinus implements Mutator
+class MinusToPlus implements Mutator
 {
     use HasName;
 
     public static function can(Node $node): bool
     {
-        return $node instanceof Plus;
+        return $node instanceof Minus;
     }
 
     public static function mutate(Node $node): Node
     {
-        /** @var Plus $node */
+        /** @var Minus $node */
 
-        return new Minus($node->left, $node->right);
+        return new Plus($node->left, $node->right);
     }
 }

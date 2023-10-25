@@ -49,13 +49,13 @@ it('sets the mutators if --mutators argument is passed', function () {
     expect($this->profile->mutators)->toEqual(\Pest\Mutate\Mutators\DefaultSet::mutators());
 
     $this->plugin->handleArguments(['--mutate', '--mutators=SetArithmetic']);
-    expect($this->profile->mutators)->toEqual([\Pest\Mutate\Mutators\Arithmetic\ArithmeticPlusToMinus::class, \Pest\Mutate\Mutators\Arithmetic\ArithmeticMinusToPlus::class]);
+    expect($this->profile->mutators)->toEqual([\Pest\Mutate\Mutators\Arithmetic\PlusToMinus::class, \Pest\Mutate\Mutators\Arithmetic\MinusToPlus::class]);
 
     $this->plugin->handleArguments(['--mutate', '--mutators=ArithmeticPlusToMinus']);
-    expect($this->profile->mutators)->toEqual([\Pest\Mutate\Mutators\Arithmetic\ArithmeticPlusToMinus::class]);
+    expect($this->profile->mutators)->toEqual([\Pest\Mutate\Mutators\Arithmetic\PlusToMinus::class]);
 
     $this->plugin->handleArguments(['--mutate', '--mutators=ArithmeticPlusToMinus,ArithmeticMinusToPlus']);
-    expect($this->profile->mutators)->toEqual([\Pest\Mutate\Mutators\Arithmetic\ArithmeticPlusToMinus::class, \Pest\Mutate\Mutators\Arithmetic\ArithmeticMinusToPlus::class]);
+    expect($this->profile->mutators)->toEqual([\Pest\Mutate\Mutators\Arithmetic\PlusToMinus::class, \Pest\Mutate\Mutators\Arithmetic\MinusToPlus::class]);
 });
 
 it('sets MSI threshold if --min argument is passed', function () {

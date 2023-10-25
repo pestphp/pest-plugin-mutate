@@ -6,7 +6,7 @@ namespace Pest\Mutate\Mutators\Arithmetic;
 
 use Pest\Mutate\Contracts\MutatorSet;
 
-class ArithmeticSet implements MutatorSet
+class SetArithmetic implements MutatorSet
 {
     /**
      * {@inheritDoc}
@@ -14,8 +14,8 @@ class ArithmeticSet implements MutatorSet
     public static function mutators(): array
     {
         return [
-            ArithmeticPlusToMinus::class,
-            ArithmeticMinusToPlus::class,
+            PlusToMinus::class,
+            MinusToPlus::class,
         ];
     }
 }

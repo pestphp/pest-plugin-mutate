@@ -51,19 +51,19 @@ test('globally configure mutators', function () {
         ->mutators(\Pest\Mutate\Mutators::SET_ARITHMETIC);
 
     expect($this->profile->mutators)
-        ->toEqual([\Pest\Mutate\Mutators\Arithmetic\ArithmeticPlusToMinus::class, \Pest\Mutate\Mutators\Arithmetic\ArithmeticMinusToPlus::class]);
+        ->toEqual([\Pest\Mutate\Mutators\Arithmetic\PlusToMinus::class, \Pest\Mutate\Mutators\Arithmetic\MinusToPlus::class]);
 
     mutate()
         ->mutators(\Pest\Mutate\Mutators::ARITHMETIC_PLUS_TO_MINUS);
 
     expect($this->profile->mutators)
-        ->toEqual([\Pest\Mutate\Mutators\Arithmetic\ArithmeticPlusToMinus::class]);
+        ->toEqual([\Pest\Mutate\Mutators\Arithmetic\PlusToMinus::class]);
 
     mutate()
         ->mutators(\Pest\Mutate\Mutators::ARITHMETIC_PLUS_TO_MINUS, \Pest\Mutate\Mutators::ARITHMETIC_MINUS_TO_PLUS);
 
     expect($this->profile->mutators)
-        ->toEqual([\Pest\Mutate\Mutators\Arithmetic\ArithmeticPlusToMinus::class, \Pest\Mutate\Mutators\Arithmetic\ArithmeticMinusToPlus::class]);
+        ->toEqual([\Pest\Mutate\Mutators\Arithmetic\PlusToMinus::class, \Pest\Mutate\Mutators\Arithmetic\MinusToPlus::class]);
 });
 
 test('globally configure min MSI threshold', function () {

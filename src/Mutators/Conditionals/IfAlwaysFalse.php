@@ -11,7 +11,7 @@ use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Name;
 use PhpParser\Node\Stmt\If_;
 
-class ConditionalsIfAlwaysFalse implements Mutator
+class IfAlwaysFalse implements Mutator
 {
     use HasName;
 

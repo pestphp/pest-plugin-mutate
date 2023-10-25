@@ -11,7 +11,7 @@ use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Expr\Ternary;
 use PhpParser\Node\Name;
 
-class ConditionalsTernaryAlwaysTrue implements Mutator
+class TernaryAlwaysTrue implements Mutator
 {
     use HasName;
 
