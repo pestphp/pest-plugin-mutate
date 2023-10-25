@@ -8,11 +8,12 @@ use Pest\Contracts\Plugins\AddsOutput;
 use Pest\Contracts\Plugins\Bootable;
 use Pest\Contracts\Plugins\HandlesArguments;
 use Pest\Mutate\Contracts\MutationTester;
+use Pest\Mutate\Factories\ProfileFactory;
 use Pest\Mutate\Options\CoveredOnlyOption;
 use Pest\Mutate\Options\MinMsiOption;
 use Pest\Mutate\Options\MutateOption;
+use Pest\Mutate\Options\MutatorsOption;
 use Pest\Mutate\Options\PathsOption;
-use Pest\Mutate\Profiles;
 use Pest\Plugins\Concerns\HandleArguments;
 use Pest\Support\Container;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -33,6 +34,7 @@ class Mutate implements AddsOutput, Bootable, HandlesArguments
     private const OPTIONS = [
         MutateOption::class,
         PathsOption::class,
+        MutatorsOption::class,
         MinMsiOption::class,
         CoveredOnlyOption::class,
     ];
@@ -83,18 +85,22 @@ class Mutate implements AddsOutput, Bootable, HandlesArguments
             return $arguments;
         }
 
-        $profile = Profiles::get($input->getOption(MutateOption::ARGUMENT) ?? 'default'); // @phpstan-ignore-line
+        $profileFactory = new ProfileFactory($input->getOption(MutateOption::ARGUMENT) ?? 'default'); // @phpstan-ignore-line
 
         if ($input->hasOption(PathsOption::ARGUMENT)) {
-            $profile->paths = explode(',', (string) $input->getOption(PathsOption::ARGUMENT)); // @phpstan-ignore-line
+            $profileFactory->paths(explode(',', (string) $input->getOption(PathsOption::ARGUMENT))); // @phpstan-ignore-line
+        }
+
+        if ($input->hasOption(MutatorsOption::ARGUMENT)) {
+            $profileFactory->mutators(explode(',', (string) $input->getOption(MutatorsOption::ARGUMENT))); // @phpstan-ignore-line
         }
 
         if ($input->hasOption(MinMsiOption::ARGUMENT)) {
-            $profile->minMSI = (float) $input->getOption(MinMsiOption::ARGUMENT); // @phpstan-ignore-line
+            $profileFactory->min((float) $input->getOption(MinMsiOption::ARGUMENT)); // @phpstan-ignore-line
         }
 
         if ($input->hasOption(CoveredOnlyOption::ARGUMENT)) {
-            $profile->coveredOnly = $input->getOption(CoveredOnlyOption::ARGUMENT) !== 'false';
+            $profileFactory->coveredOnly($input->getOption(CoveredOnlyOption::ARGUMENT) !== 'false');
         }
 
         $this->runMutationTesting();

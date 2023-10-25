@@ -6,9 +6,9 @@ namespace Pest\Mutate\Options;
 
 use Symfony\Component\Console\Input\InputOption;
 
-class PathsOption
+class MutatorsOption
 {
-    final public const ARGUMENT = 'paths';
+    final public const ARGUMENT = 'mutators';
 
     public static function remove(): bool
     {
@@ -22,6 +22,6 @@ class PathsOption
 
     public static function inputOption(): InputOption
     {
-        return new InputOption('--paths', null, InputOption::VALUE_REQUIRED, '', 0);
+        return new InputOption('--mutators', null, InputOption::VALUE_REQUIRED, '');
     }
 }

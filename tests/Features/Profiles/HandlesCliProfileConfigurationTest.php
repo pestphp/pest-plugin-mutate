@@ -45,6 +45,19 @@ it('sets the paths if --paths argument is passed', function () {
     expect($this->profile->paths)->toEqual(['src/path-1', 'src/path-2']);
 });
 
+it('sets the mutators if --mutators argument is passed', function () {
+    expect($this->profile->mutators)->toEqual(\Pest\Mutate\Mutators\DefaultSet::mutators());
+
+    $this->plugin->handleArguments(['--mutate', '--mutators=SetArithmetic']);
+    expect($this->profile->mutators)->toEqual([\Pest\Mutate\Mutators\Arithmetic\ArithmeticPlusToMinus::class, \Pest\Mutate\Mutators\Arithmetic\ArithmeticMinusToPlus::class]);
+
+    $this->plugin->handleArguments(['--mutate', '--mutators=ArithmeticPlusToMinus']);
+    expect($this->profile->mutators)->toEqual([\Pest\Mutate\Mutators\Arithmetic\ArithmeticPlusToMinus::class]);
+
+    $this->plugin->handleArguments(['--mutate', '--mutators=ArithmeticPlusToMinus,ArithmeticMinusToPlus']);
+    expect($this->profile->mutators)->toEqual([\Pest\Mutate\Mutators\Arithmetic\ArithmeticPlusToMinus::class, \Pest\Mutate\Mutators\Arithmetic\ArithmeticMinusToPlus::class]);
+});
+
 it('sets MSI threshold if --min argument is passed', function () {
     expect($this->profile->minMSI)->toEqual(0.0);
 

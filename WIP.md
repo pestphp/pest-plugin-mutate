@@ -34,13 +34,13 @@
 - [ ] Laracon Talk?
 
 # Current Tasks
-- [] 
+- [] Add Arch tests: ensure every mutator and set has a corresponding constant
 
 # Backlog Prio 1
 - []
 
 # Backlog Prio 2
-- []
+- [ ] Dedicated help output (`vendor/bin/pest --mutate --help`)
 
 # Backlog Future Release
 - [] 

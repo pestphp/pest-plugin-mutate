@@ -26,17 +26,6 @@ test('configure non default profile globally', function () {
         ->toEqual(20.0);
 });
 
-test('globally configure min MSI threshold', function () {
-    expect($this->profile->minMSI)
-        ->toEqual(0);
-
-    mutate()
-        ->min(10.0);
-
-    expect($this->profile->minMSI)
-        ->toEqual(10.0);
-});
-
 test('globally configure paths', function () {
     expect($this->profile->paths)
         ->toEqual([]);
@@ -52,6 +41,40 @@ test('globally configure paths', function () {
 
     expect($this->profile->paths)
         ->toEqual(['src/path-1', 'src/path-2', 'src/path-3']);
+});
+
+test('globally configure mutators', function () {
+    expect($this->profile->mutators)
+        ->toEqual(\Pest\Mutate\Mutators\DefaultSet::mutators());
+
+    mutate()
+        ->mutators(\Pest\Mutate\Mutators::SET_ARITHMETIC);
+
+    expect($this->profile->mutators)
+        ->toEqual([\Pest\Mutate\Mutators\Arithmetic\ArithmeticPlusToMinus::class, \Pest\Mutate\Mutators\Arithmetic\ArithmeticMinusToPlus::class]);
+
+    mutate()
+        ->mutators(\Pest\Mutate\Mutators::ARITHMETIC_PLUS_TO_MINUS);
+
+    expect($this->profile->mutators)
+        ->toEqual([\Pest\Mutate\Mutators\Arithmetic\ArithmeticPlusToMinus::class]);
+
+    mutate()
+        ->mutators(\Pest\Mutate\Mutators::ARITHMETIC_PLUS_TO_MINUS, \Pest\Mutate\Mutators::ARITHMETIC_MINUS_TO_PLUS);
+
+    expect($this->profile->mutators)
+        ->toEqual([\Pest\Mutate\Mutators\Arithmetic\ArithmeticPlusToMinus::class, \Pest\Mutate\Mutators\Arithmetic\ArithmeticMinusToPlus::class]);
+});
+
+test('globally configure min MSI threshold', function () {
+    expect($this->profile->minMSI)
+        ->toEqual(0);
+
+    mutate()
+        ->min(10.0);
+
+    expect($this->profile->minMSI)
+        ->toEqual(10.0);
 });
 
 test('globally configure covered only option', function () {
