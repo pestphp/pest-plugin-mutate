@@ -25,13 +25,16 @@
 - [ ] Awesome docs: "Why to use" and "How to use"
 
 # Current Tasks
-- [] Add Arch tests: ensure every mutator and set has a corresponding constant
+- [ ] test()->mutate()
 
 # Backlog Prio 1
-- []
+- [ ] Create documentation form mutators
+- [ ] Add more mutators and sets
+- [ ] Create a sensible default set
 
 # Backlog Prio 2
 - [ ] Dedicated help output (`vendor/bin/pest --mutate --help`)
+- [ ] Add help to show available mutators and sets
 
 # Backlog Future Release
-- [] 
+- [ ] 
