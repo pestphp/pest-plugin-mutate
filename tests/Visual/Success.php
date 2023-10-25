@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-test('visual snapshot of mutation tests on success', function () {
+use Symfony\Component\Process\Process;
+
+test('visual snapshot of mutation tests on success', function (): void {
     $testsPath = dirname(__DIR__);
 
-    $process = (new Symfony\Component\Process\Process(
+    $process = (new Process(
         ['php', 'vendor/bin/pest', 'tests/.tests/Success'],
         dirname($testsPath),
     ));

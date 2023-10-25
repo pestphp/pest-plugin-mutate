@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-it('mutates an if condition to always false', function () {
-    expect(mutateCode(\Pest\Mutate\Mutators\Conditionals\IfAlwaysTrue::class, <<<'CODE'
+use Pest\Mutate\Mutators\Conditionals\IfAlwaysTrue;
+
+it('mutates an if condition to always false', function (): void {
+    expect(mutateCode(IfAlwaysTrue::class, <<<'CODE'
         <?php
 
         if ($a > $b) {
@@ -11,7 +13,7 @@ it('mutates an if condition to always false', function () {
         }
         CODE))->toBe(<<<'CODE'
         <?php
-        
+
         if (true) {
             return true;
         }

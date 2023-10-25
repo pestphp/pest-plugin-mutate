@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
+use Pest\Mutate\Profiles;
+use Pest\Support\Container;
+
 uses()
-    ->beforeEach(function () {
-        \Pest\Support\Container::getInstance()->get(\Pest\Mutate\Profiles::class)->reset();
+    ->beforeEach(function (): void {
+        Container::getInstance()->get(Profiles::class)->reset();
     })->in(__DIR__);

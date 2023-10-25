@@ -15,7 +15,7 @@ function mutateCode(string $mutator, string $code): string
     $traverser = new NodeTraverser;
     $traverser->addVisitor(new class($mutator) extends NodeVisitorAbstract
     {
-        public function __construct(private string $mutator)
+        public function __construct(private readonly string $mutator)
         {
         }
 

@@ -1,13 +1,15 @@
 <?php
 
 declare(strict_types=1);
-
+use Pest\Mutate\Mutators\Arithmetic\MinusToPlus;
+use Pest\Mutate\Mutators\Arithmetic\PlusToMinus;
+use Pest\Mutate\Mutators\Sets\DefaultSet;
 use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Profiles;
 use Pest\Mutate\Tester\MutationTester;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
-beforeEach(function () {
+beforeEach(function (): void {
     MutationTester::fake();
 
     $this->plugin = new Mutate(new ConsoleOutput());
@@ -15,7 +17,7 @@ beforeEach(function () {
     $this->profile = Profiles::get('default');
 });
 
-it('overrides global values on the default profile', function () {
+it('overrides global values on the default profile', function (): void {
     mutate()
         ->min(10.0);
 
@@ -24,7 +26,7 @@ it('overrides global values on the default profile', function () {
     expect($this->profile->minMSI)->toEqual(2.0);
 });
 
-it('overrides global values on a non default profile', function () {
+it('overrides global values on a non default profile', function (): void {
     mutate('profile-1')
         ->min(10.0);
 
@@ -35,7 +37,7 @@ it('overrides global values on a non default profile', function () {
     expect($this->profile->minMSI)->toEqual(2.0);
 });
 
-it('sets the paths if --paths argument is passed', function () {
+it('sets the paths if --paths argument is passed', function (): void {
     expect($this->profile->paths)->toEqual([]);
 
     $this->plugin->handleArguments(['--mutate', '--paths=src']);
@@ -45,20 +47,20 @@ it('sets the paths if --paths argument is passed', function () {
     expect($this->profile->paths)->toEqual(['src/path-1', 'src/path-2']);
 });
 
-it('sets the mutators if --mutators argument is passed', function () {
-    expect($this->profile->mutators)->toEqual(\Pest\Mutate\Mutators\Sets\DefaultSet::mutators());
+it('sets the mutators if --mutators argument is passed', function (): void {
+    expect($this->profile->mutators)->toEqual(DefaultSet::mutators());
 
     $this->plugin->handleArguments(['--mutate', '--mutators=SetArithmetic']);
-    expect($this->profile->mutators)->toEqual([\Pest\Mutate\Mutators\Arithmetic\PlusToMinus::class, \Pest\Mutate\Mutators\Arithmetic\MinusToPlus::class]);
+    expect($this->profile->mutators)->toEqual([PlusToMinus::class, MinusToPlus::class]);
 
     $this->plugin->handleArguments(['--mutate', '--mutators=ArithmeticPlusToMinus']);
-    expect($this->profile->mutators)->toEqual([\Pest\Mutate\Mutators\Arithmetic\PlusToMinus::class]);
+    expect($this->profile->mutators)->toEqual([PlusToMinus::class]);
 
     $this->plugin->handleArguments(['--mutate', '--mutators=ArithmeticPlusToMinus,ArithmeticMinusToPlus']);
-    expect($this->profile->mutators)->toEqual([\Pest\Mutate\Mutators\Arithmetic\PlusToMinus::class, \Pest\Mutate\Mutators\Arithmetic\MinusToPlus::class]);
+    expect($this->profile->mutators)->toEqual([PlusToMinus::class, MinusToPlus::class]);
 });
 
-it('sets MSI threshold if --min argument is passed', function () {
+it('sets MSI threshold if --min argument is passed', function (): void {
     expect($this->profile->minMSI)->toEqual(0.0);
 
     $this->plugin->handleArguments(['--mutate']);
@@ -71,7 +73,7 @@ it('sets MSI threshold if --min argument is passed', function () {
     expect($this->profile->minMSI)->toEqual(2.4);
 });
 
-it('enables covered only option if --covered-only argument is passed', function () {
+it('enables covered only option if --covered-only argument is passed', function (): void {
     expect($this->profile->coveredOnly)->toBeFalse();
 
     $this->plugin->handleArguments(['--mutate']);

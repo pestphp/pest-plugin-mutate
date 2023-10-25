@@ -1,7 +1,9 @@
 <?php
 
 declare(strict_types=1);
-
+use Pest\Mutate\Contracts\Mutator;
+use Pest\Mutate\Contracts\MutatorSet;
+use Pest\Mutate\Mutators;
 use Symfony\Component\Finder\Finder;
 
 test('contract')
@@ -9,17 +11,17 @@ test('contract')
     ->toBeInterface();
 
 test('mutators')
-    ->expect('Pest\Mutate\Mutators')
+    ->expect(Mutators::class)
     ->classes()
-    ->toImplement(\Pest\Mutate\Contracts\Mutator::class)
+    ->toImplement(Mutator::class)
     ->ignoring('Pest\Mutate\Mutators\Sets');
 
 test('mutator sets')
     ->expect('Pest\Mutate\Mutators\Sets')
-    ->toImplement(\Pest\Mutate\Contracts\MutatorSet::class);
+    ->toImplement(MutatorSet::class);
 
-test('all mutators and sets have a corresponding constant', function () {
-    $constants = (new ReflectionClass(\Pest\Mutate\Mutators::class))->getConstants();
+test('all mutators and sets have a corresponding constant', function (): void {
+    $constants = (new ReflectionClass(Mutators::class))->getConstants();
 
     $files = Finder::create()
         ->in(__DIR__.'/../src/Mutators')
