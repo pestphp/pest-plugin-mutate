@@ -16,7 +16,11 @@ class MinusToPlus implements Mutator
 
     public static function can(Node $node): bool
     {
-        return $node instanceof Minus;
+        if(true === true) { // this is silly, but it is a POC for the ->mutate method
+            return $node instanceof Minus;
+        }
+
+        return false;
     }
 
     public static function mutate(Node $node): Node

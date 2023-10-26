@@ -6,11 +6,11 @@ use Pest\Mutate\Mutators\Arithmetic\PlusToMinus;
 use Pest\Mutate\Mutators\Sets\DefaultSet;
 use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Profiles;
-use Pest\Mutate\Tester\MutationTester;
+use Pest\Mutate\Tester\MutationTestRunner;
 use Symfony\Component\Console\Output\ConsoleOutput;
 
 beforeEach(function (): void {
-    MutationTester::fake();
+    MutationTestRunner::fake();
 
     $this->plugin = new Mutate(new ConsoleOutput());
 

@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Pest\Mutate;
 
-use Pest\Mutate\Plugins\Mutate;
+use Pest\Mutate\Contracts\MutationTestRunner;
 use Pest\PendingCalls\TestCall;
 use Pest\Plugins\Only;
+use Pest\Support\Container;
 
 class MutationTestCallDecorator
 {
@@ -26,7 +27,9 @@ class MutationTestCallDecorator
     {
         Only::enable($this->testCall);
 
-        Mutate::enable();
+        Container::getInstance()
+            ->get(MutationTestRunner::class)
+            ->enable($profile);
 
         return $this;
     }

@@ -25,10 +25,11 @@
 - [ ] Awesome docs: "Why to use" and "How to use"
 
 # Current Tasks
-- [ ] test()->mutate()
+- [ ] Actually make `test()->mutate()` work
+- [ ] Refactor MutationTestCallDecorator to Decorators/TestCallDecorator
 
 # Backlog Prio 1
-- [ ] Create documentation form mutators
+- [ ] Automatically create documentation from mutators
 - [ ] Add more mutators and sets
 - [ ] Create a sensible default set
 
