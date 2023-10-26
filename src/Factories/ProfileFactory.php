@@ -76,4 +76,11 @@ class ProfileFactory
 
         return $this;
     }
+
+    public function parallel(bool $parallel = true): self
+    {
+        $this->profile->parallel = $parallel;
+
+        return $this;
+    }
 }

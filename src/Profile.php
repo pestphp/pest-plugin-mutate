@@ -23,6 +23,8 @@ class Profile
 
     public bool $coveredOnly = false;
 
+    public bool $parallel = false;
+
     public function __construct()
     {
         $this->mutators = DefaultSet::mutators();
