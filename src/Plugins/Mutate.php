@@ -12,11 +12,13 @@ use Pest\Mutate\Options\CoveredOnlyOption;
 use Pest\Mutate\Options\MinMsiOption;
 use Pest\Mutate\Options\MutateOption;
 use Pest\Mutate\Options\MutatorsOption;
+use Pest\Mutate\Options\ParallelOption;
 use Pest\Mutate\Options\PathsOption;
 use Pest\Mutate\Subscribers\DisablePhpCodeCoverageIfNotRequired;
 use Pest\Mutate\Subscribers\EnsureToRunMutationTestingIfRequired;
 use Pest\Mutate\Subscribers\PrepareForInitialTestRun;
 use Pest\Plugins\Concerns\HandleArguments;
+use Pest\Plugins\Parallel;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
 use PHPUnit\Event\Facade;
@@ -40,6 +42,7 @@ class Mutate implements Bootable, HandlesArguments
         MutatorsOption::class,
         MinMsiOption::class,
         CoveredOnlyOption::class,
+        ParallelOption::class,
     ];
 
     /**
@@ -134,6 +137,12 @@ class Mutate implements Bootable, HandlesArguments
 
         if ($input->hasOption(CoveredOnlyOption::ARGUMENT)) {
             $profileFactory->coveredOnly($input->getOption(CoveredOnlyOption::ARGUMENT) !== 'false');
+        }
+
+        if ($input->hasOption(ParallelOption::ARGUMENT)) {
+            unset($arguments[array_search('--'.ParallelOption::ARGUMENT, $arguments)]);
+            $profileFactory->parallel();
+            Parallel::disable();
         }
 
         return $arguments;
