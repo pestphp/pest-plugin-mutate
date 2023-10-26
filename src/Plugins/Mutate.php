@@ -15,6 +15,7 @@ use Pest\Mutate\Options\MutatorsOption;
 use Pest\Mutate\Options\PathsOption;
 use Pest\Mutate\Subscribers\DisablePhpCodeCoverageIfNotRequired;
 use Pest\Mutate\Subscribers\EnsureToRunMutationTestingIfRequired;
+use Pest\Mutate\Subscribers\PrepareForInitialTestRun;
 use Pest\Plugins\Concerns\HandleArguments;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
@@ -48,6 +49,7 @@ class Mutate implements Bootable, HandlesArguments
      */
     private const SUBSCRIBERS = [
         DisablePhpCodeCoverageIfNotRequired::class,
+        PrepareForInitialTestRun::class,
         EnsureToRunMutationTestingIfRequired::class,
     ];
 
