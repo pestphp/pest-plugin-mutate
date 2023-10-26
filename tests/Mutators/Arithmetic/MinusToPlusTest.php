@@ -11,9 +11,9 @@ it('mutates a binary minus to plus', function (): void {
         1 - 1;
         CODE))->toBe(<<<'CODE'
         <?php
-        
+
         1 + 1;
         CODE);
-})
-//    ->mutate('asdf')
-;
+});
+//})->only();
+//})->mutate('asdf');

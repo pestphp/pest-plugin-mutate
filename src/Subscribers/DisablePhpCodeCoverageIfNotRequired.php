@@ -6,24 +6,28 @@ namespace Pest\Mutate\Subscribers;
 
 use Pest\Mutate\Contracts\MutationTestRunner;
 use Pest\Support\Container;
-use PHPUnit\Event\Application\Finished;
-use PHPUnit\Event\Application\FinishedSubscriber;
+use PHPUnit\Event\TestSuite\Loaded;
+use PHPUnit\Event\TestSuite\LoadedSubscriber;
+use PHPUnit\Runner\CodeCoverage;
 
 /**
  * @internal
  */
-final class EnsureToRunMutationTestingIfRequired implements FinishedSubscriber
+final class DisablePhpCodeCoverageIfNotRequired implements LoadedSubscriber
 {
     /**
      * Runs the subscriber.
      */
-    public function notify(Finished $event): void
+    public function notify(Loaded $event): void
     {
         /** @var MutationTestRunner $mutationTestRunner */
         $mutationTestRunner = Container::getInstance()->get(MutationTestRunner::class);
-
         if ($mutationTestRunner->isEnabled()) {
-            $mutationTestRunner->run();
+            return;
         }
+        if ($mutationTestRunner->isCodeCoverageRequested()) {
+            return;
+        }
+        CodeCoverage::instance()->deactivate();
     }
 }

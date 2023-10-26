@@ -20,6 +20,11 @@ class MutationTestRunnerFake implements MutationTestRunnerContract
 
     public function isEnabled(): bool
     {
-        // TODO: Implement isEnabled() method.
+        return true;
+    }
+
+    public function isCodeCoverageRequested(): bool
+    {
+        return false;
     }
 }

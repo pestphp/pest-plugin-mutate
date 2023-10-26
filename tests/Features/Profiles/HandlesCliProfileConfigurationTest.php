@@ -7,12 +7,12 @@ use Pest\Mutate\Mutators\Sets\DefaultSet;
 use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Profiles;
 use Pest\Mutate\Tester\MutationTestRunner;
-use Symfony\Component\Console\Output\ConsoleOutput;
+use Pest\Support\Container;
 
 beforeEach(function (): void {
     MutationTestRunner::fake();
 
-    $this->plugin = new Mutate(new ConsoleOutput());
+    $this->plugin = Container::getInstance()->get(Mutate::class);
 
     $this->profile = Profiles::get('default');
 });

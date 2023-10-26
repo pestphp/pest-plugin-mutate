@@ -27,7 +27,7 @@ class MutationTestCallDecorator
     {
         Only::enable($this->testCall);
 
-        Container::getInstance()
+        Container::getInstance() // @phpstan-ignore-line
             ->get(MutationTestRunner::class)
             ->enable($profile);
 
