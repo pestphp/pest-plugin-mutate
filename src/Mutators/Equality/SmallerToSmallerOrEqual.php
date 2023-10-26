@@ -21,6 +21,7 @@ class SmallerToSmallerOrEqual implements Mutator
 
     public static function mutate(Node $node): Node
     {
+        /** @var Smaller $node */
         return new SmallerOrEqual($node->left, $node->right);
     }
 }

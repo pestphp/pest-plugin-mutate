@@ -21,6 +21,7 @@ class GreaterOrEqualToGreater implements Mutator
 
     public static function mutate(Node $node): Node
     {
+        /** @var GreaterOrEqual $node */
         return new Greater($node->left, $node->right);
     }
 }
