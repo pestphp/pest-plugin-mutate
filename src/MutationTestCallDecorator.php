@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pest\Mutate;
 
 use Pest\Mutate\Contracts\MutationTestRunner;
+use Pest\Mutate\Factories\ProfileFactory;
 use Pest\PendingCalls\TestCall;
 use Pest\Plugins\Only;
 use Pest\Support\Container;
@@ -31,6 +32,22 @@ class MutationTestCallDecorator
             ->get(MutationTestRunner::class)
             ->enable($profile);
 
+        $this->coveredOnly();
+
         return $this;
+    }
+
+    public function coveredOnly(bool $coveredOnly = true): self
+    {
+        $this->_profileFactory()->coveredOnly($coveredOnly);
+
+        return $this;
+    }
+
+    private function _profileFactory(): ProfileFactory
+    {
+        return Container::getInstance() // @phpstan-ignore-line
+            ->get(MutationTestRunner::class)
+            ->getProfileFactory();
     }
 }
