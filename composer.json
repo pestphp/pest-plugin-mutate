@@ -1,5 +1,5 @@
 {
-    "name": "gehrisandro/pest-plugin-mutate",
+    "name": "pestphp/pest-plugin-mutate",
     "description": "Mutates your code to find untested cases",
     "keywords": [
         "php",
