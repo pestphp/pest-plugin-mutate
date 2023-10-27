@@ -4,11 +4,16 @@ declare(strict_types=1);
 use Pest\Mutate\Contracts\Mutator;
 use Pest\Mutate\Contracts\MutatorSet;
 use Pest\Mutate\Mutators;
+use PHPUnit\Event\Subscriber;
 use Symfony\Component\Finder\Finder;
 
 test('contract')
     ->expect('Pest\Mutate\Contracts')
     ->toBeInterface();
+
+test('subscribers')
+    ->expect('Pest\Mutate\Subscribers')
+    ->toImplement(Subscriber::class);
 
 test('mutators')
     ->expect(Mutators::class)

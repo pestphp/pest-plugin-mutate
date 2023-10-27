@@ -31,9 +31,13 @@ class MutationTestRunner implements MutationTestRunnerContract
      */
     private array $originalArguments;
 
-    public static function fake(): void
+    public static function fake(): MutationTestRunnerFake
     {
-        Container::getInstance()->add(MutationTestRunnerContract::class, new MutationTestRunnerFake());
+        $fake = new MutationTestRunnerFake();
+
+        Container::getInstance()->add(MutationTestRunnerContract::class, $fake);
+
+        return $fake;
     }
 
     public function __construct(private readonly OutputInterface $output)
