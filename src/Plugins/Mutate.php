@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Plugins;
 
+use Infection\StreamWrapper\IncludeInterceptor;
 use Pest\Contracts\Plugins\Bootable;
 use Pest\Contracts\Plugins\HandlesArguments;
 use Pest\Mutate\Contracts\MutationTestRunner;
@@ -77,6 +78,11 @@ class Mutate implements Bootable, HandlesArguments
 
             Facade::instance()->registerSubscriber($instance);
         }
+
+        if (getenv('MUTATION_TESTING') !== false) {
+            IncludeInterceptor::intercept(getenv('MUTATION_TESTING'), getenv('MUTATION_FILE'));
+            IncludeInterceptor::enable();
+        }
     }
 
     /**
@@ -101,6 +107,9 @@ class Mutate implements Bootable, HandlesArguments
                 }
             }
         }
+
+        $mutationTestRunner->setOriginalArguments($arguments);
+
         $inputDefinition = new InputDefinition($inputOptions);
 
         $input = new ArgvInput($filteredArguments, $inputDefinition);
@@ -140,7 +149,7 @@ class Mutate implements Bootable, HandlesArguments
         }
 
         if ($input->hasOption(ParallelOption::ARGUMENT)) {
-            unset($arguments[array_search('--'.ParallelOption::ARGUMENT, $arguments)]);
+            unset($arguments[array_search('--'.ParallelOption::ARGUMENT, $arguments, true)]);
             $profileFactory->parallel();
             Parallel::disable();
         }

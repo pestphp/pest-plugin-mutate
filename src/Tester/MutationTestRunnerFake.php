@@ -27,4 +27,9 @@ class MutationTestRunnerFake implements MutationTestRunnerContract
     {
         return false;
     }
+
+    public function setOriginalArguments(array $arguments): void
+    {
+        // TODO: Implement setOriginalArguments() method.
+    }
 }

@@ -10,6 +10,11 @@ interface MutationTestRunner
 
     public function isEnabled(): bool;
 
+    /**
+     * @param  array<int, string>  $arguments
+     */
+    public function setOriginalArguments(array $arguments): void;
+
     public function isCodeCoverageRequested(): bool;
 
     public function run(): void;
