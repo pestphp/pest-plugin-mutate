@@ -96,3 +96,20 @@ test('globally configure covered only option', function (): void {
     expect($this->profile->coveredOnly)
         ->toBeFalse();
 });
+
+test('globally configure parallel option', function (): void {
+    expect($this->profile->parallel)
+        ->toBeFalse();
+
+    mutate()
+        ->parallel();
+
+    expect($this->profile->parallel)
+        ->toBeTrue();
+
+    mutate()
+        ->parallel(false);
+
+    expect($this->profile->parallel)
+        ->toBeFalse();
+});

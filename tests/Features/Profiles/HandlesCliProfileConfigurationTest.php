@@ -88,3 +88,19 @@ it('enables covered only option if --covered-only argument is passed', function 
     $this->plugin->handleArguments(['--mutate', '--covered-only=false']);
     expect($this->profile->coveredOnly)->toBeFalse();
 });
+
+it('enables parallel option if --parallel argument is passed', function (): void {
+    expect($this->profile->parallel)->toBeFalse();
+
+    $this->plugin->handleArguments(['--mutate']);
+    expect($this->profile->parallel)->toBeFalse();
+
+    $this->plugin->handleArguments(['--mutate', '--parallel']);
+    expect($this->profile->parallel)->toBeTrue();
+
+    $this->plugin->handleArguments(['--mutate', '--parallel=true']);
+    expect($this->profile->parallel)->toBeTrue();
+
+    $this->plugin->handleArguments(['--mutate', '--parallel=false']);
+    expect($this->profile->coveredOnly)->toBeFalse();
+});
