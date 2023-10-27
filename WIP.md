@@ -25,8 +25,7 @@
 - [ ] Awesome docs: "Why to use" and "How to use"
 
 # Current Tasks
-- [ ] Actually make `test()->mutate()` work
-- [ ] Refactor MutationTestCallDecorator to Decorators/TestCallDecorator
+- [ ] 
 
 # Backlog Prio 1
 - [ ] Automatically create documentation from mutators

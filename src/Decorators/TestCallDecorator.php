@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pest\Mutate;
+namespace Pest\Mutate\Decorators;
 
 use Pest\Mutate\Contracts\MutationTestRunner;
 use Pest\Mutate\Factories\ProfileFactory;
@@ -10,7 +10,7 @@ use Pest\PendingCalls\TestCall;
 use Pest\Plugins\Only;
 use Pest\Support\Container;
 
-class MutationTestCallDecorator
+class TestCallDecorator
 {
     public function __construct(private readonly TestCall $testCall)
     {
