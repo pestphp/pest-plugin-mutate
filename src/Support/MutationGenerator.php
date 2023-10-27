@@ -13,10 +13,6 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class MutationGenerator
 {
-    public static ?Node $lastMutatedNode = null;
-
-    public static ?Node $lastMutatedNodeOriginal = null;
-
     private bool $mutated = false;
 
     private int $offset = 0;
@@ -24,19 +20,6 @@ class MutationGenerator
     private Node $originalNode;
 
     private ?Node $modifiedNode = null;
-
-    private function trackMutation(int $nodeCount, Node $original, ?Node $modified): void
-    {
-        $this->mutated = true;
-        $this->offset = $nodeCount;
-        $this->originalNode = $original;
-        $this->modifiedNode = $modified;
-    }
-
-    private function hasMutated(): bool
-    {
-        return $this->mutated;
-    }
 
     /**
      * @param  array<int, class-string<Mutator>>  $mutators
@@ -73,7 +56,7 @@ class MutationGenerator
                     mutator: $mutator,
                     linesToMutate: $linesToMutate,
                     offset: $this->offset,
-                    hasMutated: $this->hasMutated(...),
+                    hasAlreadyMutated: $this->hasMutated(...),
                     trackMutation: $this->trackMutation(...)
                 ));
 
@@ -105,5 +88,18 @@ class MutationGenerator
         //        $cache->persist();
 
         return $mutations;
+    }
+
+    private function trackMutation(int $nodeCount, Node $original, ?Node $modified): void
+    {
+        $this->mutated = true;
+        $this->offset = $nodeCount;
+        $this->originalNode = $original;
+        $this->modifiedNode = $modified;
+    }
+
+    private function hasMutated(): bool
+    {
+        return $this->mutated;
     }
 }

@@ -14,21 +14,21 @@ class NodeVisitor extends NodeVisitorAbstract
 
     /**
      * @param  array<int, int>  $linesToMutate
-     * @param  callable  $hasMutated
+     * @param  callable  $hasAlreadyMutated
      * @param  callable  $trackMutation
      */
     public function __construct(
         private readonly string $mutator,
         private readonly int $offset,
         private readonly array $linesToMutate,
-        private $hasMutated, // @pest-ignore-type
+        private $hasAlreadyMutated, // @pest-ignore-type
         private $trackMutation, // @pest-ignore-type
     ) {
     }
 
     public function leaveNode(Node $node): Node|int|null
     {
-        if (($this->hasMutated)()) {
+        if (($this->hasAlreadyMutated)()) {
             return NodeTraverser::STOP_TRAVERSAL;
         }
 
