@@ -12,27 +12,40 @@ class NodeVisitor extends NodeVisitorAbstract
 {
     private int $nodeCount = 0;
 
-    public function __construct(private readonly string $mutator, private readonly MutationGenerator $generator)
-    {
+    /**
+     * @param  array<int, int>  $linesToMutate
+     * @param  callable  $hasMutated
+     * @param  callable  $trackMutation
+     */
+    public function __construct(
+        private readonly string $mutator,
+        private readonly int $offset,
+        private readonly array $linesToMutate,
+        private $hasMutated, // @pest-ignore-type
+        private $trackMutation, // @pest-ignore-type
+    ) {
     }
 
     public function leaveNode(Node $node): Node|int|null
     {
-        if ($this->generator->hasMutated()) {
+        if (($this->hasMutated)()) {
             return NodeTraverser::STOP_TRAVERSAL;
         }
 
-        $this->nodeCount++;
+        if ($this->nodeCount++ < $this->offset) {
+            return null;
+        }
 
-        if ($this->nodeCount <= MutationGenerator::$lastMutatedNodeCount) {
+        if ($this->linesToMutate !== [] && ! in_array($node->getStartLine(), $this->linesToMutate, true)) {
             return null;
         }
 
         if ($this->mutator::can($node)) {
-            $this->generator->trackMutation();
-            MutationGenerator::$lastMutatedNodeOriginal = clone $node;
-            MutationGenerator::$lastMutatedNodeCount = $this->nodeCount;
-            MutationGenerator::$lastMutatedNode = $mutatedNode = $this->mutator::mutate($node);
+            ($this->trackMutation)(
+                $this->nodeCount,
+                clone $node,
+                $mutatedNode = $this->mutator::mutate($node),
+            );
 
             return $mutatedNode;
         }

@@ -6,7 +6,6 @@ namespace Pest\Mutate\Support;
 
 use Pest\Mutate\Contracts\Mutator;
 use Pest\Mutate\Mutation;
-use PhpParser\Error;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
@@ -14,20 +13,27 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class MutationGenerator
 {
-    public static ?int $lastMutatedNodeCount = null;
-
     public static ?Node $lastMutatedNode = null;
 
     public static ?Node $lastMutatedNodeOriginal = null;
 
     private bool $mutated = false;
 
-    public function trackMutation(): void
+    private int $offset = 0;
+
+    private Node $originalNode;
+
+    private ?Node $modifiedNode = null;
+
+    private function trackMutation(int $nodeCount, Node $original, ?Node $modified): void
     {
         $this->mutated = true;
+        $this->offset = $nodeCount;
+        $this->originalNode = $original;
+        $this->modifiedNode = $modified;
     }
 
-    public function hasMutated(): bool
+    private function hasMutated(): bool
     {
         return $this->mutated;
     }
@@ -57,21 +63,21 @@ class MutationGenerator
 
             $newMutations = [];
 
-            self::$lastMutatedNodeCount = null;
+            $this->offset = 0;
 
             while (true) {
                 $this->mutated = false;
-                self::$lastMutatedNode = null;
-                self::$lastMutatedNodeOriginal = null;
 
                 $traverser = new NodeTraverser;
-                $traverser->addVisitor(new NodeVisitor($mutator, $this));
+                $traverser->addVisitor(new NodeVisitor(
+                    mutator: $mutator,
+                    linesToMutate: $linesToMutate,
+                    offset: $this->offset,
+                    hasMutated: $this->hasMutated(...),
+                    trackMutation: $this->trackMutation(...)
+                ));
 
-                try {
-                    $ast = $parser->parse($contents);
-                } catch (Error $error) {
-                    dd("Parse error: {$error->getMessage()}");
-                }
+                $ast = $parser->parse($contents);
 
                 $modifiedAst = $traverser->traverse($ast); // @phpstan-ignore-line
 
@@ -82,8 +88,8 @@ class MutationGenerator
                 $newMutations[] = new Mutation(
                     file: $file,
                     mutator: $mutator,
-                    originalNode: self::$lastMutatedNodeOriginal, // @phpstan-ignore-line
-                    mutatedNode: self::$lastMutatedNode,
+                    originalNode: $this->originalNode,
+                    modifiedNode: $this->modifiedNode,
                     modifiedAst: $modifiedAst,
                 );
             }
@@ -97,11 +103,6 @@ class MutationGenerator
         }
 
         //        $cache->persist();
-
-        if ($linesToMutate !== []) {
-            // TODO: this is probably wrong for multi line statements
-            return array_filter($mutations, fn (Mutation $mutation): bool => in_array($mutation->originalNode->getStartLine(), $linesToMutate, true));
-        }
 
         return $mutations;
     }

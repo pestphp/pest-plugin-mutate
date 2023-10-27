@@ -16,7 +16,7 @@ class Mutation
         public SplFileInfo $file,
         public string $mutator,
         public Node $originalNode,
-        public ?Node $mutatedNode,
+        public ?Node $modifiedNode,
         public array $modifiedAst,
     ) {
     }
@@ -30,7 +30,7 @@ class Mutation
             'file' => $this->file->getRealPath(),
             'mutator' => $this->mutator,
             'originalNode' => $this->originalNode,
-            'mutatedNode' => $this->mutatedNode,
+            'mutatedNode' => $this->modifiedNode,
             'modifiedAst' => $this->modifiedAst,
         ];
     }
@@ -43,7 +43,7 @@ class Mutation
         $this->file = new SplFileInfo($data['file'], '', '');
         $this->mutator = $data['mutator'];
         $this->originalNode = $data['originalNode'];
-        $this->mutatedNode = $data['mutatedNode'];
+        $this->modifiedNode = $data['mutatedNode'];
         $this->modifiedAst = $data['modifiedAst'];
     }
 }

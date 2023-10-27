@@ -25,7 +25,7 @@
 - [ ] Awesome docs: "Why to use" and "How to use"
 
 # Current Tasks
-- [ ] 
+- [ ] `->mutate()` should not override `--covered-only=false`
 
 # Backlog Prio 1
 - [ ] Automatically create documentation from mutators
