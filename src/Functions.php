@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 use Pest\Mutate\Factories\ProfileFactory;
 
+// @codeCoverageIgnoreStart
 if (! function_exists('mutate')) {
+    // @codeCoverageIgnoreEnd
+
     /**
      * Returns a factory to configure the mutation testing profile.
      */

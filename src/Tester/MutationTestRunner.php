@@ -59,6 +59,10 @@ class MutationTestRunner implements MutationTestRunnerContract
 
     public function isEnabled(): bool
     {
+        if ($this->enabledProfile === Profile::FAKE) {
+            return false;
+        }
+
         return $this->enabledProfile !== null;
     }
 

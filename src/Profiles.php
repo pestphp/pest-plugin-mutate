@@ -35,6 +35,8 @@ class Profiles
      */
     public function reset(): void
     {
-        $this->profiles = [];
+        $this->profiles = array_filter([
+            Profile::FAKE => $this->profiles[Profile::FAKE] ?? null,
+        ]);
     }
 }

@@ -10,6 +10,11 @@ use Pest\Mutate\Mutators\Sets\DefaultSet;
 class Profile
 {
     /**
+     * @internal
+     */
+    final public const FAKE = 'fake-profile';
+
+    /**
      * @var array<int, string>
      */
     public array $paths = [];

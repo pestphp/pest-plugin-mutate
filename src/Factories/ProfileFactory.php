@@ -6,11 +6,12 @@ namespace Pest\Mutate\Factories;
 
 use Pest\Mutate\Contracts\Mutator;
 use Pest\Mutate\Contracts\MutatorSet;
+use Pest\Mutate\Contracts\ProfileFactory as ProfileFactoryContract;
 use Pest\Mutate\Exceptions\InvalidMutatorException;
 use Pest\Mutate\Profile;
 use Pest\Mutate\Profiles;
 
-class ProfileFactory
+class ProfileFactory implements ProfileFactoryContract
 {
     private readonly Profile $profile;
 
@@ -20,7 +21,7 @@ class ProfileFactory
     }
 
     /**
-     * @param  array<int, string>|string  ...$paths
+     * {@inheritDoc}
      */
     public function paths(array|string ...$paths): self
     {
@@ -30,7 +31,7 @@ class ProfileFactory
     }
 
     /**
-     * @param  array<int, class-string<Mutator|MutatorSet>>|class-string<Mutator|MutatorSet>  ...$mutators
+     * {@inheritDoc}
      */
     public function mutators(array|string ...$mutators): self
     {
