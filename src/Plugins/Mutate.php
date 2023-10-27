@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Pest\Mutate\Plugins;
 
 use Infection\StreamWrapper\IncludeInterceptor;
+use Pest\Contracts\Bootstrapper;
 use Pest\Contracts\Plugins\Bootable;
 use Pest\Contracts\Plugins\HandlesArguments;
+use Pest\Mutate\Boostrappers\BootSubscribers;
 use Pest\Mutate\Contracts\MutationTestRunner;
 use Pest\Mutate\Factories\ProfileFactory;
 use Pest\Mutate\Options\CoveredOnlyOption;
@@ -47,14 +49,12 @@ class Mutate implements Bootable, HandlesArguments
     ];
 
     /**
-     * The list of Subscribers.
+     * The Kernel bootstrappers.
      *
-     * @var array<int, class-string<Subscriber>>
+     * @var array<int, class-string>
      */
-    private const SUBSCRIBERS = [
-        DisablePhpCodeCoverageIfNotRequired::class,
-        PrepareForInitialTestRun::class,
-        EnsureToRunMutationTestingIfRequired::class,
+    private const BOOTSTRAPPERS = [
+        BootSubscribers::class,
     ];
 
     /**
@@ -71,12 +71,11 @@ class Mutate implements Bootable, HandlesArguments
     {
         $this->container->add(MutationTestRunner::class, new \Pest\Mutate\Tester\MutationTestRunner($this->output));
 
-        foreach (self::SUBSCRIBERS as $subscriber) {
-            $instance = $this->container->get($subscriber);
+        foreach (self::BOOTSTRAPPERS as $bootstrapper) {
+            $bootstrapper = Container::getInstance()->get($bootstrapper);
+            assert($bootstrapper instanceof Bootstrapper);
 
-            assert($instance instanceof Subscriber);
-
-            Facade::instance()->registerSubscriber($instance);
+            $bootstrapper->boot();
         }
 
         if (getenv('MUTATION_TESTING') !== false) {
