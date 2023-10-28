@@ -39,6 +39,9 @@ class Mutate implements Bootable, HandlesArguments
 {
     use HandleArguments;
 
+    final public const ENV_MUTATION_TESTING = 'PEST_MUTATION_TESTING';
+    final public const ENV_MUTATION_FILE = 'PEST_MUTATION_FILE';
+
     private const OPTIONS = [
         MutateOption::class,
         PathsOption::class,
@@ -78,8 +81,8 @@ class Mutate implements Bootable, HandlesArguments
             $bootstrapper->boot();
         }
 
-        if (getenv('MUTATION_TESTING') !== false) {
-            IncludeInterceptor::intercept(getenv('MUTATION_TESTING'), getenv('MUTATION_FILE'));
+        if (getenv(self::ENV_MUTATION_TESTING) !== false) {
+            IncludeInterceptor::intercept(getenv(self::ENV_MUTATION_TESTING), getenv(self::ENV_MUTATION_FILE));
             IncludeInterceptor::enable();
         }
     }

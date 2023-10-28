@@ -7,6 +7,7 @@ namespace Pest\Mutate\Tester;
 use Pest\Exceptions\ShouldNotHappen;
 use Pest\Mutate\Contracts\MutationTestRunner as MutationTestRunnerContract;
 use Pest\Mutate\Factories\ProfileFactory;
+use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Profile;
 use Pest\Mutate\Profiles;
 use Pest\Mutate\Support\MutationGenerator;
@@ -54,7 +55,7 @@ class MutationTestRunner implements MutationTestRunnerContract
 
     public function enable(string $profile): void
     {
-        if (getenv('MUTATION_TESTING') !== false) {
+        if (getenv(Mutate::ENV_MUTATION_TESTING) !== false) {
             return;
         }
 
@@ -146,8 +147,8 @@ class MutationTestRunner implements MutationTestRunnerContract
                     $this->getProfile()->parallel ? '--parallel' : '',
                 ],
                 env: [
-                    'MUTATION_TESTING' => $mutation->file->getRealPath(),
-                    'MUTATION_FILE' => $tmpfname,
+                    Mutate::ENV_MUTATION_TESTING => $mutation->file->getRealPath(),
+                    Mutate::ENV_MUTATION_FILE => $tmpfname,
                 ]
             );
             $process->run();
