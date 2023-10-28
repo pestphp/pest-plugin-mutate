@@ -163,31 +163,8 @@ class MutationTestRunner implements MutationTestRunnerContract
             $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' killed.');
         }
 
-        //        try {
-        //            $this->runInitialTestRun();
-        //        }catch (Exception $ex){
-        //            exit(1);
-        //        }
-
         exit(0);
     }
-
-    //    private function runInitialTestRun()
-    //    {
-    //        $this->output->writeln('Start initial test run');
-    //
-    //        $process = new Process($this->originalArguments, env: ['MUTATION_TESTING' => 'initial']);
-    //        $process->run();
-    //
-    //        if (!$process->isSuccessful()) {
-    //            $this->output->write($process->getOutput());
-    //
-    //            $this->output->writeln('Initial test run failed, aborting mutation testing.');
-    //            exit(1);
-    //        }
-    //
-    //        $this->output->writeln('Finished initial test run');
-    //    }
 
     /**
      * @param  array<array-key, string>|string  $paths
