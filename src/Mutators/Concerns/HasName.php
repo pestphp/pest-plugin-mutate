@@ -8,6 +8,8 @@ trait HasName
 {
     public static function name(): string
     {
-        return '';
+        $parts = explode('\\', static::class);
+
+        return end($parts);
     }
 }

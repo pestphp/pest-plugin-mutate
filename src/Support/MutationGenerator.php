@@ -32,6 +32,13 @@ class MutationGenerator
 
         $contents = $file->getContents();
 
+        $ignoreComments = [];
+        foreach (explode(PHP_EOL, $contents) as $lineNumber => $line) {
+            if (str_contains($line, '// @pest-mutate-ignore')) {
+                $ignoreComments[] = ['line' => $lineNumber + 1, 'comment' => '// @pest-mutate-ignore'];
+            }
+        }
+
         $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
 
         //        $cache = MutationCache::instance();
@@ -57,7 +64,7 @@ class MutationGenerator
                     linesToMutate: $linesToMutate,
                     offset: $this->offset,
                     hasAlreadyMutated: $this->hasMutated(...),
-                    trackMutation: $this->trackMutation(...)
+                    trackMutation: $this->trackMutation(...),
                 ));
 
                 $ast = $parser->parse($contents);
@@ -87,7 +94,15 @@ class MutationGenerator
 
         //        $cache->persist();
 
-        return $mutations;
+        return array_filter($mutations, function () use ($ignoreComments): bool {
+            foreach ($ignoreComments as $comment) {
+                if ($comment['line'] === $this->originalNode->getStartLine()) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
     }
 
     private function trackMutation(int $nodeCount, Node $original, ?Node $modified): void

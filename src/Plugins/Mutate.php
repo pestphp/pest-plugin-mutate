@@ -17,15 +17,10 @@ use Pest\Mutate\Options\MutateOption;
 use Pest\Mutate\Options\MutatorsOption;
 use Pest\Mutate\Options\ParallelOption;
 use Pest\Mutate\Options\PathsOption;
-use Pest\Mutate\Subscribers\DisablePhpCodeCoverageIfNotRequired;
-use Pest\Mutate\Subscribers\EnsureToRunMutationTestingIfRequired;
-use Pest\Mutate\Subscribers\PrepareForInitialTestRun;
 use Pest\Plugins\Concerns\HandleArguments;
 use Pest\Plugins\Parallel;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
-use PHPUnit\Event\Facade;
-use PHPUnit\Event\Subscriber;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -40,6 +35,7 @@ class Mutate implements Bootable, HandlesArguments
     use HandleArguments;
 
     final public const ENV_MUTATION_TESTING = 'PEST_MUTATION_TESTING';
+
     final public const ENV_MUTATION_FILE = 'PEST_MUTATION_FILE';
 
     private const OPTIONS = [

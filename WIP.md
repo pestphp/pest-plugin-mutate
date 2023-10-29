@@ -25,7 +25,9 @@
 - [ ] Awesome docs: "Why to use" and "How to use"
 
 # Current Tasks
+- [ ] `HandleTestCallProfileConfigurationTest` has side effects on other tests, if they should be run with `--mutate`
 - [ ] `->mutate()` should not override `--covered-only=false`
+- [ ] Set proper default paths `src` or `app`  if Laravel. see src/Plugins/Parallel/Handlers/Laravel.php:29
 
 # Backlog Prio 1
 - [ ] Automatically create documentation from mutators
@@ -38,3 +40,10 @@
 
 # Backlog Future Release
 - [ ] 
+
+# Notes
+## Running Initial Test Suite in Parallel
+### Problem 1
+The Parallel Plugin does exit and does not fire a TestSuite->Finished event. Therefore the only hook is "AddsOutput", but this is a bit weak.
+### Problem 2
+PHP Coverage Report does not contain infos about which tests covered a specific line.

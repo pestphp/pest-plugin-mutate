@@ -32,7 +32,7 @@ class NodeVisitor extends NodeVisitorAbstract
             return NodeTraverser::STOP_TRAVERSAL;
         }
 
-        if ($this->nodeCount++ < $this->offset) {
+        if ($this->nodeCount++ < $this->offset) { // @pest-mutate-ignore: SmallerToSmallerOrEqual
             return null;
         }
 

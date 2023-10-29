@@ -7,6 +7,7 @@ namespace Pest\Mutate\Tester;
 use Pest\Exceptions\ShouldNotHappen;
 use Pest\Mutate\Contracts\MutationTestRunner as MutationTestRunnerContract;
 use Pest\Mutate\Factories\ProfileFactory;
+use Pest\Mutate\Mutation;
 use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Profile;
 use Pest\Mutate\Profiles;
@@ -19,7 +20,11 @@ use SebastianBergmann\CodeCoverage\CodeCoverage;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Symfony\Component\Process\Process;
+
+use function Termwind\render;
+use function Termwind\renderUsing;
 
 class MutationTestRunner implements MutationTestRunnerContract
 {
@@ -91,7 +96,10 @@ class MutationTestRunner implements MutationTestRunnerContract
             exit(1);
         }
 
-        $this->output->writeln('Running mutation tests for profile: '.$this->enabledProfile);
+        //        $this->output->writeln('Running mutation tests for profile: '.$this->enabledProfile);
+
+        renderUsing($this->output);
+        render('<div class="m-2 my-1">Running mutation tests'.($this->enabledProfile !== 'default' ? (' (Profile: '.$this->enabledProfile.')') : '').':</div>');
 
         /** @var CodeCoverage $codeCoverage */
         $codeCoverage = require $reportPath;
@@ -100,6 +108,7 @@ class MutationTestRunner implements MutationTestRunnerContract
 
         $files = $this->getFiles(array_keys($coveredLines));
 
+        /** @var array<int, Mutation> $mutations */
         $mutations = [];
 
         /** @var MutationGenerator $generator */
@@ -114,6 +123,9 @@ class MutationTestRunner implements MutationTestRunnerContract
                 ),
             ];
         }
+
+        $survivedCount = 0;
+        $notCoveredCount = 0;
 
         // run tests for each mutation
         foreach ($mutations as $mutation) {
@@ -133,7 +145,8 @@ class MutationTestRunner implements MutationTestRunnerContract
             }
 
             if ($filters === []) {
-                $this->output->writeln('No tests found for mutation: '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine());
+                //                $this->output->writeln('No tests found for mutation: '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine());
+                $notCoveredCount++;
 
                 continue;
             }
@@ -149,20 +162,50 @@ class MutationTestRunner implements MutationTestRunnerContract
                 env: [
                     Mutate::ENV_MUTATION_TESTING => $mutation->file->getRealPath(),
                     Mutate::ENV_MUTATION_FILE => $tmpfname,
-                ]
+                ],
+                timeout: $this->calculateTimeout(),
             );
-            $process->run();
 
-            if ($process->isSuccessful()) {
-                $this->output->write($process->getOutput());
-
-                $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' NOT killed.');
+            try {
+                $process->run();
+            } catch (ProcessTimedOutException) {
+                //                $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' timed out.');
 
                 continue;
             }
 
-            $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' killed.');
+            if ($process->isSuccessful()) {
+                $survivedCount++;
+
+                //                $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' NOT killed. ('.$mutation->mutator.')');
+                $path = str_ireplace(dirname(__DIR__, 2).'/', '', $mutation->file->getRealPath());
+                render(<<<HTML
+                        <div class="mx-2 flex">
+                            <span>{$path}:{$mutation->originalNode->getLine()}</span>
+                            <span class="flex-1 content-repeat-[.] text-gray mx-1"></span>
+                            <span>{$mutation->mutator::name()}</span>
+                        </div>
+                    HTML);
+
+                continue;
+            }
+
+//            $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' killed.');
         }
+
+        $this->output->writeln([
+            '',
+            '  <fg=gray>Mutations:</>    <fg=default><fg=red;options=bold>'.$survivedCount.' survived</><fg=gray>,</> <fg=yellow;options=bold>'.$notCoveredCount.' not covered</><fg=gray>,</> <fg=green;options=bold>'.(count($mutations) - $survivedCount - $notCoveredCount).' killed</>',
+            '',
+        ]);
+
+        //        if($survivedCount){
+        //            $this->output->writeln([
+        //                '',
+        //                '  <fg=default;bg=yellow;options=bold> WARNING </> '.$survivedCount.' of '.count($mutations).' Mutants have survived</>',
+        //                '',
+        //            ]);
+        //        }
 
         exit(0);
     }
@@ -222,5 +265,11 @@ class MutationTestRunner implements MutationTestRunnerContract
         ]);
 
         exit(1);
+    }
+
+    private function calculateTimeout(): int
+    {
+        // TODO: calculate a reasonable timeout
+        return 3;
     }
 }

@@ -10,7 +10,7 @@ use Pest\Mutate\Subscribers\EnsureToRunMutationTestingIfRequired;
 use Pest\Mutate\Subscribers\PrepareForInitialTestRun;
 use Pest\Subscribers;
 use Pest\Support\Container;
-use PHPUnit\Event;
+use PHPUnit\Event\Facade;
 use PHPUnit\Event\Subscriber;
 
 /**
@@ -47,7 +47,7 @@ final class BootSubscribers implements Bootstrapper
 
             assert($instance instanceof Subscriber);
 
-            Event\Facade::instance()->registerSubscriber($instance);
+            Facade::instance()->registerSubscriber($instance);
         }
     }
 }

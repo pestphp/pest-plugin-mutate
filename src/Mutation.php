@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pest\Mutate;
 
 use PhpParser\Node;
+use PhpParser\PrettyPrinter\Standard;
 use Symfony\Component\Finder\SplFileInfo;
 
 class Mutation
@@ -19,6 +20,14 @@ class Mutation
         public ?Node $modifiedNode,
         public array $modifiedAst,
     ) {
+    }
+
+    public function modifiedSource(): string
+    {
+        // TODO: resolve from container
+        $prettyPrinter = new Standard();
+
+        return $prettyPrinter->prettyPrintFile($this->modifiedAst);
     }
 
     /**

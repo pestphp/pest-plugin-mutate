@@ -6,8 +6,18 @@ namespace Tests\Fixtures\Classes;
 
 class AgeHelper
 {
-    public static function isAdult(int $age): bool
+    public static function isAdult(int $age): bool // @pest-mutate-ignore
     {
         return $age >= 18;
+    }
+
+    public static function isSenior(int $age): bool
+    {
+        return $age >= 65;
+    }
+
+    public static function isImmature(int $age): bool
+    {
+        return $age < 18;
     }
 }
