@@ -4,6 +4,7 @@ declare(strict_types=1);
 use Pest\Mutate\Mutators;
 use Pest\Mutate\Mutators\Arithmetic\MinusToPlus;
 use Pest\Mutate\Mutators\Arithmetic\PlusToMinus;
+use Pest\Mutate\Mutators\Sets\ArithmeticSet;
 use Pest\Mutate\Mutators\Sets\DefaultSet;
 use Pest\Mutate\Profiles;
 
@@ -54,7 +55,7 @@ test('globally configure mutators', function (): void {
         ->mutators(Mutators::SET_ARITHMETIC);
 
     expect($this->profile->mutators)
-        ->toEqual([PlusToMinus::class, MinusToPlus::class]);
+        ->toEqual(ArithmeticSet::mutators());
 
     mutate()
         ->mutators(Mutators::ARITHMETIC_PLUS_TO_MINUS);

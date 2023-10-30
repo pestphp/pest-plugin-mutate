@@ -3,6 +3,7 @@
 declare(strict_types=1);
 use Pest\Mutate\Mutators\Arithmetic\MinusToPlus;
 use Pest\Mutate\Mutators\Arithmetic\PlusToMinus;
+use Pest\Mutate\Mutators\Sets\ArithmeticSet;
 use Pest\Mutate\Mutators\Sets\DefaultSet;
 use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Profiles;
@@ -51,7 +52,7 @@ it('sets the mutators if --mutators argument is passed', function (): void {
     expect($this->profile->mutators)->toEqual(DefaultSet::mutators());
 
     $this->plugin->handleArguments(['--mutate', '--mutators=SetArithmetic']);
-    expect($this->profile->mutators)->toEqual([PlusToMinus::class, MinusToPlus::class]);
+    expect($this->profile->mutators)->toEqual(ArithmeticSet::mutators());
 
     $this->plugin->handleArguments(['--mutate', '--mutators=ArithmeticPlusToMinus']);
     expect($this->profile->mutators)->toEqual([PlusToMinus::class]);

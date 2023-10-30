@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Pest\Mutate\Mutators\Sets;
 
 use Pest\Mutate\Contracts\MutatorSet;
+use Pest\Mutate\Mutators\Logical\BooleanAndToBooleanOr;
+use Pest\Mutate\Mutators\Logical\BooleanOrToBooleanAnd;
 
-class DefaultSet implements MutatorSet
+class LogicalSet implements MutatorSet
 {
     /**
      * {@inheritDoc}
@@ -14,10 +16,8 @@ class DefaultSet implements MutatorSet
     public static function mutators(): array
     {
         return [
-            ...ArithmeticSet::mutators(),
-            ...AssignmentSet::mutators(),
-            ...ConditionalsSet::mutators(),
-            ...EqualitySet::mutators(),
+            BooleanAndToBooleanOr::class,
+            BooleanOrToBooleanAnd::class,
         ];
     }
 }

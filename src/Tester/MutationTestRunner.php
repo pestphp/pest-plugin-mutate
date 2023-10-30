@@ -14,7 +14,6 @@ use Pest\Mutate\Profiles;
 use Pest\Mutate\Support\MutationGenerator;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
-use PhpParser\PrettyPrinter\Standard;
 use PHPUnit\TestRunner\TestResult\Facade;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -129,12 +128,9 @@ class MutationTestRunner implements MutationTestRunnerContract
 
         // run tests for each mutation
         foreach ($mutations as $mutation) {
-            $prettyPrinter = new Standard();
-            $modifiedSource = $prettyPrinter->prettyPrintFile($mutation->modifiedAst);
-
             /** @var string $tmpfname */
             $tmpfname = tempnam('/tmp', 'pest_mutation_');
-            file_put_contents($tmpfname, $modifiedSource);
+            file_put_contents($tmpfname, $mutation->modifiedSource());
 
             // TODO: we should pass the tests to run in another way, maybe via cache, mutation or env variable
             $filters = [];
@@ -245,11 +241,7 @@ class MutationTestRunner implements MutationTestRunnerContract
 
     public function getProfileFactory(): ProfileFactory
     {
-        if ($this->enabledProfile === null) {
-            throw ShouldNotHappen::fromMessage('No profile enabled');
-        }
-
-        return new ProfileFactory($this->enabledProfile);
+        return new ProfileFactory($this->enabledProfile ?? 'default');
     }
 
     private function assertInitialTestRunWasSuccessful(): void
