@@ -175,11 +175,23 @@ class MutationTestRunner implements MutationTestRunnerContract
 
                 //                $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' NOT killed. ('.$mutation->mutator.')');
                 $path = str_ireplace(dirname(__DIR__, 2).'/', '', $mutation->file->getRealPath());
+
+                $diff = <<<HTML
+                    <div class="text-green">+ {$mutation->diff()['original'][0]}</div>
+                    <div class="text-red">- {$mutation->diff()['modified'][0]}</div>
+                    HTML;
+
                 render(<<<HTML
                         <div class="mx-2 flex">
                             <span>{$path}:{$mutation->originalNode->getLine()}</span>
                             <span class="flex-1 content-repeat-[.] text-gray mx-1"></span>
                             <span>{$mutation->mutator::name()}</span>
+                        </div>
+                    HTML);
+
+                render(<<<HTML
+                        <div class="mx-2 mb-1 flex">
+                            {$diff}
                         </div>
                     HTML);
 

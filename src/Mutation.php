@@ -31,6 +31,22 @@ class Mutation
     }
 
     /**
+     * @return array{original: string[], modified: string[]}
+     */
+    public function diff(): array
+    {
+        $prettyPrinter = new Standard();
+
+        $original = explode(PHP_EOL, $prettyPrinter->prettyPrintFile([$this->originalNode]));
+        $modified = explode(PHP_EOL, $prettyPrinter->prettyPrintFile([$this->modifiedNode])); // @phpstan-ignore-line
+
+        return [
+            'original' => array_slice($original, 2),
+            'modified' => array_slice($modified, 2),
+        ];
+    }
+
+    /**
      * @return array{file: (string | false), mutator: string, originalNode: Node, mutatedNode: (Node | null), modifiedAst: array<array-key, Node>}
      */
     public function __serialize(): array
