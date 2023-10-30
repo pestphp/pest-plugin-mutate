@@ -6,6 +6,7 @@ namespace Pest\Mutate\Boostrappers;
 
 use Pest\Contracts\Bootstrapper;
 use Pest\Mutate\Subscribers\DisablePhpCodeCoverageIfNotRequired;
+use Pest\Mutate\Subscribers\DisplayInitialTestRunMessage;
 use Pest\Mutate\Subscribers\EnsureToRunMutationTestingIfRequired;
 use Pest\Mutate\Subscribers\PrepareForInitialTestRun;
 use Pest\Subscribers;
@@ -25,6 +26,7 @@ final class BootSubscribers implements Bootstrapper
      */
     private const SUBSCRIBERS = [
         DisablePhpCodeCoverageIfNotRequired::class,
+        DisplayInitialTestRunMessage::class,
         PrepareForInitialTestRun::class,
         EnsureToRunMutationTestingIfRequired::class,
     ];
