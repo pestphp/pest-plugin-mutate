@@ -6,6 +6,10 @@ If you want to know, what it will going to look like, checkout the **[documentat
 
 To stay up to date, follow me on social media (**[Twitter/X](https://twitter.com/gehrisandro)**, **[Mastodon](https://phpc.social/@gehrisandro)**, **[Bluesky](https://bsky.app/profile/gehrisandro.bsky.social)**) or keep an eye on this repository.
 
+Cheers,
+
+**[Sandro](https://github.com/gehrisandro)**
+
 ---
 
 > If you want to start testing your application with Pest, visit the main **[Pest Repository](https://github.com/pestphp/pest)**.
