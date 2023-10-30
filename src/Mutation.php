@@ -37,8 +37,8 @@ class Mutation
     {
         $prettyPrinter = new Standard();
 
-        $original = explode(PHP_EOL, $prettyPrinter->prettyPrintFile([$this->originalNode]));
-        $modified = explode(PHP_EOL, $prettyPrinter->prettyPrintFile([$this->modifiedNode])); // @phpstan-ignore-line
+        $original = explode(PHP_EOL, htmlentities($prettyPrinter->prettyPrintFile([$this->originalNode])));
+        $modified = explode(PHP_EOL, htmlentities($prettyPrinter->prettyPrintFile([$this->modifiedNode]))); // @phpstan-ignore-line
 
         return [
             'original' => array_slice($original, 2),
