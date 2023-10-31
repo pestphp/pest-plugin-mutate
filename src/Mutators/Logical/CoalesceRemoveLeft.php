@@ -9,7 +9,7 @@ use Pest\Mutate\Mutators\Concerns\HasName;
 use PhpParser\Node;
 use PhpParser\Node\Expr\BinaryOp\Coalesce;
 
-class CoalesceSwitchSides implements Mutator
+class CoalesceRemoveLeft implements Mutator
 {
     use HasName;
 
@@ -21,10 +21,7 @@ class CoalesceSwitchSides implements Mutator
     public static function mutate(Node $node): Node
     {
         /** @var Coalesce $node */
-        $tmp = $node->left;
-        $node->left = $node->right;
-        $node->right = $tmp;
 
-        return $node;
+        return $node->right;
     }
 }

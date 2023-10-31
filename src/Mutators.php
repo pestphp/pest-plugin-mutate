@@ -45,7 +45,7 @@ use Pest\Mutate\Mutators\Laravel\Remove\LaravelRemoveStringableUpper;
 use Pest\Mutate\Mutators\Laravel\Unwrap\LaravelUnwrapStrUpper;
 use Pest\Mutate\Mutators\Logical\BooleanAndToBooleanOr;
 use Pest\Mutate\Mutators\Logical\BooleanOrToBooleanAnd;
-use Pest\Mutate\Mutators\Logical\CoalesceSwitchSides;
+use Pest\Mutate\Mutators\Logical\CoalesceRemoveLeft;
 use Pest\Mutate\Mutators\Logical\ConcatSwitchSides;
 use Pest\Mutate\Mutators\Logical\FalseToTrue;
 use Pest\Mutate\Mutators\Logical\InstanceOfToFalse;
@@ -188,7 +188,7 @@ class Mutators
 
     final public const LOGICAL_BOOLEAN_OR_TO_BOOLEAN_AND = BooleanOrToBooleanAnd::class;
 
-    final public const LOGICAL_COALESCE_SWITCH_SIDES = CoalesceSwitchSides::class;
+    final public const LOGICAL_COALESCE_REMOVE_LEFT = CoalesceRemoveLeft::class;
 
     final public const LOGICAL_CONCAT_SWITCH_SIDES = ConcatSwitchSides::class;
 
