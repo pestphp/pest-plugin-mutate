@@ -9,9 +9,11 @@ use Pest\Mutate\Mutators\Logical\BooleanAndToBooleanOr;
 use Pest\Mutate\Mutators\Logical\BooleanOrToBooleanAnd;
 use Pest\Mutate\Mutators\Logical\CoalesceSwitchSides;
 use Pest\Mutate\Mutators\Logical\ConcatSwitchSides;
+use Pest\Mutate\Mutators\Logical\FalseToTrue;
 use Pest\Mutate\Mutators\Logical\LogicalAndToLogicalOr;
 use Pest\Mutate\Mutators\Logical\LogicalOrToLogicalAnd;
 use Pest\Mutate\Mutators\Logical\LogicalXorToLogicalAnd;
+use Pest\Mutate\Mutators\Logical\TrueToFalse;
 
 class LogicalSet implements MutatorSet
 {
@@ -28,6 +30,8 @@ class LogicalSet implements MutatorSet
             LogicalAndToLogicalOr::class,
             LogicalOrToLogicalAnd::class,
             LogicalXorToLogicalAnd::class,
+            FalseToTrue::class,
+            TrueToFalse::class,
         ];
     }
 }

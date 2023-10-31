@@ -43,9 +43,11 @@ use Pest\Mutate\Mutators\Logical\BooleanAndToBooleanOr;
 use Pest\Mutate\Mutators\Logical\BooleanOrToBooleanAnd;
 use Pest\Mutate\Mutators\Logical\CoalesceSwitchSides;
 use Pest\Mutate\Mutators\Logical\ConcatSwitchSides;
+use Pest\Mutate\Mutators\Logical\FalseToTrue;
 use Pest\Mutate\Mutators\Logical\LogicalAndToLogicalOr;
 use Pest\Mutate\Mutators\Logical\LogicalOrToLogicalAnd;
 use Pest\Mutate\Mutators\Logical\LogicalXorToLogicalAnd;
+use Pest\Mutate\Mutators\Logical\TrueToFalse;
 use Pest\Mutate\Mutators\Math\CeilToFloor;
 use Pest\Mutate\Mutators\Math\CeilToRound;
 use Pest\Mutate\Mutators\Math\FloorToCiel;
@@ -180,6 +182,10 @@ class Mutators
     final public const LOGICAL_LOGICAL_OR_TO_LOGICAL_AND = LogicalOrToLogicalAnd::class;
 
     final public const LOGICAL_LOGICAL_XOR_TO_LOGICAL_AND = LogicalXorToLogicalAnd::class;
+
+    final public const LOGICAL_FALSE_TO_TRUE = FalseToTrue::class;
+
+    final public const LOGICAL_TRUE_TO_FALSE = TrueToFalse::class;
 
     /** Math */
     final public const MATH_MIN_TO_MAX = MinToMax::class;
