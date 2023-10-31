@@ -27,6 +27,8 @@ use Pest\Mutate\Mutators\Assignment\PlusEqualToMinusEqual;
 use Pest\Mutate\Mutators\Assignment\PowerEqualToMultiplyEqual;
 use Pest\Mutate\Mutators\Assignment\ShiftLeftToShiftRight;
 use Pest\Mutate\Mutators\Assignment\ShiftRightToShiftLeft;
+use Pest\Mutate\Mutators\ControlStructures\BreakToContinue;
+use Pest\Mutate\Mutators\ControlStructures\ContinueToBreak;
 use Pest\Mutate\Mutators\ControlStructures\DoWhileAlwaysFalse;
 use Pest\Mutate\Mutators\ControlStructures\ElseIfNegated;
 use Pest\Mutate\Mutators\ControlStructures\ForAlwaysFalse;
@@ -175,6 +177,10 @@ class Mutators
     final public const CONTROL_STRUCTURES_WHILE_ALWAYS_FALSE = WhileAlwaysFalse::class;
 
     final public const CONTROL_STRUCTURES_DO_WHILE_ALWAYS_FALSE = DoWhileAlwaysFalse::class;
+
+    final public const CONTROL_STRUCTURES_BREAK_TO_CONTINUE = BreakToContinue::class;
+
+    final public const CONTROL_STRUCTURES_CONTINUE_TO_BREAK = ContinueToBreak::class;
 
     /** Equality */
     final public const EQUALITY_GREATER_TO_GREATER_OR_EQUAL = GreaterToGreaterOrEqual::class;

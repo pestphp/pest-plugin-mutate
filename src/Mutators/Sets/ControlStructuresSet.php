@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Pest\Mutate\Mutators\Sets;
 
 use Pest\Mutate\Contracts\MutatorSet;
+use Pest\Mutate\Mutators\ControlStructures\BreakToContinue;
+use Pest\Mutate\Mutators\ControlStructures\ContinueToBreak;
 use Pest\Mutate\Mutators\ControlStructures\DoWhileAlwaysFalse;
 use Pest\Mutate\Mutators\ControlStructures\ElseIfNegated;
 use Pest\Mutate\Mutators\ControlStructures\ForAlwaysFalse;
@@ -28,6 +30,8 @@ class ControlStructuresSet implements MutatorSet
             ForeachEmptyIterable::class,
             DoWhileAlwaysFalse::class,
             WhileAlwaysFalse::class,
+            BreakToContinue::class,
+            ContinueToBreak::class,
         ];
     }
 }
