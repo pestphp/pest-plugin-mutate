@@ -27,6 +27,12 @@ use Pest\Mutate\Mutators\Assignment\PlusEqualToMinusEqual;
 use Pest\Mutate\Mutators\Assignment\PowerEqualToMultiplyEqual;
 use Pest\Mutate\Mutators\Assignment\ShiftLeftToShiftRight;
 use Pest\Mutate\Mutators\Assignment\ShiftRightToShiftLeft;
+use Pest\Mutate\Mutators\Casting\RemoveArrayCast;
+use Pest\Mutate\Mutators\Casting\RemoveBooleanCast;
+use Pest\Mutate\Mutators\Casting\RemoveDoubleCast;
+use Pest\Mutate\Mutators\Casting\RemoveIntegerCast;
+use Pest\Mutate\Mutators\Casting\RemoveObjectCast;
+use Pest\Mutate\Mutators\Casting\RemoveStringCast;
 use Pest\Mutate\Mutators\ControlStructures\BreakToContinue;
 use Pest\Mutate\Mutators\ControlStructures\ContinueToBreak;
 use Pest\Mutate\Mutators\ControlStructures\DoWhileAlwaysFalse;
@@ -78,6 +84,7 @@ use Pest\Mutate\Mutators\Number\IncrementFloat;
 use Pest\Mutate\Mutators\Number\IncrementInteger;
 use Pest\Mutate\Mutators\Sets\ArithmeticSet;
 use Pest\Mutate\Mutators\Sets\AssignmentSet;
+use Pest\Mutate\Mutators\Sets\CastingSet;
 use Pest\Mutate\Mutators\Sets\ControlStructuresSet;
 use Pest\Mutate\Mutators\Sets\DefaultSet;
 use Pest\Mutate\Mutators\Sets\EqualitySet;
@@ -100,6 +107,8 @@ class Mutators
     final public const SET_ARITHMETIC = ArithmeticSet::class;
 
     final public const SET_ASSIGNMENT = AssignmentSet::class;
+
+    final public const SET_CASTING = CastingSet::class;
 
     final public const SET_CONTROL_STRUCTURES = ControlStructuresSet::class;
 
@@ -174,6 +183,19 @@ class Mutators
     final public const ASSIGNMENTS_SHIFT_LEFT_TO_SHIFT_RIGHT = ShiftLeftToShiftRight::class;
 
     final public const ASSIGNMENTS_SHIFT_RIGHT_TO_SHIFT_LEFT = ShiftRightToShiftLeft::class;
+
+    /** Casting */
+    final public const CASTING_REMOVE_ARRAY_CAST = RemoveArrayCast::class;
+
+    final public const CASTING_REMOVE_BOOLEAN_CAST = RemoveBooleanCast::class;
+
+    final public const CASTING_REMOVE_DOUBLE_CAST = RemoveDoubleCast::class;
+
+    final public const CASTING_REMOVE_INTEGER_CAST = RemoveIntegerCast::class;
+
+    final public const CASTING_REMOVE_OBJECT_CAST = RemoveObjectCast::class;
+
+    final public const CASTING_REMOVE_STRING_CAST = RemoveStringCast::class;
 
     /** ControlStructures */
     final public const CONTROL_STRUCTURES_IF_NEGATED = IfNegated::class;
