@@ -23,10 +23,10 @@ use Pest\Mutate\Mutators\Assignment\PlusEqualToMinusEqual;
 use Pest\Mutate\Mutators\Assignment\PowerEqualToMultiplyEqual;
 use Pest\Mutate\Mutators\Assignment\ShiftLeftToShiftRight;
 use Pest\Mutate\Mutators\Assignment\ShiftRightToShiftLeft;
-use Pest\Mutate\Mutators\Conditionals\IfAlwaysFalse;
-use Pest\Mutate\Mutators\Conditionals\IfAlwaysTrue;
-use Pest\Mutate\Mutators\Conditionals\TernaryAlwaysFalse;
-use Pest\Mutate\Mutators\Conditionals\TernaryAlwaysTrue;
+use Pest\Mutate\Mutators\Conditionals\DoWhileAlwaysFalse;
+use Pest\Mutate\Mutators\Conditionals\ElseIfNegated;
+use Pest\Mutate\Mutators\Conditionals\IfNegated;
+use Pest\Mutate\Mutators\Conditionals\TernaryNegated;
 use Pest\Mutate\Mutators\Conditionals\WhileAlwaysFalse;
 use Pest\Mutate\Mutators\Equality\EqualToIdentical;
 use Pest\Mutate\Mutators\Equality\GreaterOrEqualToGreater;
@@ -126,15 +126,15 @@ class Mutators
     final public const ASSIGNMENTS_SHIFT_RIGHT_TO_SHIFT_LEFT = ShiftRightToShiftLeft::class;
 
     /** Conditionals */
-    final public const CONDITIONALS_IF_ALWAYS_FALSE = IfAlwaysFalse::class;
+    final public const CONDITIONALS_IF_NEGATED = IfNegated::class;
 
-    final public const CONDITIONALS_IF_ALWAYS_TRUE = IfAlwaysTrue::class;
+    final public const CONDITIONALS_ELSE_IF_NEGATED = ElseIfNegated::class;
 
-    final public const CONDITIONALS_TERNARY_ALWAYS_FALSE = TernaryAlwaysFalse::class;
+    final public const CONDITIONALS_TERNARY_NEGATED = TernaryNegated::class;
 
-    final public const CONDITIONALS_TERNARY_ALWAYS_TRUE = TernaryAlwaysTrue::class;
+    final public const CONDITIONALS_WHILE_ALWAYS_FALSE = WhileAlwaysFalse::class;
 
-    final public const CONDITIONALS_WHILE_ALWAYS_TRUE = WhileAlwaysFalse::class;
+    final public const CONDITIONALS_DO_WHILE_ALWAYS_FALSE = DoWhileAlwaysFalse::class;
 
     /** Equality */
     final public const EQUALITY_GREATER_TO_GREATER_OR_EQUAL = GreaterToGreaterOrEqual::class;

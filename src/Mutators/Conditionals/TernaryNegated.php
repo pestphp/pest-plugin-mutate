@@ -7,11 +7,10 @@ namespace Pest\Mutate\Mutators\Conditionals;
 use Pest\Mutate\Contracts\Mutator;
 use Pest\Mutate\Mutators\Concerns\HasName;
 use PhpParser\Node;
-use PhpParser\Node\Expr\ConstFetch;
+use PhpParser\Node\Expr\BooleanNot;
 use PhpParser\Node\Expr\Ternary;
-use PhpParser\Node\Name;
 
-class TernaryAlwaysFalse implements Mutator
+class TernaryNegated implements Mutator
 {
     use HasName;
 
@@ -23,7 +22,7 @@ class TernaryAlwaysFalse implements Mutator
     public static function mutate(Node $node): Node
     {
         /** @var Ternary $node */
-        $node->cond = new ConstFetch(new Name([0 => 'false']));
+        $node->cond = new BooleanNot($node->cond);
 
         return $node;
     }

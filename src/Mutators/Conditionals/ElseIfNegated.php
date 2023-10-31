@@ -7,23 +7,22 @@ namespace Pest\Mutate\Mutators\Conditionals;
 use Pest\Mutate\Contracts\Mutator;
 use Pest\Mutate\Mutators\Concerns\HasName;
 use PhpParser\Node;
-use PhpParser\Node\Expr\ConstFetch;
-use PhpParser\Node\Expr\Ternary;
-use PhpParser\Node\Name;
+use PhpParser\Node\Expr\BooleanNot;
+use PhpParser\Node\Stmt\ElseIf_;
 
-class TernaryAlwaysTrue implements Mutator
+class ElseIfNegated implements Mutator
 {
     use HasName;
 
     public static function can(Node $node): bool
     {
-        return $node instanceof Ternary;
+        return $node instanceof ElseIf_;
     }
 
     public static function mutate(Node $node): Node
     {
-        /** @var Ternary $node */
-        $node->cond = new ConstFetch(new Name([0 => 'true']));
+        /** @var Node\Stmt\ElseIf_ $node */
+        $node->cond = new BooleanNot($node->cond);
 
         return $node;
     }

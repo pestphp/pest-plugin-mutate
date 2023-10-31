@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Pest\Mutate\Mutators\Sets;
 
 use Pest\Mutate\Contracts\MutatorSet;
-use Pest\Mutate\Mutators\Conditionals\IfAlwaysFalse;
-use Pest\Mutate\Mutators\Conditionals\IfAlwaysTrue;
-use Pest\Mutate\Mutators\Conditionals\TernaryAlwaysFalse;
-use Pest\Mutate\Mutators\Conditionals\TernaryAlwaysTrue;
+use Pest\Mutate\Mutators\Conditionals\DoWhileAlwaysFalse;
+use Pest\Mutate\Mutators\Conditionals\ElseIfNegated;
+use Pest\Mutate\Mutators\Conditionals\IfNegated;
+use Pest\Mutate\Mutators\Conditionals\TernaryNegated;
 use Pest\Mutate\Mutators\Conditionals\WhileAlwaysFalse;
 
 class ConditionalsSet implements MutatorSet
@@ -19,10 +19,10 @@ class ConditionalsSet implements MutatorSet
     public static function mutators(): array
     {
         return [
-            IfAlwaysFalse::class,
-            IfAlwaysTrue::class,
-            TernaryAlwaysFalse::class,
-            TernaryAlwaysTrue::class,
+            IfNegated::class,
+            ElseIfNegated::class,
+            TernaryNegated::class,
+            DoWhileAlwaysFalse::class,
             WhileAlwaysFalse::class,
         ];
     }
