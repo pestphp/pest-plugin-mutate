@@ -15,6 +15,7 @@ use Pest\Mutate\Mutators\Logical\InstanceOfToTrue;
 use Pest\Mutate\Mutators\Logical\LogicalAndToLogicalOr;
 use Pest\Mutate\Mutators\Logical\LogicalOrToLogicalAnd;
 use Pest\Mutate\Mutators\Logical\LogicalXorToLogicalAnd;
+use Pest\Mutate\Mutators\Logical\RemoveNot;
 use Pest\Mutate\Mutators\Logical\TrueToFalse;
 
 class LogicalSet implements MutatorSet
@@ -36,6 +37,7 @@ class LogicalSet implements MutatorSet
             TrueToFalse::class,
             InstanceOfToTrue::class,
             InstanceOfToFalse::class,
+            RemoveNot::class,
         ];
     }
 }

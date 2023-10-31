@@ -49,6 +49,7 @@ use Pest\Mutate\Mutators\Logical\InstanceOfToTrue;
 use Pest\Mutate\Mutators\Logical\LogicalAndToLogicalOr;
 use Pest\Mutate\Mutators\Logical\LogicalOrToLogicalAnd;
 use Pest\Mutate\Mutators\Logical\LogicalXorToLogicalAnd;
+use Pest\Mutate\Mutators\Logical\RemoveNot;
 use Pest\Mutate\Mutators\Logical\TrueToFalse;
 use Pest\Mutate\Mutators\Math\CeilToFloor;
 use Pest\Mutate\Mutators\Math\CeilToRound;
@@ -192,6 +193,8 @@ class Mutators
     final public const LOGICAL_INSTANCE_OF_TO_TRUE = InstanceOfToTrue::class;
 
     final public const LOGICAL_INSTANCE_OF_TO_FALSE = InstanceOfToFalse::class;
+
+    final public const LOGICAL_REMOVE_NOT = RemoveNot::class;
 
     /** Math */
     final public const MATH_MIN_TO_MAX = MinToMax::class;
