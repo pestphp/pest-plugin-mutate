@@ -9,6 +9,7 @@ use Pest\Mutate\Mutators\Arithmetic\MinusToPlus;
 use Pest\Mutate\Mutators\Arithmetic\ModulusToMultiplication;
 use Pest\Mutate\Mutators\Arithmetic\MultiplicationToDivision;
 use Pest\Mutate\Mutators\Arithmetic\PlusToMinus;
+use Pest\Mutate\Mutators\Arithmetic\PowerToMultiplication;
 use Pest\Mutate\Mutators\Assignment\BitwiseAndToBitwiseOr;
 use Pest\Mutate\Mutators\Assignment\BitwiseOrToBitwiseAnd;
 use Pest\Mutate\Mutators\Assignment\BitwiseXorToBitwiseAnd;
@@ -27,12 +28,22 @@ use Pest\Mutate\Mutators\Conditionals\IfAlwaysTrue;
 use Pest\Mutate\Mutators\Conditionals\TernaryAlwaysFalse;
 use Pest\Mutate\Mutators\Conditionals\TernaryAlwaysTrue;
 use Pest\Mutate\Mutators\Conditionals\WhileAlwaysFalse;
+use Pest\Mutate\Mutators\Equality\EqualToIdentical;
 use Pest\Mutate\Mutators\Equality\GreaterOrEqualToGreater;
 use Pest\Mutate\Mutators\Equality\GreaterToGreaterOrEqual;
+use Pest\Mutate\Mutators\Equality\IdenticalToEqual;
+use Pest\Mutate\Mutators\Equality\NotEqualToNotIdentical;
+use Pest\Mutate\Mutators\Equality\NotIdenticalToNotEqual;
 use Pest\Mutate\Mutators\Equality\SmallerOrEqualToSmaller;
 use Pest\Mutate\Mutators\Equality\SmallerToSmallerOrEqual;
+use Pest\Mutate\Mutators\Equality\SpaceshipSwitchSides;
 use Pest\Mutate\Mutators\Logical\BooleanAndToBooleanOr;
 use Pest\Mutate\Mutators\Logical\BooleanOrToBooleanAnd;
+use Pest\Mutate\Mutators\Logical\CoalesceSwitchSides;
+use Pest\Mutate\Mutators\Logical\ConcatSwitchSides;
+use Pest\Mutate\Mutators\Logical\LogicalAndToLogicalOr;
+use Pest\Mutate\Mutators\Logical\LogicalOrToLogicalAnd;
+use Pest\Mutate\Mutators\Logical\LogicalXorToLogicalAnd;
 use Pest\Mutate\Mutators\Sets\ArithmeticSet;
 use Pest\Mutate\Mutators\Sets\AssignmentSet;
 use Pest\Mutate\Mutators\Sets\ConditionalsSet;
@@ -71,6 +82,12 @@ class Mutators
     final public const ARITHMETIC_MULTIPLICATION_TO_DIVISION = MultiplicationToDivision::class;
 
     final public const ARITHMETIC_MODULUS_TO_MULTIPLICATION = ModulusToMultiplication::class;
+
+    final public const ARITHMETIC_POWER_TO_MULTIPLICATION = PowerToMultiplication::class;
+
+    final public const ARITHMETIC_SHIFT_LEFT_TO_SHIFT_RIGHT = \Pest\Mutate\Mutators\Arithmetic\ShiftLeftToShiftRight::class;
+
+    final public const ARITHMETIC_SHIFT_RIGHT_TO_SHIFT_LEFT = \Pest\Mutate\Mutators\Arithmetic\ShiftRightToShiftLeft::class;
 
     /** Assignments */
     final public const ASSIGNMENTS_BITWISE_AND_TO_BITWISE_OR = BitwiseAndToBitwiseOr::class;
@@ -119,8 +136,28 @@ class Mutators
 
     final public const EQUALITY_SMALLER_OR_EQUAL_TO_SMALLER = SmallerOrEqualToSmaller::class;
 
+    final public const EQUALITY_EQUAL_TO_IDENTICAL = EqualToIdentical::class;
+
+    final public const EQUALITY_IDENTICAL_TO_EQUAL = IdenticalToEqual::class;
+
+    final public const EQUALITY_NOT_EQUAL_TO_NOT_IDENTICAL = NotEqualToNotIdentical::class;
+
+    final public const EQUALITY_NOT_IDENTICAL_TO_NOT_EQUAL = NotIdenticalToNotEqual::class;
+
+    final public const EQUALITY_SPACESHIP_SWITCH_SIDES = SpaceshipSwitchSides::class;
+
     /** Logical */
     final public const LOGICAL_BOOLEAN_AND_TO_BOOLEAN_OR = BooleanAndToBooleanOr::class;
 
     final public const LOGICAL_BOOLEAN_OR_TO_BOOLEAN_AND = BooleanOrToBooleanAnd::class;
+
+    final public const LOGICAL_COALESCE_SWITCH_SIDES = CoalesceSwitchSides::class;
+
+    final public const LOGICAL_CONCAT_SWITCH_SIDES = ConcatSwitchSides::class;
+
+    final public const LOGICAL_LOGICAL_AND_TO_LOGICAL_OR = LogicalAndToLogicalOr::class;
+
+    final public const LOGICAL_LOGICAL_OR_TO_LOGICAL_AND = LogicalOrToLogicalAnd::class;
+
+    final public const LOGICAL_LOGICAL_XOR_TO_LOGICAL_AND = LogicalXorToLogicalAnd::class;
 }

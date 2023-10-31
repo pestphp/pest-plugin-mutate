@@ -203,7 +203,7 @@ class MutationTestRunner implements MutationTestRunnerContract
 
         $this->output->writeln([
             '',
-            '  <fg=gray>Mutations:</>    <fg=default><fg=red;options=bold>'. ($survivedCount ? $survivedCount.' survived</><fg=gray>,</> ' : '').'<fg=yellow;options=bold>'.($notCoveredCount ? $notCoveredCount.' not covered</><fg=gray>,</> ' : '') . '<fg=green;options=bold>'.(count($mutations) - $survivedCount - $notCoveredCount).' killed</>',
+            '  <fg=gray>Mutations:</>    <fg=default><fg=red;options=bold>'.($survivedCount !== 0 ? $survivedCount.' survived</><fg=gray>,</> ' : '').'<fg=yellow;options=bold>'.($notCoveredCount !== 0 ? $notCoveredCount.' not covered</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.(count($mutations) - $survivedCount - $notCoveredCount).' killed</>',
             '',
         ]);
 

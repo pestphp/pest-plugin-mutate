@@ -13,6 +13,9 @@ use Pest\Mutate\Mutators\Arithmetic\MinusToPlus;
 use Pest\Mutate\Mutators\Arithmetic\ModulusToMultiplication;
 use Pest\Mutate\Mutators\Arithmetic\MultiplicationToDivision;
 use Pest\Mutate\Mutators\Arithmetic\PlusToMinus;
+use Pest\Mutate\Mutators\Arithmetic\PowerToMultiplication;
+use Pest\Mutate\Mutators\Arithmetic\ShiftLeftToShiftRight;
+use Pest\Mutate\Mutators\Arithmetic\ShiftRightToShiftLeft;
 
 class ArithmeticSet implements MutatorSet
 {
@@ -30,6 +33,9 @@ class ArithmeticSet implements MutatorSet
             DivisionToMultiplication::class,
             MultiplicationToDivision::class,
             ModulusToMultiplication::class,
+            PowerToMultiplication::class,
+            ShiftLeftToShiftRight::class,
+            ShiftRightToShiftLeft::class,
         ];
     }
 }
