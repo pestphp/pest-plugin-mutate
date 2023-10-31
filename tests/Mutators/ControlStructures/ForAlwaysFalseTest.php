@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Pest\Mutate\Mutators\Conditionals\ForAlwaysFalse;
+use Pest\Mutate\Mutators\ControlStructures\ForAlwaysFalse;
 
 it('mutates a for statement to be always false', function (): void {
     expect(mutateCode(ForAlwaysFalse::class, <<<'CODE'

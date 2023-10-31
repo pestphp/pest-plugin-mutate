@@ -5,15 +5,15 @@ declare(strict_types=1);
 namespace Pest\Mutate\Mutators\Sets;
 
 use Pest\Mutate\Contracts\MutatorSet;
-use Pest\Mutate\Mutators\Conditionals\DoWhileAlwaysFalse;
-use Pest\Mutate\Mutators\Conditionals\ElseIfNegated;
-use Pest\Mutate\Mutators\Conditionals\ForAlwaysFalse;
-use Pest\Mutate\Mutators\Conditionals\ForeachEmptyIterable;
-use Pest\Mutate\Mutators\Conditionals\IfNegated;
-use Pest\Mutate\Mutators\Conditionals\TernaryNegated;
-use Pest\Mutate\Mutators\Conditionals\WhileAlwaysFalse;
+use Pest\Mutate\Mutators\ControlStructures\DoWhileAlwaysFalse;
+use Pest\Mutate\Mutators\ControlStructures\ElseIfNegated;
+use Pest\Mutate\Mutators\ControlStructures\ForAlwaysFalse;
+use Pest\Mutate\Mutators\ControlStructures\ForeachEmptyIterable;
+use Pest\Mutate\Mutators\ControlStructures\IfNegated;
+use Pest\Mutate\Mutators\ControlStructures\TernaryNegated;
+use Pest\Mutate\Mutators\ControlStructures\WhileAlwaysFalse;
 
-class ConditionalsSet implements MutatorSet
+class ControlStructuresSet implements MutatorSet
 {
     /**
      * {@inheritDoc}

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Pest\Mutate\Mutators\Conditionals\ForeachEmptyIterable;
+use Pest\Mutate\Mutators\ControlStructures\ForeachEmptyIterable;
 
 it('mutates a foreach statement to be empty', function (): void {
     expect(mutateCode(ForeachEmptyIterable::class, <<<'CODE'

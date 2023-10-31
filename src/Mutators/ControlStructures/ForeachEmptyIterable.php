@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Pest\Mutate\Mutators\Conditionals;
+namespace Pest\Mutate\Mutators\ControlStructures;
 
 use Pest\Mutate\Contracts\Mutator;
 use Pest\Mutate\Mutators\Concerns\HasName;

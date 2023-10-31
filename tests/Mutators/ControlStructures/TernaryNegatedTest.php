@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Pest\Mutate\Mutators\Conditionals\TernaryNegated;
+use Pest\Mutate\Mutators\ControlStructures\TernaryNegated;
 
 it('mutates an ternary condition to be negated', function (): void {
     expect(mutateCode(TernaryNegated::class, <<<'CODE'

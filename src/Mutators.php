@@ -27,13 +27,13 @@ use Pest\Mutate\Mutators\Assignment\PlusEqualToMinusEqual;
 use Pest\Mutate\Mutators\Assignment\PowerEqualToMultiplyEqual;
 use Pest\Mutate\Mutators\Assignment\ShiftLeftToShiftRight;
 use Pest\Mutate\Mutators\Assignment\ShiftRightToShiftLeft;
-use Pest\Mutate\Mutators\Conditionals\DoWhileAlwaysFalse;
-use Pest\Mutate\Mutators\Conditionals\ElseIfNegated;
-use Pest\Mutate\Mutators\Conditionals\ForAlwaysFalse;
-use Pest\Mutate\Mutators\Conditionals\ForeachEmptyIterable;
-use Pest\Mutate\Mutators\Conditionals\IfNegated;
-use Pest\Mutate\Mutators\Conditionals\TernaryNegated;
-use Pest\Mutate\Mutators\Conditionals\WhileAlwaysFalse;
+use Pest\Mutate\Mutators\ControlStructures\DoWhileAlwaysFalse;
+use Pest\Mutate\Mutators\ControlStructures\ElseIfNegated;
+use Pest\Mutate\Mutators\ControlStructures\ForAlwaysFalse;
+use Pest\Mutate\Mutators\ControlStructures\ForeachEmptyIterable;
+use Pest\Mutate\Mutators\ControlStructures\IfNegated;
+use Pest\Mutate\Mutators\ControlStructures\TernaryNegated;
+use Pest\Mutate\Mutators\ControlStructures\WhileAlwaysFalse;
 use Pest\Mutate\Mutators\Equality\EqualToIdentical;
 use Pest\Mutate\Mutators\Equality\GreaterOrEqualToGreater;
 use Pest\Mutate\Mutators\Equality\GreaterOrEqualToSmaller;
@@ -73,7 +73,7 @@ use Pest\Mutate\Mutators\Math\RoundToCeil;
 use Pest\Mutate\Mutators\Math\RoundToFloor;
 use Pest\Mutate\Mutators\Sets\ArithmeticSet;
 use Pest\Mutate\Mutators\Sets\AssignmentSet;
-use Pest\Mutate\Mutators\Sets\ConditionalsSet;
+use Pest\Mutate\Mutators\Sets\ControlStructuresSet;
 use Pest\Mutate\Mutators\Sets\DefaultSet;
 use Pest\Mutate\Mutators\Sets\EqualitySet;
 use Pest\Mutate\Mutators\Sets\LaravelSet;
@@ -91,7 +91,7 @@ class Mutators
 
     final public const SET_ASSIGNMENT = AssignmentSet::class;
 
-    final public const SET_CONDITIONALS = ConditionalsSet::class;
+    final public const SET_CONTROL_STRUCTUR = ControlStructuresSet::class;
 
     final public const SET_EQUALITY = EqualitySet::class;
 
@@ -161,20 +161,20 @@ class Mutators
 
     final public const ASSIGNMENTS_SHIFT_RIGHT_TO_SHIFT_LEFT = ShiftRightToShiftLeft::class;
 
-    /** Conditionals */
-    final public const CONDITIONALS_IF_NEGATED = IfNegated::class;
+    /** ControlStructures */
+    final public const CONTROL_STRUCTURES_IF_NEGATED = IfNegated::class;
 
-    final public const CONDITIONALS_ELSE_IF_NEGATED = ElseIfNegated::class;
+    final public const CONTROL_STRUCTURES_ELSE_IF_NEGATED = ElseIfNegated::class;
 
-    final public const CONDITIONALS_TERNARY_NEGATED = TernaryNegated::class;
+    final public const CONTROL_STRUCTURES_TERNARY_NEGATED = TernaryNegated::class;
 
-    final public const CONDITIONALS_FOR_ALWAYS_FALSE = ForAlwaysFalse::class;
+    final public const CONTROL_STRUCTURES_FOR_ALWAYS_FALSE = ForAlwaysFalse::class;
 
-    final public const CONDITIONALS_FOREACH_EMPTY_ITERABLE = ForeachEmptyIterable::class;
+    final public const CONTROL_STRUCTURES_FOREACH_EMPTY_ITERABLE = ForeachEmptyIterable::class;
 
-    final public const CONDITIONALS_WHILE_ALWAYS_FALSE = WhileAlwaysFalse::class;
+    final public const CONTROL_STRUCTURES_WHILE_ALWAYS_FALSE = WhileAlwaysFalse::class;
 
-    final public const CONDITIONALS_DO_WHILE_ALWAYS_FALSE = DoWhileAlwaysFalse::class;
+    final public const CONTROL_STRUCTURES_DO_WHILE_ALWAYS_FALSE = DoWhileAlwaysFalse::class;
 
     /** Equality */
     final public const EQUALITY_GREATER_TO_GREATER_OR_EQUAL = GreaterToGreaterOrEqual::class;

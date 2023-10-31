@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Pest\Mutate\Mutators\Conditionals\ElseIfNegated;
+use Pest\Mutate\Mutators\ControlStructures\ElseIfNegated;
 
 it('mutates an else if condition to be negated', function (): void {
     expect(mutateCode(ElseIfNegated::class, <<<'CODE'

@@ -2,26 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Pest\Mutate\Mutators\Conditionals;
+namespace Pest\Mutate\Mutators\ControlStructures;
 
 use Pest\Mutate\Contracts\Mutator;
 use Pest\Mutate\Mutators\Concerns\HasName;
 use PhpParser\Node;
 use PhpParser\Node\Expr\BooleanNot;
-use PhpParser\Node\Expr\Ternary;
+use PhpParser\Node\Stmt\ElseIf_;
 
-class TernaryNegated implements Mutator
+class ElseIfNegated implements Mutator
 {
     use HasName;
 
     public static function can(Node $node): bool
     {
-        return $node instanceof Ternary;
+        return $node instanceof ElseIf_;
     }
 
     public static function mutate(Node $node): Node
     {
-        /** @var Ternary $node */
+        /** @var Node\Stmt\ElseIf_ $node */
         $node->cond = new BooleanNot($node->cond);
 
         return $node;
