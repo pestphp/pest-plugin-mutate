@@ -6,10 +6,10 @@ namespace Pest\Mutate\Mutators\Unwrap;
 
 use Pest\Mutate\Mutators\Abstract\AbstractFunctionCallUnwrapMutator;
 
-class UnwrapStrtoupper extends AbstractFunctionCallUnwrapMutator
+class UnwrapHtmlspecialcharsDecode extends AbstractFunctionCallUnwrapMutator
 {
     public static function functionName(): string
     {
-        return 'strtoupper';
+        return 'htmlspecialchars_decode';
     }
 }

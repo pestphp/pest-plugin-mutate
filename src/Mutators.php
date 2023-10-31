@@ -97,7 +97,31 @@ use Pest\Mutate\Mutators\Sets\UnwrapSet;
 use Pest\Mutate\Mutators\String\ConcatRemoveLeft;
 use Pest\Mutate\Mutators\String\ConcatRemoveRight;
 use Pest\Mutate\Mutators\String\ConcatSwitchSides;
+use Pest\Mutate\Mutators\Unwrap\UnwrapChop;
+use Pest\Mutate\Mutators\Unwrap\UnwrapChunkSplit;
+use Pest\Mutate\Mutators\Unwrap\UnwrapHtmlentities;
+use Pest\Mutate\Mutators\Unwrap\UnwrapHtmlEntityDecode;
+use Pest\Mutate\Mutators\Unwrap\UnwrapHtmlspecialchars;
+use Pest\Mutate\Mutators\Unwrap\UnwrapHtmlspecialcharsDecode;
+use Pest\Mutate\Mutators\Unwrap\UnwrapLcfirst;
+use Pest\Mutate\Mutators\Unwrap\UnwrapLtrim;
+use Pest\Mutate\Mutators\Unwrap\UnwrapMd5;
+use Pest\Mutate\Mutators\Unwrap\UnwrapNl2br;
+use Pest\Mutate\Mutators\Unwrap\UnwrapRtrim;
+use Pest\Mutate\Mutators\Unwrap\UnwrapStripTags;
+use Pest\Mutate\Mutators\Unwrap\UnwrapStrIreplace;
+use Pest\Mutate\Mutators\Unwrap\UnwrapStrPad;
+use Pest\Mutate\Mutators\Unwrap\UnwrapStrRepeat;
+use Pest\Mutate\Mutators\Unwrap\UnwrapStrReplace;
+use Pest\Mutate\Mutators\Unwrap\UnwrapStrrev;
+use Pest\Mutate\Mutators\Unwrap\UnwrapStrShuffle;
+use Pest\Mutate\Mutators\Unwrap\UnwrapStrtolower;
 use Pest\Mutate\Mutators\Unwrap\UnwrapStrtoupper;
+use Pest\Mutate\Mutators\Unwrap\UnwrapSubstr;
+use Pest\Mutate\Mutators\Unwrap\UnwrapTrim;
+use Pest\Mutate\Mutators\Unwrap\UnwrapUcfirst;
+use Pest\Mutate\Mutators\Unwrap\UnwrapUcwords;
+use Pest\Mutate\Mutators\Unwrap\UnwrapWordwrap;
 
 class Mutators
 {
@@ -304,7 +328,55 @@ class Mutators
     final public const STRING_CONCAT_SWITCH_SIDES = ConcatSwitchSides::class;
 
     /** Unwrap */
+    final public const UNWRAP_CHOP = UnwrapChop::class;
+
+    final public const UNWRAP_CHUNK_SPLIT = UnwrapChunkSplit::class;
+
+    final public const UNWRAP_HTML_ENTITIES = UnwrapHtmlentities::class;
+
+    final public const UNWRAP_HTML_ENTITY_DECODE = UnwrapHtmlEntityDecode::class;
+
+    final public const UNWRAP_HTML_SPECIALCHARS = UnwrapHtmlspecialchars::class;
+
+    final public const UNWRAP_HTML_SPECIALCHARS_DECODE = UnwrapHtmlspecialcharsDecode::class;
+
+    final public const UNWRAP_LCFIRST = UnwrapLcfirst::class;
+
+    final public const UNWRAP_LTRIM = UnwrapLtrim::class;
+
+    final public const UNWRAP_MD5 = UnwrapMd5::class;
+
+    final public const UNWRAP_NL2BR = UnwrapNl2br::class;
+
+    final public const UNWRAP_RTRIM = UnwrapRtrim::class;
+
+    final public const UNWRAP_STRIP_TAGS = UnwrapStripTags::class;
+
+    final public const UNWRAP_STR_IREPLACE = UnwrapStrIreplace::class;
+
+    final public const UNWRAP_STR_PAD = UnwrapStrPad::class;
+
+    final public const UNWRAP_STR_REPEAT = UnwrapStrRepeat::class;
+
+    final public const UNWRAP_STR_REPLACE = UnwrapStrReplace::class;
+
+    final public const UNWRAP_STRREV = UnwrapStrrev::class;
+
+    final public const UNWRAP_STR_SHUFFLE = UnwrapStrShuffle::class;
+
+    final public const UNWRAP_STRTOLOWER = UnwrapStrtolower::class;
+
     final public const UNWRAP_STRTOUPPER = UnwrapStrtoupper::class;
+
+    final public const UNWRAP_SUBSTR = UnwrapSubstr::class;
+
+    final public const UNWRAP_TRIM = UnwrapTrim::class;
+
+    final public const UNWRAP_UCFIRST = UnwrapUcfirst::class;
+
+    final public const UNWRAP_UCWORDS = UnwrapUcwords::class;
+
+    final public const UNWRAP_WORDWRAP = UnwrapWordwrap::class;
 
     /** Laravel */
     final public const LARAVEL_UNWRAP_STR_UPPER = LaravelUnwrapStrUpper::class;
