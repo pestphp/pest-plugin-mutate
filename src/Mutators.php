@@ -46,6 +46,14 @@ use Pest\Mutate\Mutators\Logical\ConcatSwitchSides;
 use Pest\Mutate\Mutators\Logical\LogicalAndToLogicalOr;
 use Pest\Mutate\Mutators\Logical\LogicalOrToLogicalAnd;
 use Pest\Mutate\Mutators\Logical\LogicalXorToLogicalAnd;
+use Pest\Mutate\Mutators\Math\CeilToFloor;
+use Pest\Mutate\Mutators\Math\CeilToRound;
+use Pest\Mutate\Mutators\Math\FloorToCiel;
+use Pest\Mutate\Mutators\Math\FloorToRound;
+use Pest\Mutate\Mutators\Math\MaxToMin;
+use Pest\Mutate\Mutators\Math\MinToMax;
+use Pest\Mutate\Mutators\Math\RoundToCeil;
+use Pest\Mutate\Mutators\Math\RoundToFloor;
 use Pest\Mutate\Mutators\Sets\ArithmeticSet;
 use Pest\Mutate\Mutators\Sets\AssignmentSet;
 use Pest\Mutate\Mutators\Sets\ConditionalsSet;
@@ -53,6 +61,7 @@ use Pest\Mutate\Mutators\Sets\DefaultSet;
 use Pest\Mutate\Mutators\Sets\EqualitySet;
 use Pest\Mutate\Mutators\Sets\LaravelSet;
 use Pest\Mutate\Mutators\Sets\LogicalSet;
+use Pest\Mutate\Mutators\Sets\MathSet;
 use Pest\Mutate\Mutators\Sets\UnwrapSet;
 use Pest\Mutate\Mutators\Unwrap\UnwrapStrtoupper;
 
@@ -70,6 +79,8 @@ class Mutators
     final public const SET_EQUALITY = EqualitySet::class;
 
     final public const SET_LOGICAL = LogicalSet::class;
+
+    final public const SET_MATH = MathSet::class;
 
     final public const SET_UNWRAP = UnwrapSet::class;
 
@@ -169,6 +180,23 @@ class Mutators
     final public const LOGICAL_LOGICAL_OR_TO_LOGICAL_AND = LogicalOrToLogicalAnd::class;
 
     final public const LOGICAL_LOGICAL_XOR_TO_LOGICAL_AND = LogicalXorToLogicalAnd::class;
+
+    /** Math */
+    final public const MATH_MIN_TO_MAX = MinToMax::class;
+
+    final public const MATH_MAX_TO_MIN = MaxToMin::class;
+
+    final public const MATH_ROUND_TO_FLOOR = RoundToFloor::class;
+
+    final public const MATH_ROUND_TO_CEIL = RoundToCeil::class;
+
+    final public const MATH_FLOOR_TO_ROUND = FloorToRound::class;
+
+    final public const MATH_FLOOR_TO_CIEL = FloorToCiel::class;
+
+    final public const MATH_CIEL_TO_FLOOR = CeilToFloor::class;
+
+    final public const MATH_CIEL_TO_ROUND = CeilToRound::class;
 
     /** Unwrap */
     final public const UNWRAP_STRTOUPPER = UnwrapStrtoupper::class;

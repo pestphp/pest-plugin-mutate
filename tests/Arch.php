@@ -31,7 +31,7 @@ test('all mutators and sets have a corresponding constant', function (): void {
     $files = Finder::create()
         ->in(__DIR__.'/../src/Mutators')
         ->name('*.php')
-        ->notPath(['Concerns'])
+        ->notPath(['Concerns', 'Abstract'])
         ->files();
 
     foreach ($files as $file) {

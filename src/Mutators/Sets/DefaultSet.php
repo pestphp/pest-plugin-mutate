@@ -19,6 +19,7 @@ class DefaultSet implements MutatorSet
             ...ConditionalsSet::mutators(),
             ...EqualitySet::defaultMutators(),
             ...LogicalSet::mutators(),
+            ...MathSet::mutators(),
         ];
     }
 }
