@@ -35,7 +35,7 @@ test('all mutators and sets have a corresponding constant', function (): void {
         ->files();
 
     foreach ($files as $file) {
-        $class = 'Pest\Mutate\Mutators\\'.$file->getRelativePath().'\\'.$file->getFilenameWithoutExtension();
+        $class = 'Pest\Mutate\Mutators\\'.str_replace('/', '\\', $file->getRelativePath()).'\\'.$file->getFilenameWithoutExtension();
 
         expect($class)
             ->toBeIn($constants, 'Missing constant for '.$class);

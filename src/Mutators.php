@@ -37,6 +37,8 @@ use Pest\Mutate\Mutators\Equality\NotIdenticalToNotEqual;
 use Pest\Mutate\Mutators\Equality\SmallerOrEqualToSmaller;
 use Pest\Mutate\Mutators\Equality\SmallerToSmallerOrEqual;
 use Pest\Mutate\Mutators\Equality\SpaceshipSwitchSides;
+use Pest\Mutate\Mutators\Laravel\Remove\LaravelRemoveStringableUpper;
+use Pest\Mutate\Mutators\Laravel\Unwrap\LaravelUnwrapStrUpper;
 use Pest\Mutate\Mutators\Logical\BooleanAndToBooleanOr;
 use Pest\Mutate\Mutators\Logical\BooleanOrToBooleanAnd;
 use Pest\Mutate\Mutators\Logical\CoalesceSwitchSides;
@@ -49,7 +51,10 @@ use Pest\Mutate\Mutators\Sets\AssignmentSet;
 use Pest\Mutate\Mutators\Sets\ConditionalsSet;
 use Pest\Mutate\Mutators\Sets\DefaultSet;
 use Pest\Mutate\Mutators\Sets\EqualitySet;
+use Pest\Mutate\Mutators\Sets\LaravelSet;
 use Pest\Mutate\Mutators\Sets\LogicalSet;
+use Pest\Mutate\Mutators\Sets\UnwrapSet;
+use Pest\Mutate\Mutators\Unwrap\UnwrapStrtoupper;
 
 class Mutators
 {
@@ -65,6 +70,10 @@ class Mutators
     final public const SET_EQUALITY = EqualitySet::class;
 
     final public const SET_LOGICAL = LogicalSet::class;
+
+    final public const SET_UNWRAP = UnwrapSet::class;
+
+    final public const SET_LARAVEL = LaravelSet::class;
 
     /** Arithmetic */
     final public const ARITHMETIC_BITWISE_AND_TO_BITWISE_OR = \Pest\Mutate\Mutators\Arithmetic\BitwiseAndToBitwiseOr::class;
@@ -160,4 +169,12 @@ class Mutators
     final public const LOGICAL_LOGICAL_OR_TO_LOGICAL_AND = LogicalOrToLogicalAnd::class;
 
     final public const LOGICAL_LOGICAL_XOR_TO_LOGICAL_AND = LogicalXorToLogicalAnd::class;
+
+    /** Unwrap */
+    final public const UNWRAP_STRTOUPPER = UnwrapStrtoupper::class;
+
+    /** Laravel */
+    final public const LARAVEL_UNWRAP_STR_UPPER = LaravelUnwrapStrUpper::class;
+
+    final public const LARAVEL_REMOVE_STRINGABLE_UPPER = LaravelRemoveStringableUpper::class;
 }
