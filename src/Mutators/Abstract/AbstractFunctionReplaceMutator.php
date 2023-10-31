@@ -20,7 +20,11 @@ abstract class AbstractFunctionReplaceMutator implements Mutator
             return false;
         }
 
-        return $node->name->getParts() === [static::from()]; // @phpstan-ignore-line
+        if (! $node->name instanceof Name) {
+            return false;
+        }
+
+        return $node->name->getParts() === [static::from()];
     }
 
     public static function mutate(Node $node): Node
