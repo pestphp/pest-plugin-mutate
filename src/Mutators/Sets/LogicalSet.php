@@ -10,6 +10,8 @@ use Pest\Mutate\Mutators\Logical\BooleanOrToBooleanAnd;
 use Pest\Mutate\Mutators\Logical\CoalesceSwitchSides;
 use Pest\Mutate\Mutators\Logical\ConcatSwitchSides;
 use Pest\Mutate\Mutators\Logical\FalseToTrue;
+use Pest\Mutate\Mutators\Logical\InstanceOfToFalse;
+use Pest\Mutate\Mutators\Logical\InstanceOfToTrue;
 use Pest\Mutate\Mutators\Logical\LogicalAndToLogicalOr;
 use Pest\Mutate\Mutators\Logical\LogicalOrToLogicalAnd;
 use Pest\Mutate\Mutators\Logical\LogicalXorToLogicalAnd;
@@ -32,6 +34,8 @@ class LogicalSet implements MutatorSet
             LogicalXorToLogicalAnd::class,
             FalseToTrue::class,
             TrueToFalse::class,
+            InstanceOfToTrue::class,
+            InstanceOfToFalse::class,
         ];
     }
 }
