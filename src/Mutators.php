@@ -29,6 +29,8 @@ use Pest\Mutate\Mutators\Assignment\ShiftLeftToShiftRight;
 use Pest\Mutate\Mutators\Assignment\ShiftRightToShiftLeft;
 use Pest\Mutate\Mutators\Conditionals\DoWhileAlwaysFalse;
 use Pest\Mutate\Mutators\Conditionals\ElseIfNegated;
+use Pest\Mutate\Mutators\Conditionals\ForAlwaysFalse;
+use Pest\Mutate\Mutators\Conditionals\ForeachEmptyIterable;
 use Pest\Mutate\Mutators\Conditionals\IfNegated;
 use Pest\Mutate\Mutators\Conditionals\TernaryNegated;
 use Pest\Mutate\Mutators\Conditionals\WhileAlwaysFalse;
@@ -165,6 +167,10 @@ class Mutators
     final public const CONDITIONALS_ELSE_IF_NEGATED = ElseIfNegated::class;
 
     final public const CONDITIONALS_TERNARY_NEGATED = TernaryNegated::class;
+
+    final public const CONDITIONALS_FOR_ALWAYS_FALSE = ForAlwaysFalse::class;
+
+    final public const CONDITIONALS_FOREACH_EMPTY_ITERABLE = ForeachEmptyIterable::class;
 
     final public const CONDITIONALS_WHILE_ALWAYS_FALSE = WhileAlwaysFalse::class;
 
