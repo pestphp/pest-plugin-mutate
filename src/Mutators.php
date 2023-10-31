@@ -9,7 +9,11 @@ use Pest\Mutate\Mutators\Arithmetic\MinusToPlus;
 use Pest\Mutate\Mutators\Arithmetic\ModulusToMultiplication;
 use Pest\Mutate\Mutators\Arithmetic\MultiplicationToDivision;
 use Pest\Mutate\Mutators\Arithmetic\PlusToMinus;
+use Pest\Mutate\Mutators\Arithmetic\PostDecrementToPostIncrement;
+use Pest\Mutate\Mutators\Arithmetic\PostIncrementToPostDecrement;
 use Pest\Mutate\Mutators\Arithmetic\PowerToMultiplication;
+use Pest\Mutate\Mutators\Arithmetic\PreDecrementToPreIncrement;
+use Pest\Mutate\Mutators\Arithmetic\PreIncrementToPreDecrement;
 use Pest\Mutate\Mutators\Assignment\BitwiseAndToBitwiseOr;
 use Pest\Mutate\Mutators\Assignment\BitwiseOrToBitwiseAnd;
 use Pest\Mutate\Mutators\Assignment\BitwiseXorToBitwiseAnd;
@@ -119,6 +123,14 @@ class Mutators
     final public const ARITHMETIC_SHIFT_LEFT_TO_SHIFT_RIGHT = \Pest\Mutate\Mutators\Arithmetic\ShiftLeftToShiftRight::class;
 
     final public const ARITHMETIC_SHIFT_RIGHT_TO_SHIFT_LEFT = \Pest\Mutate\Mutators\Arithmetic\ShiftRightToShiftLeft::class;
+
+    final public const ARITHMETIC_POST_DECREMENT_TO_POST_INCREMENT = PostDecrementToPostIncrement::class;
+
+    final public const ARITHMETIC_POST_INCREMENT_TO_POST_DECREMENT = PostIncrementToPostDecrement::class;
+
+    final public const ARITHMETIC_PRE_DECREMENT_TO_PRE_INCREMENT = PreDecrementToPreIncrement::class;
+
+    final public const ARITHMETIC_PRE_INCREMENT_TO_PRE_DECREMENT = PreIncrementToPreDecrement::class;
 
     /** Assignments */
     final public const ASSIGNMENTS_BITWISE_AND_TO_BITWISE_OR = BitwiseAndToBitwiseOr::class;
