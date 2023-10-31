@@ -8,7 +8,6 @@ use Pest\Mutate\Contracts\MutatorSet;
 use Pest\Mutate\Mutators\Logical\BooleanAndToBooleanOr;
 use Pest\Mutate\Mutators\Logical\BooleanOrToBooleanAnd;
 use Pest\Mutate\Mutators\Logical\CoalesceRemoveLeft;
-use Pest\Mutate\Mutators\Logical\ConcatSwitchSides;
 use Pest\Mutate\Mutators\Logical\FalseToTrue;
 use Pest\Mutate\Mutators\Logical\InstanceOfToFalse;
 use Pest\Mutate\Mutators\Logical\InstanceOfToTrue;
@@ -31,7 +30,6 @@ class LogicalSet implements MutatorSet
             BooleanAndToBooleanOr::class,
             BooleanOrToBooleanAnd::class,
             CoalesceRemoveLeft::class,
-            ConcatSwitchSides::class,
             LogicalAndToLogicalOr::class,
             LogicalOrToLogicalAnd::class,
             LogicalXorToLogicalAnd::class,

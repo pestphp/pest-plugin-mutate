@@ -54,7 +54,6 @@ use Pest\Mutate\Mutators\Laravel\Unwrap\LaravelUnwrapStrUpper;
 use Pest\Mutate\Mutators\Logical\BooleanAndToBooleanOr;
 use Pest\Mutate\Mutators\Logical\BooleanOrToBooleanAnd;
 use Pest\Mutate\Mutators\Logical\CoalesceRemoveLeft;
-use Pest\Mutate\Mutators\Logical\ConcatSwitchSides;
 use Pest\Mutate\Mutators\Logical\FalseToTrue;
 use Pest\Mutate\Mutators\Logical\InstanceOfToFalse;
 use Pest\Mutate\Mutators\Logical\InstanceOfToTrue;
@@ -81,7 +80,11 @@ use Pest\Mutate\Mutators\Sets\EqualitySet;
 use Pest\Mutate\Mutators\Sets\LaravelSet;
 use Pest\Mutate\Mutators\Sets\LogicalSet;
 use Pest\Mutate\Mutators\Sets\MathSet;
+use Pest\Mutate\Mutators\Sets\StringSet;
 use Pest\Mutate\Mutators\Sets\UnwrapSet;
+use Pest\Mutate\Mutators\String\ConcatRemoveLeft;
+use Pest\Mutate\Mutators\String\ConcatRemoveRight;
+use Pest\Mutate\Mutators\String\ConcatSwitchSides;
 use Pest\Mutate\Mutators\Unwrap\UnwrapStrtoupper;
 
 class Mutators
@@ -100,6 +103,8 @@ class Mutators
     final public const SET_LOGICAL = LogicalSet::class;
 
     final public const SET_MATH = MathSet::class;
+
+    final public const SET_STRING = StringSet::class;
 
     final public const SET_UNWRAP = UnwrapSet::class;
 
@@ -216,8 +221,6 @@ class Mutators
 
     final public const LOGICAL_COALESCE_REMOVE_LEFT = CoalesceRemoveLeft::class;
 
-    final public const LOGICAL_CONCAT_SWITCH_SIDES = ConcatSwitchSides::class;
-
     final public const LOGICAL_LOGICAL_AND_TO_LOGICAL_OR = LogicalAndToLogicalOr::class;
 
     final public const LOGICAL_LOGICAL_OR_TO_LOGICAL_AND = LogicalOrToLogicalAnd::class;
@@ -254,6 +257,13 @@ class Mutators
     final public const MATH_CIEL_TO_FLOOR = CeilToFloor::class;
 
     final public const MATH_CIEL_TO_ROUND = CeilToRound::class;
+
+    /** String */
+    final public const STRING_CONCAT_REMOVE_LEFT = ConcatRemoveLeft::class;
+
+    final public const STRING_CONCAT_REMOVE_RIGHT = ConcatRemoveRight::class;
+
+    final public const STRING_CONCAT_SWITCH_SIDES = ConcatSwitchSides::class;
 
     /** Unwrap */
     final public const UNWRAP_STRTOUPPER = UnwrapStrtoupper::class;

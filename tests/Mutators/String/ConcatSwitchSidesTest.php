@@ -1,7 +1,8 @@
 <?php
 
 declare(strict_types=1);
-use Pest\Mutate\Mutators\Logical\ConcatSwitchSides;
+
+use Pest\Mutate\Mutators\String\ConcatSwitchSides;
 
 it('mutates a coalesce operation by switching the parameters', function (): void {
     expect(mutateCode(ConcatSwitchSides::class, <<<'CODE'
