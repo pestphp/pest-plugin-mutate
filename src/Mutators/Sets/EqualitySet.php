@@ -8,11 +8,15 @@ use Pest\Mutate\Contracts\Mutator;
 use Pest\Mutate\Contracts\MutatorSet;
 use Pest\Mutate\Mutators\Equality\EqualToIdentical;
 use Pest\Mutate\Mutators\Equality\GreaterOrEqualToGreater;
+use Pest\Mutate\Mutators\Equality\GreaterOrEqualToSmaller;
 use Pest\Mutate\Mutators\Equality\GreaterToGreaterOrEqual;
+use Pest\Mutate\Mutators\Equality\GreaterToSmallerOrEqual;
 use Pest\Mutate\Mutators\Equality\IdenticalToEqual;
 use Pest\Mutate\Mutators\Equality\NotEqualToNotIdentical;
 use Pest\Mutate\Mutators\Equality\NotIdenticalToNotEqual;
+use Pest\Mutate\Mutators\Equality\SmallerOrEqualToGreater;
 use Pest\Mutate\Mutators\Equality\SmallerOrEqualToSmaller;
+use Pest\Mutate\Mutators\Equality\SmallerToGreaterOrEqual;
 use Pest\Mutate\Mutators\Equality\SmallerToSmallerOrEqual;
 use Pest\Mutate\Mutators\Equality\SpaceshipSwitchSides;
 
@@ -37,8 +41,12 @@ class EqualitySet implements MutatorSet
     {
         return [
             GreaterToGreaterOrEqual::class,
+            GreaterToSmallerOrEqual::class,
             GreaterOrEqualToGreater::class,
+            GreaterOrEqualToSmaller::class,
+            SmallerToGreaterOrEqual::class,
             SmallerToSmallerOrEqual::class,
+            SmallerOrEqualToGreater::class,
             SmallerOrEqualToSmaller::class,
             EqualToIdentical::class,
             NotEqualToNotIdentical::class,

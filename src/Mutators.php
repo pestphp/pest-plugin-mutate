@@ -30,11 +30,15 @@ use Pest\Mutate\Mutators\Conditionals\TernaryNegated;
 use Pest\Mutate\Mutators\Conditionals\WhileAlwaysFalse;
 use Pest\Mutate\Mutators\Equality\EqualToIdentical;
 use Pest\Mutate\Mutators\Equality\GreaterOrEqualToGreater;
+use Pest\Mutate\Mutators\Equality\GreaterOrEqualToSmaller;
 use Pest\Mutate\Mutators\Equality\GreaterToGreaterOrEqual;
+use Pest\Mutate\Mutators\Equality\GreaterToSmallerOrEqual;
 use Pest\Mutate\Mutators\Equality\IdenticalToEqual;
 use Pest\Mutate\Mutators\Equality\NotEqualToNotIdentical;
 use Pest\Mutate\Mutators\Equality\NotIdenticalToNotEqual;
+use Pest\Mutate\Mutators\Equality\SmallerOrEqualToGreater;
 use Pest\Mutate\Mutators\Equality\SmallerOrEqualToSmaller;
+use Pest\Mutate\Mutators\Equality\SmallerToGreaterOrEqual;
 use Pest\Mutate\Mutators\Equality\SmallerToSmallerOrEqual;
 use Pest\Mutate\Mutators\Equality\SpaceshipSwitchSides;
 use Pest\Mutate\Mutators\Laravel\Remove\LaravelRemoveStringableUpper;
@@ -155,11 +159,19 @@ class Mutators
     /** Equality */
     final public const EQUALITY_GREATER_TO_GREATER_OR_EQUAL = GreaterToGreaterOrEqual::class;
 
+    final public const EQUALITY_GREATER_TO_SMALLER_OR_EQUAL = GreaterToSmallerOrEqual::class;
+
     final public const EQUALITY_GREATER_OR_EQUAL_TO_GREATER = GreaterOrEqualToGreater::class;
+
+    final public const EQUALITY_GREATER_OR_EQUAL_TO_SMALLER = GreaterOrEqualToSmaller::class;
 
     final public const EQUALITY_SMALLER_TO_SMALLER_OR_EQUAL = SmallerToSmallerOrEqual::class;
 
+    final public const EQUALITY_SMALLER_TO_GREATER_OR_EQUAL = SmallerToGreaterOrEqual::class;
+
     final public const EQUALITY_SMALLER_OR_EQUAL_TO_SMALLER = SmallerOrEqualToSmaller::class;
+
+    final public const EQUALITY_SMALLER_OR_EQUAL_TO_GREATER = SmallerOrEqualToGreater::class;
 
     final public const EQUALITY_EQUAL_TO_IDENTICAL = EqualToIdentical::class;
 
