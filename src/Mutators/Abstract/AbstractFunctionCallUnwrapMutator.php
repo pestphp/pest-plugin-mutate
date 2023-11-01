@@ -8,6 +8,7 @@ use Pest\Mutate\Contracts\Mutator;
 use Pest\Mutate\Mutators\Concerns\HasName;
 use PhpParser\Node;
 use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Name;
 
 abstract class AbstractFunctionCallUnwrapMutator implements Mutator
 {
@@ -16,6 +17,10 @@ abstract class AbstractFunctionCallUnwrapMutator implements Mutator
     public static function can(Node $node): bool
     {
         if (! $node instanceof FuncCall) {
+            return false;
+        }
+
+        if (! $node->name instanceof Name) {
             return false;
         }
 
