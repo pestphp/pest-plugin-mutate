@@ -7,6 +7,7 @@ namespace Pest\Mutate\Decorators;
 use Pest\Mutate\Contracts\MutationTestRunner;
 use Pest\Mutate\Factories\ProfileFactory;
 use Pest\Mutate\Profile;
+use Pest\Mutate\Tester\MutationTestRunnerFake;
 use Pest\PendingCalls\TestCall;
 use Pest\Plugins\Only;
 use Pest\Support\Container;
@@ -14,6 +15,8 @@ use Pest\Support\Container;
 // @codeCoverageIgnoreStart
 class TestCallDecorator implements \Pest\Mutate\Contracts\ProfileFactory
 {
+    private MutationTestRunner $testRunner;
+
     public function __construct(private readonly TestCall $testCall)
     {
     }
@@ -30,11 +33,14 @@ class TestCallDecorator implements \Pest\Mutate\Contracts\ProfileFactory
     {
         if ($profile !== Profile::FAKE) {
             Only::enable($this->testCall);
+
+            $this->testRunner = Container::getInstance() // @phpstan-ignore-line
+                ->get(MutationTestRunner::class);
+        } else {
+            $this->testRunner = new MutationTestRunnerFake();
         }
 
-        Container::getInstance() // @phpstan-ignore-line
-            ->get(MutationTestRunner::class)
-            ->enable($profile);
+        $this->testRunner->enable($profile); // @phpstan-ignore-line
 
         $this->coveredOnly();
 
@@ -84,9 +90,7 @@ class TestCallDecorator implements \Pest\Mutate\Contracts\ProfileFactory
 
     private function _profileFactory(): ProfileFactory
     {
-        return Container::getInstance() // @phpstan-ignore-line
-            ->get(MutationTestRunner::class)
-            ->getProfileFactory();
+        return $this->testRunner->getProfileFactory();
     }
 }
 // @codeCoverageIgnoreEnd

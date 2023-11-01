@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Contracts;
 
+use Pest\Mutate\Factories\ProfileFactory;
+
 interface MutationTestRunner
 {
     public function enable(string $profile): void;
@@ -16,6 +18,8 @@ interface MutationTestRunner
     public function setOriginalArguments(array $arguments): void;
 
     public function isCodeCoverageRequested(): bool;
+
+    public function getProfileFactory(): ProfileFactory;
 
     public function run(): void;
 }
