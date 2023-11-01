@@ -15,11 +15,15 @@ class DefaultSet implements MutatorSet
     {
         return [
             ...ArithmeticSet::mutators(),
+            ...ArraySet::mutators(),
             ...AssignmentSet::mutators(),
+            ...CastingSet::mutators(),
             ...ControlStructuresSet::mutators(),
             ...EqualitySet::defaultMutators(),
             ...LogicalSet::mutators(),
             ...MathSet::mutators(),
+            ...NumberSet::mutators(),
+            ...StringSet::mutators(),
         ];
     }
 }
