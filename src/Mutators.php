@@ -14,6 +14,42 @@ use Pest\Mutate\Mutators\Arithmetic\PostIncrementToPostDecrement;
 use Pest\Mutate\Mutators\Arithmetic\PowerToMultiplication;
 use Pest\Mutate\Mutators\Arithmetic\PreDecrementToPreIncrement;
 use Pest\Mutate\Mutators\Arithmetic\PreIncrementToPreDecrement;
+use Pest\Mutate\Mutators\Array\UnwrapArrayChangeKeyCase;
+use Pest\Mutate\Mutators\Array\UnwrapArrayChunk;
+use Pest\Mutate\Mutators\Array\UnwrapArrayColumn;
+use Pest\Mutate\Mutators\Array\UnwrapArrayCombine;
+use Pest\Mutate\Mutators\Array\UnwrapArrayCountValues;
+use Pest\Mutate\Mutators\Array\UnwrapArrayDiff;
+use Pest\Mutate\Mutators\Array\UnwrapArrayDiffAssoc;
+use Pest\Mutate\Mutators\Array\UnwrapArrayDiffKey;
+use Pest\Mutate\Mutators\Array\UnwrapArrayDiffUassoc;
+use Pest\Mutate\Mutators\Array\UnwrapArrayDiffUkey;
+use Pest\Mutate\Mutators\Array\UnwrapArrayFilter;
+use Pest\Mutate\Mutators\Array\UnwrapArrayFlip;
+use Pest\Mutate\Mutators\Array\UnwrapArrayIntersect;
+use Pest\Mutate\Mutators\Array\UnwrapArrayIntersectAssoc;
+use Pest\Mutate\Mutators\Array\UnwrapArrayIntersectKey;
+use Pest\Mutate\Mutators\Array\UnwrapArrayIntersectUassoc;
+use Pest\Mutate\Mutators\Array\UnwrapArrayIntersectUkey;
+use Pest\Mutate\Mutators\Array\UnwrapArrayKeys;
+use Pest\Mutate\Mutators\Array\UnwrapArrayMap;
+use Pest\Mutate\Mutators\Array\UnwrapArrayMerge;
+use Pest\Mutate\Mutators\Array\UnwrapArrayMergeRecursive;
+use Pest\Mutate\Mutators\Array\UnwrapArrayPad;
+use Pest\Mutate\Mutators\Array\UnwrapArrayReduce;
+use Pest\Mutate\Mutators\Array\UnwrapArrayReplace;
+use Pest\Mutate\Mutators\Array\UnwrapArrayReplaceRecursive;
+use Pest\Mutate\Mutators\Array\UnwrapArrayReverse;
+use Pest\Mutate\Mutators\Array\UnwrapArraySlice;
+use Pest\Mutate\Mutators\Array\UnwrapArraySplice;
+use Pest\Mutate\Mutators\Array\UnwrapArrayUdiff;
+use Pest\Mutate\Mutators\Array\UnwrapArrayUdiffAssoc;
+use Pest\Mutate\Mutators\Array\UnwrapArrayUdiffUassoc;
+use Pest\Mutate\Mutators\Array\UnwrapArrayUintersect;
+use Pest\Mutate\Mutators\Array\UnwrapArrayUintersectAssoc;
+use Pest\Mutate\Mutators\Array\UnwrapArrayUintersectUassoc;
+use Pest\Mutate\Mutators\Array\UnwrapArrayUnique;
+use Pest\Mutate\Mutators\Array\UnwrapArrayValues;
 use Pest\Mutate\Mutators\Assignment\BitwiseAndToBitwiseOr;
 use Pest\Mutate\Mutators\Assignment\BitwiseOrToBitwiseAnd;
 use Pest\Mutate\Mutators\Assignment\BitwiseXorToBitwiseAnd;
@@ -83,6 +119,7 @@ use Pest\Mutate\Mutators\Number\DecrementInteger;
 use Pest\Mutate\Mutators\Number\IncrementFloat;
 use Pest\Mutate\Mutators\Number\IncrementInteger;
 use Pest\Mutate\Mutators\Sets\ArithmeticSet;
+use Pest\Mutate\Mutators\Sets\ArraySet;
 use Pest\Mutate\Mutators\Sets\AssignmentSet;
 use Pest\Mutate\Mutators\Sets\CastingSet;
 use Pest\Mutate\Mutators\Sets\ControlStructuresSet;
@@ -93,35 +130,34 @@ use Pest\Mutate\Mutators\Sets\LogicalSet;
 use Pest\Mutate\Mutators\Sets\MathSet;
 use Pest\Mutate\Mutators\Sets\NumberSet;
 use Pest\Mutate\Mutators\Sets\StringSet;
-use Pest\Mutate\Mutators\Sets\UnwrapSet;
 use Pest\Mutate\Mutators\String\ConcatRemoveLeft;
 use Pest\Mutate\Mutators\String\ConcatRemoveRight;
 use Pest\Mutate\Mutators\String\ConcatSwitchSides;
-use Pest\Mutate\Mutators\Unwrap\UnwrapChop;
-use Pest\Mutate\Mutators\Unwrap\UnwrapChunkSplit;
-use Pest\Mutate\Mutators\Unwrap\UnwrapHtmlentities;
-use Pest\Mutate\Mutators\Unwrap\UnwrapHtmlEntityDecode;
-use Pest\Mutate\Mutators\Unwrap\UnwrapHtmlspecialchars;
-use Pest\Mutate\Mutators\Unwrap\UnwrapHtmlspecialcharsDecode;
-use Pest\Mutate\Mutators\Unwrap\UnwrapLcfirst;
-use Pest\Mutate\Mutators\Unwrap\UnwrapLtrim;
-use Pest\Mutate\Mutators\Unwrap\UnwrapMd5;
-use Pest\Mutate\Mutators\Unwrap\UnwrapNl2br;
-use Pest\Mutate\Mutators\Unwrap\UnwrapRtrim;
-use Pest\Mutate\Mutators\Unwrap\UnwrapStripTags;
-use Pest\Mutate\Mutators\Unwrap\UnwrapStrIreplace;
-use Pest\Mutate\Mutators\Unwrap\UnwrapStrPad;
-use Pest\Mutate\Mutators\Unwrap\UnwrapStrRepeat;
-use Pest\Mutate\Mutators\Unwrap\UnwrapStrReplace;
-use Pest\Mutate\Mutators\Unwrap\UnwrapStrrev;
-use Pest\Mutate\Mutators\Unwrap\UnwrapStrShuffle;
-use Pest\Mutate\Mutators\Unwrap\UnwrapStrtolower;
-use Pest\Mutate\Mutators\Unwrap\UnwrapStrtoupper;
-use Pest\Mutate\Mutators\Unwrap\UnwrapSubstr;
-use Pest\Mutate\Mutators\Unwrap\UnwrapTrim;
-use Pest\Mutate\Mutators\Unwrap\UnwrapUcfirst;
-use Pest\Mutate\Mutators\Unwrap\UnwrapUcwords;
-use Pest\Mutate\Mutators\Unwrap\UnwrapWordwrap;
+use Pest\Mutate\Mutators\String\UnwrapChop;
+use Pest\Mutate\Mutators\String\UnwrapChunkSplit;
+use Pest\Mutate\Mutators\String\UnwrapHtmlentities;
+use Pest\Mutate\Mutators\String\UnwrapHtmlEntityDecode;
+use Pest\Mutate\Mutators\String\UnwrapHtmlspecialchars;
+use Pest\Mutate\Mutators\String\UnwrapHtmlspecialcharsDecode;
+use Pest\Mutate\Mutators\String\UnwrapLcfirst;
+use Pest\Mutate\Mutators\String\UnwrapLtrim;
+use Pest\Mutate\Mutators\String\UnwrapMd5;
+use Pest\Mutate\Mutators\String\UnwrapNl2br;
+use Pest\Mutate\Mutators\String\UnwrapRtrim;
+use Pest\Mutate\Mutators\String\UnwrapStripTags;
+use Pest\Mutate\Mutators\String\UnwrapStrIreplace;
+use Pest\Mutate\Mutators\String\UnwrapStrPad;
+use Pest\Mutate\Mutators\String\UnwrapStrRepeat;
+use Pest\Mutate\Mutators\String\UnwrapStrReplace;
+use Pest\Mutate\Mutators\String\UnwrapStrrev;
+use Pest\Mutate\Mutators\String\UnwrapStrShuffle;
+use Pest\Mutate\Mutators\String\UnwrapStrtolower;
+use Pest\Mutate\Mutators\String\UnwrapStrtoupper;
+use Pest\Mutate\Mutators\String\UnwrapSubstr;
+use Pest\Mutate\Mutators\String\UnwrapTrim;
+use Pest\Mutate\Mutators\String\UnwrapUcfirst;
+use Pest\Mutate\Mutators\String\UnwrapUcwords;
+use Pest\Mutate\Mutators\String\UnwrapWordwrap;
 
 class Mutators
 {
@@ -129,6 +165,8 @@ class Mutators
     final public const SET_DEFAULT = DefaultSet::class;
 
     final public const SET_ARITHMETIC = ArithmeticSet::class;
+
+    final public const SET_ARRAY = ArraySet::class;
 
     final public const SET_ASSIGNMENT = AssignmentSet::class;
 
@@ -145,8 +183,6 @@ class Mutators
     final public const SET_NUMBER = NumberSet::class;
 
     final public const SET_STRING = StringSet::class;
-
-    final public const SET_UNWRAP = UnwrapSet::class;
 
     final public const SET_LARAVEL = LaravelSet::class;
 
@@ -180,6 +216,79 @@ class Mutators
     final public const ARITHMETIC_PRE_DECREMENT_TO_PRE_INCREMENT = PreDecrementToPreIncrement::class;
 
     final public const ARITHMETIC_PRE_INCREMENT_TO_PRE_DECREMENT = PreIncrementToPreDecrement::class;
+
+    /** Array */
+    final public const ARRAY_UNWRAP_ARRAY_CHANGE_KEY_CASE = UnwrapArrayChangeKeyCase::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_CHUNK = UnwrapArrayChunk::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_COLUMN = UnwrapArrayColumn::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_COMBINE = UnwrapArrayCombine::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_COUNT_VALUES = UnwrapArrayCountValues::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_DIFF = UnwrapArrayDiff::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_DIFF_ASSOC = UnwrapArrayDiffAssoc::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_DIFF_KEY = UnwrapArrayDiffKey::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_DIFF_UASSOC = UnwrapArrayDiffUassoc::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_DIFF_UKEY = UnwrapArrayDiffUkey::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_FILTER = UnwrapArrayFilter::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_FLIP = UnwrapArrayFlip::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_INTERSECT = UnwrapArrayIntersect::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_INTERSECT_ASSOC = UnwrapArrayIntersectAssoc::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_INTERSECT_KEY = UnwrapArrayIntersectKey::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_INTERSECT_UASSOC = UnwrapArrayIntersectUassoc::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_INTERSECT_UKEY = UnwrapArrayIntersectUkey::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_KEYS = UnwrapArrayKeys::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_MAP = UnwrapArrayMap::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_MERGE = UnwrapArrayMerge::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_MERGE_RECURSIVE = UnwrapArrayMergeRecursive::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_PAD = UnwrapArrayPad::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_REDUCE = UnwrapArrayReduce::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_REPLACE = UnwrapArrayReplace::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_REPLACE_RECURSIVE = UnwrapArrayReplaceRecursive::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_REVERSE = UnwrapArrayReverse::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_SLICE = UnwrapArraySlice::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_SPLICE = UnwrapArraySplice::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_UDIFF = UnwrapArrayUdiff::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_UDIFF_ASSOC = UnwrapArrayUdiffAssoc::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_UDIFF_UASSOC = UnwrapArrayUdiffUassoc::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_UINTERSECT = UnwrapArrayUintersect::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_UINTERSECT_ASSOC = UnwrapArrayUintersectAssoc::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_UINTERSECT_UASSOC = UnwrapArrayUintersectUassoc::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_UNIQUE = UnwrapArrayUnique::class;
+
+    final public const ARRAY_UNWRAP_ARRAY_VALUES = UnwrapArrayValues::class;
 
     /** Assignments */
     final public const ASSIGNMENTS_BITWISE_AND_TO_BITWISE_OR = BitwiseAndToBitwiseOr::class;
@@ -327,56 +436,55 @@ class Mutators
 
     final public const STRING_CONCAT_SWITCH_SIDES = ConcatSwitchSides::class;
 
-    /** Unwrap */
-    final public const UNWRAP_CHOP = UnwrapChop::class;
+    final public const STRING_UNWRAP_CHOP = UnwrapChop::class;
 
-    final public const UNWRAP_CHUNK_SPLIT = UnwrapChunkSplit::class;
+    final public const STRING_UNWRAP_CHUNK_SPLIT = UnwrapChunkSplit::class;
 
-    final public const UNWRAP_HTML_ENTITIES = UnwrapHtmlentities::class;
+    final public const STRING_UNWRAP_HTML_ENTITIES = UnwrapHtmlentities::class;
 
-    final public const UNWRAP_HTML_ENTITY_DECODE = UnwrapHtmlEntityDecode::class;
+    final public const STRING_UNWRAP_HTML_ENTITY_DECODE = UnwrapHtmlEntityDecode::class;
 
-    final public const UNWRAP_HTML_SPECIALCHARS = UnwrapHtmlspecialchars::class;
+    final public const STRING_UNWRAP_HTML_SPECIALCHARS = UnwrapHtmlspecialchars::class;
 
-    final public const UNWRAP_HTML_SPECIALCHARS_DECODE = UnwrapHtmlspecialcharsDecode::class;
+    final public const STRING_UNWRAP_HTML_SPECIALCHARS_DECODE = UnwrapHtmlspecialcharsDecode::class;
 
-    final public const UNWRAP_LCFIRST = UnwrapLcfirst::class;
+    final public const STRING_UNWRAP_LCFIRST = UnwrapLcfirst::class;
 
-    final public const UNWRAP_LTRIM = UnwrapLtrim::class;
+    final public const STRING_UNWRAP_LTRIM = UnwrapLtrim::class;
 
-    final public const UNWRAP_MD5 = UnwrapMd5::class;
+    final public const STRING_UNWRAP_MD5 = UnwrapMd5::class;
 
-    final public const UNWRAP_NL2BR = UnwrapNl2br::class;
+    final public const STRING_UNWRAP_NL2BR = UnwrapNl2br::class;
 
-    final public const UNWRAP_RTRIM = UnwrapRtrim::class;
+    final public const STRING_UNWRAP_RTRIM = UnwrapRtrim::class;
 
-    final public const UNWRAP_STRIP_TAGS = UnwrapStripTags::class;
+    final public const STRING_UNWRAP_STRIP_TAGS = UnwrapStripTags::class;
 
-    final public const UNWRAP_STR_IREPLACE = UnwrapStrIreplace::class;
+    final public const STRING_UNWRAP_STR_IREPLACE = UnwrapStrIreplace::class;
 
-    final public const UNWRAP_STR_PAD = UnwrapStrPad::class;
+    final public const STRING_UNWRAP_STR_PAD = UnwrapStrPad::class;
 
-    final public const UNWRAP_STR_REPEAT = UnwrapStrRepeat::class;
+    final public const STRING_UNWRAP_STR_REPEAT = UnwrapStrRepeat::class;
 
-    final public const UNWRAP_STR_REPLACE = UnwrapStrReplace::class;
+    final public const STRING_UNWRAP_STR_REPLACE = UnwrapStrReplace::class;
 
-    final public const UNWRAP_STRREV = UnwrapStrrev::class;
+    final public const STRING_UNWRAP_STRREV = UnwrapStrrev::class;
 
-    final public const UNWRAP_STR_SHUFFLE = UnwrapStrShuffle::class;
+    final public const STRING_UNWRAP_STR_SHUFFLE = UnwrapStrShuffle::class;
 
-    final public const UNWRAP_STRTOLOWER = UnwrapStrtolower::class;
+    final public const STRING_UNWRAP_STRTOLOWER = UnwrapStrtolower::class;
 
-    final public const UNWRAP_STRTOUPPER = UnwrapStrtoupper::class;
+    final public const STRING_UNWRAP_STRTOUPPER = UnwrapStrtoupper::class;
 
-    final public const UNWRAP_SUBSTR = UnwrapSubstr::class;
+    final public const STRING_UNWRAP_SUBSTR = UnwrapSubstr::class;
 
-    final public const UNWRAP_TRIM = UnwrapTrim::class;
+    final public const STRING_UNWRAP_TRIM = UnwrapTrim::class;
 
-    final public const UNWRAP_UCFIRST = UnwrapUcfirst::class;
+    final public const STRING_UNWRAP_UCFIRST = UnwrapUcfirst::class;
 
-    final public const UNWRAP_UCWORDS = UnwrapUcwords::class;
+    final public const STRING_UNWRAP_UCWORDS = UnwrapUcwords::class;
 
-    final public const UNWRAP_WORDWRAP = UnwrapWordwrap::class;
+    final public const STRING_UNWRAP_WORDWRAP = UnwrapWordwrap::class;
 
     /** Laravel */
     final public const LARAVEL_UNWRAP_STR_UPPER = LaravelUnwrapStrUpper::class;
