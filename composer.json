@@ -13,6 +13,12 @@
         "plugin"
     ],
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Sandro Gehri",
+            "email": "sandrogehri@gmail.com"
+        }
+    ],
     "repositories": {
         "pest": {
             "type": "vcs",
