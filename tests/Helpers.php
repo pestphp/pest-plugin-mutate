@@ -4,6 +4,7 @@ declare(strict_types=1);
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
+use PhpParser\NodeVisitor\ParentConnectingVisitor;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
@@ -15,6 +16,7 @@ function mutateCode(string $mutator, string $code): string
     $traverser = new NodeTraverser;
     $nameResolver = new NameResolver(null, ['replaceNodes' => false]);
     $traverser->addVisitor($nameResolver);
+    $traverser->addVisitor(new ParentConnectingVisitor);
     $traverser->addVisitor(new class($mutator) extends NodeVisitorAbstract
     {
         public function __construct(private readonly string $mutator)

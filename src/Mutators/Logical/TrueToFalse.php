@@ -16,8 +16,26 @@ class TrueToFalse implements Mutator
 
     public static function can(Node $node): bool
     {
-        return $node instanceof ConstFetch &&
-            $node->name->toCodeString() === 'true';
+        if(!$node instanceof ConstFetch) {
+            return false;
+        }
+
+        if($node->name->toCodeString() !== 'true') {
+            return false;
+        }
+
+        $possibleFuncCall = $node->getAttribute('parent')?->getAttribute('parent');
+        if(
+            $possibleFuncCall instanceof Node\Expr\FuncCall &&
+            in_array(
+                $possibleFuncCall->name->toCodeString(),
+                ['in_array', 'array_search'],
+                true)
+        ) {
+            return false;
+        }
+
+        return true;
     }
 
     public static function mutate(Node $node): Node

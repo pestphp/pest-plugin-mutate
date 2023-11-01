@@ -8,6 +8,8 @@ use Pest\Mutate\Contracts\Mutator;
 use Pest\Mutate\Mutation;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitor\NameResolver;
+use PhpParser\NodeVisitor\ParentConnectingVisitor;
 use PhpParser\ParserFactory;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -59,6 +61,9 @@ class MutationGenerator
                 $this->mutated = false;
 
                 $traverser = new NodeTraverser;
+                $nameResolver = new NameResolver(null, ['replaceNodes' => false]);
+                $traverser->addVisitor($nameResolver);
+                $traverser->addVisitor(new ParentConnectingVisitor);
                 $traverser->addVisitor(new NodeVisitor(
                     mutator: $mutator,
                     linesToMutate: $linesToMutate,
