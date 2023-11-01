@@ -8,6 +8,8 @@ use Pest\Mutate\Contracts\MutatorSet;
 use Pest\Mutate\Mutators\String\ConcatRemoveLeft;
 use Pest\Mutate\Mutators\String\ConcatRemoveRight;
 use Pest\Mutate\Mutators\String\ConcatSwitchSides;
+use Pest\Mutate\Mutators\String\EmptyStringToNotEmpty;
+use Pest\Mutate\Mutators\String\NotEmptyStringToEmpty;
 use Pest\Mutate\Mutators\String\UnwrapChop;
 use Pest\Mutate\Mutators\String\UnwrapChunkSplit;
 use Pest\Mutate\Mutators\String\UnwrapHtmlentities;
@@ -45,6 +47,8 @@ class StringSet implements MutatorSet
             ConcatRemoveLeft::class,
             ConcatRemoveRight::class,
             ConcatSwitchSides::class,
+            EmptyStringToNotEmpty::class,
+            NotEmptyStringToEmpty::class,
             UnwrapChop::class,
             UnwrapChunkSplit::class,
             UnwrapHtmlentities::class,

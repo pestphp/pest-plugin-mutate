@@ -133,6 +133,10 @@ use Pest\Mutate\Mutators\Sets\StringSet;
 use Pest\Mutate\Mutators\String\ConcatRemoveLeft;
 use Pest\Mutate\Mutators\String\ConcatRemoveRight;
 use Pest\Mutate\Mutators\String\ConcatSwitchSides;
+use Pest\Mutate\Mutators\String\EmptyStringToNotEmpty;
+use Pest\Mutate\Mutators\String\NotEmptyStringToEmpty;
+use Pest\Mutate\Mutators\String\StrEndsWithToStrStartsWith;
+use Pest\Mutate\Mutators\String\StrStartsWithToStrEndsWith;
 use Pest\Mutate\Mutators\String\UnwrapChop;
 use Pest\Mutate\Mutators\String\UnwrapChunkSplit;
 use Pest\Mutate\Mutators\String\UnwrapHtmlentities;
@@ -435,6 +439,14 @@ class Mutators
     final public const STRING_CONCAT_REMOVE_RIGHT = ConcatRemoveRight::class;
 
     final public const STRING_CONCAT_SWITCH_SIDES = ConcatSwitchSides::class;
+
+    final public const STRING_EMPTY_STRING_TO_NOT_EMPTY = EmptyStringToNotEmpty::class;
+
+    final public const STRING_NOT_EMPTY_STRING_TO_EMPTY = NotEmptyStringToEmpty::class;
+
+    final public const STRING_STR_STARTS_WITH_TO_STRING_ENDS_WITH = StrStartsWithToStrEndsWith::class;
+
+    final public const STRING_STR_ENDS_WITH_TO_STRING_STARTS_WITH = StrEndsWithToStrStartsWith::class;
 
     final public const STRING_UNWRAP_CHOP = UnwrapChop::class;
 
