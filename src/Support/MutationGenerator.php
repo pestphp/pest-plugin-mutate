@@ -94,9 +94,9 @@ class MutationGenerator
 
         //        $cache->persist();
 
-        return array_filter($mutations, function () use ($ignoreComments): bool {
+        return array_filter($mutations, function (Mutation $mutation) use ($ignoreComments): bool {
             foreach ($ignoreComments as $comment) {
-                if ($comment['line'] === $this->originalNode->getStartLine()) {
+                if ($comment['line'] === $mutation->originalNode->getStartLine()) {
                     return false;
                 }
             }
