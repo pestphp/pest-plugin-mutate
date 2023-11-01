@@ -174,7 +174,7 @@ class MutationTestRunner implements MutationTestRunnerContract
                 $survivedCount++;
 
                 //                $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' NOT killed. ('.$mutation->mutator.')');
-                $path = str_ireplace(dirname(__DIR__, 2).'/', '', $mutation->file->getRealPath());
+                $path = str_ireplace(getcwd().'/', '', $mutation->file->getRealPath());
 
                 $diff = <<<HTML
                     <div class="text-green">+ {$mutation->diff()['modified'][0]}</div>

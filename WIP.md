@@ -25,6 +25,7 @@
 - [ ] Awesome docs: "Why to use" and "How to use"
 
 # Current Tasks
+- [ ] TrueToFalse: do not mutate third parameter of in_array and array_search?
 - [ ] `HandleTestCallProfileConfigurationTest` has side effects on other tests, if they should be run with `--mutate`
 - [ ] `->mutate()` should not override `--covered-only=false`
 - [ ] Set proper default paths `src` or `app`  if Laravel. see src/Plugins/Parallel/Handlers/Laravel.php:29, or maybe use the "coverage" config from phpunit.xml
@@ -34,6 +35,7 @@
 - [ ] Automatically create documentation from mutators
 - [ ] Add more mutators and sets
 - [ ] Create a sensible default set
+- [ ] Add option to only mutate a specific class
 
 # Backlog Prio 2
 - [ ] Dedicated help output (`vendor/bin/pest --mutate --help`)
