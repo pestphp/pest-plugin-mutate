@@ -14,6 +14,10 @@ use Pest\Mutate\Mutators\Arithmetic\PostIncrementToPostDecrement;
 use Pest\Mutate\Mutators\Arithmetic\PowerToMultiplication;
 use Pest\Mutate\Mutators\Arithmetic\PreDecrementToPreIncrement;
 use Pest\Mutate\Mutators\Arithmetic\PreIncrementToPreDecrement;
+use Pest\Mutate\Mutators\Array\ArrayKeyFirstToArrayKeyLast;
+use Pest\Mutate\Mutators\Array\ArrayKeyLastToArrayKeyFirst;
+use Pest\Mutate\Mutators\Array\ArrayPopToArrayShift;
+use Pest\Mutate\Mutators\Array\ArrayShiftToArrayPop;
 use Pest\Mutate\Mutators\Array\UnwrapArrayChangeKeyCase;
 use Pest\Mutate\Mutators\Array\UnwrapArrayChunk;
 use Pest\Mutate\Mutators\Array\UnwrapArrayColumn;
@@ -226,6 +230,14 @@ class Mutators
     final public const ARITHMETIC_PRE_INCREMENT_TO_PRE_DECREMENT = PreIncrementToPreDecrement::class;
 
     /** Array */
+    final public const ARRAY_ARRAY_KEY_FIRST_TO_ARRAY_KEY_LAST = ArrayKeyFirstToArrayKeyLast::class;
+
+    final public const ARRAY_ARRAY_KEY_LAST_TO_ARRAY_KEY_FIRST = ArrayKeyLastToArrayKeyFirst::class;
+
+    final public const ARRAY_ARRAY_POP_TO_ARRAY_SHIFT = ArrayPopToArrayShift::class;
+
+    final public const ARRAY_ARRAY_SHIFT_TO_ARRAY_POP = ArrayShiftToArrayPop::class;
+
     final public const ARRAY_UNWRAP_ARRAY_CHANGE_KEY_CASE = UnwrapArrayChangeKeyCase::class;
 
     final public const ARRAY_UNWRAP_ARRAY_CHUNK = UnwrapArrayChunk::class;

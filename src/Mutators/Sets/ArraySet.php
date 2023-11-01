@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Pest\Mutate\Mutators\Sets;
 
 use Pest\Mutate\Contracts\MutatorSet;
+use Pest\Mutate\Mutators\Array\ArrayKeyFirstToArrayKeyLast;
+use Pest\Mutate\Mutators\Array\ArrayKeyLastToArrayKeyFirst;
+use Pest\Mutate\Mutators\Array\ArrayPopToArrayShift;
+use Pest\Mutate\Mutators\Array\ArrayShiftToArrayPop;
 use Pest\Mutate\Mutators\Array\UnwrapArrayChangeKeyCase;
 use Pest\Mutate\Mutators\Array\UnwrapArrayChunk;
 use Pest\Mutate\Mutators\Array\UnwrapArrayColumn;
@@ -50,6 +54,10 @@ class ArraySet implements MutatorSet
     public static function mutators(): array
     {
         return [
+            ArrayKeyFirstToArrayKeyLast::class,
+            ArrayKeyLastToArrayKeyFirst::class,
+            ArrayPopToArrayShift::class,
+            ArrayShiftToArrayPop::class,
             UnwrapArrayChangeKeyCase::class,
             UnwrapArrayChunk::class,
             UnwrapArrayColumn::class,
