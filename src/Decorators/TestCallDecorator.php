@@ -31,7 +31,7 @@ class TestCallDecorator implements \Pest\Mutate\Contracts\ProfileFactory
 
     public function mutate(string $profile = 'default'): self
     {
-        if ($profile !== Profile::FAKE) {
+        if (! str_starts_with($profile, Profile::FAKE)) {
             Only::enable($this->testCall);
 
             $this->testRunner = Container::getInstance() // @phpstan-ignore-line
@@ -84,6 +84,16 @@ class TestCallDecorator implements \Pest\Mutate\Contracts\ProfileFactory
     public function parallel(bool $parallel = true): self
     {
         $this->_profileFactory()->parallel($parallel);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function class(string|array ...$classes): self
+    {
+        $this->_profileFactory()->class(...$classes);
 
         return $this;
     }

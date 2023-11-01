@@ -84,4 +84,14 @@ class ProfileFactory implements ProfileFactoryContract
 
         return $this;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function class(string|array ...$classes): ProfileFactoryContract
+    {
+        $this->profile->classes = array_merge(...array_map(fn (string|array $class): array => is_string($class) ? [$class] : $class, $classes));
+
+        return $this;
+    }
 }

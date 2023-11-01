@@ -6,34 +6,26 @@ use Pest\Mutate\Mutators\Arithmetic\PlusToMinus;
 use Pest\Mutate\Mutators\Sets\ArithmeticSet;
 use Pest\Mutate\Mutators\Sets\DefaultSet;
 use Pest\Mutate\Plugins\Mutate;
+use Pest\Mutate\Profile;
 use Pest\Mutate\Profiles;
 use Pest\Mutate\Tester\MutationTestRunner;
 use Pest\Support\Container;
+use Tests\Fixtures\Classes\AgeHelper;
+use Tests\Fixtures\Classes\SizeHelper;
 
 beforeEach(function (): void {
     MutationTestRunner::fake();
 
     $this->plugin = Container::getInstance()->get(Mutate::class);
 
-    $this->profile = Profiles::get('default');
+    $this->profile = Profiles::get(Profile::FAKE);
 });
 
-it('overrides global values on the default profile', function (): void {
-    mutate()
+it('overrides global values', function (): void {
+    mutate(Profile::FAKE)
         ->min(10.0);
 
-    $this->plugin->handleArguments(['--mutate', '--min=2']);
-
-    expect($this->profile->minMSI)->toEqual(2.0);
-});
-
-it('overrides global values on a non default profile', function (): void {
-    mutate('profile-1')
-        ->min(10.0);
-
-    $this->profile = Profiles::get('profile-1');
-
-    $this->plugin->handleArguments(['--mutate=profile-1', '--min=2']);
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--min=2']);
 
     expect($this->profile->minMSI)->toEqual(2.0);
 });
@@ -41,67 +33,77 @@ it('overrides global values on a non default profile', function (): void {
 it('sets the paths if --paths argument is passed', function (): void {
     expect($this->profile->paths)->toEqual([]);
 
-    $this->plugin->handleArguments(['--mutate', '--paths=src']);
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--paths=src']);
     expect($this->profile->paths)->toEqual(['src']);
 
-    $this->plugin->handleArguments(['--mutate', '--paths=src/path-1,src/path-2']);
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--paths=src/path-1,src/path-2']);
     expect($this->profile->paths)->toEqual(['src/path-1', 'src/path-2']);
 });
 
 it('sets the mutators if --mutators argument is passed', function (): void {
     expect($this->profile->mutators)->toEqual(DefaultSet::mutators());
 
-    $this->plugin->handleArguments(['--mutate', '--mutators=SetArithmetic']);
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--mutators=SetArithmetic']);
     expect($this->profile->mutators)->toEqual(ArithmeticSet::mutators());
 
-    $this->plugin->handleArguments(['--mutate', '--mutators=ArithmeticPlusToMinus']);
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--mutators=ArithmeticPlusToMinus']);
     expect($this->profile->mutators)->toEqual([PlusToMinus::class]);
 
-    $this->plugin->handleArguments(['--mutate', '--mutators=ArithmeticPlusToMinus,ArithmeticMinusToPlus']);
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--mutators=ArithmeticPlusToMinus,ArithmeticMinusToPlus']);
     expect($this->profile->mutators)->toEqual([PlusToMinus::class, MinusToPlus::class]);
 });
 
 it('sets MSI threshold if --min argument is passed', function (): void {
     expect($this->profile->minMSI)->toEqual(0.0);
 
-    $this->plugin->handleArguments(['--mutate']);
+    $this->plugin->handleArguments(['--mutate=fake-profile']);
     expect($this->profile->minMSI)->toEqual(0.0);
 
-    $this->plugin->handleArguments(['--mutate', '--min=2']);
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--min=2']);
     expect($this->profile->minMSI)->toEqual(2.0);
 
-    $this->plugin->handleArguments(['--mutate', '--min=2.4']);
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--min=2.4']);
     expect($this->profile->minMSI)->toEqual(2.4);
 });
 
 it('enables covered only option if --covered-only argument is passed', function (): void {
     expect($this->profile->coveredOnly)->toBeFalse();
 
-    $this->plugin->handleArguments(['--mutate']);
+    $this->plugin->handleArguments(['--mutate=fake-profile']);
     expect($this->profile->coveredOnly)->toBeFalse();
 
-    $this->plugin->handleArguments(['--mutate', '--covered-only']);
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--covered-only']);
     expect($this->profile->coveredOnly)->toBeTrue();
 
-    $this->plugin->handleArguments(['--mutate', '--covered-only=true']);
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--covered-only=true']);
     expect($this->profile->coveredOnly)->toBeTrue();
 
-    $this->plugin->handleArguments(['--mutate', '--covered-only=false']);
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--covered-only=false']);
     expect($this->profile->coveredOnly)->toBeFalse();
 });
 
 it('enables parallel option if --parallel argument is passed', function (): void {
     expect($this->profile->parallel)->toBeFalse();
 
-    $this->plugin->handleArguments(['--mutate']);
+    $this->plugin->handleArguments(['--mutate=fake-profile']);
     expect($this->profile->parallel)->toBeFalse();
 
-    $this->plugin->handleArguments(['--mutate', '--parallel']);
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--parallel']);
     expect($this->profile->parallel)->toBeTrue();
 
-    $this->plugin->handleArguments(['--mutate', '--parallel=true']);
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--parallel=true']);
     expect($this->profile->parallel)->toBeTrue();
 
-    $this->plugin->handleArguments(['--mutate', '--parallel=false']);
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--parallel=false']);
     expect($this->profile->coveredOnly)->toBeFalse();
+});
+
+it('sets the class if --class argument is passed', function (): void {
+    expect($this->profile->classes)->toEqual([]);
+
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--class='.AgeHelper::class]);
+    expect($this->profile->classes)->toEqual([AgeHelper::class]);
+
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--class='.AgeHelper::class.','.SizeHelper::class]);
+    expect($this->profile->classes)->toEqual([AgeHelper::class, SizeHelper::class]);
 });

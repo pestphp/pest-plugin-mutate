@@ -21,4 +21,9 @@ interface ProfileFactory
     public function coveredOnly(bool $coveredOnly = true): self;
 
     public function parallel(bool $parallel = true): self;
+
+    /**
+     * @param  array<int, class-string>|class-string  ...$classes
+     */
+    public function class(array|string ...$classes): self;
 }

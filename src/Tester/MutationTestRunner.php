@@ -15,6 +15,7 @@ use Pest\Mutate\Support\MutationGenerator;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
 use PHPUnit\TestRunner\TestResult\Facade;
+use ReflectionClass;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
@@ -68,7 +69,7 @@ class MutationTestRunner implements MutationTestRunnerContract
 
     public function isEnabled(): bool
     {
-        if ($this->enabledProfile === Profile::FAKE) {
+        if (str_starts_with((string) $this->enabledProfile, Profile::FAKE)) {
             return false;
         }
 
@@ -113,6 +114,17 @@ class MutationTestRunner implements MutationTestRunnerContract
         /** @var MutationGenerator $generator */
         $generator = Container::getInstance()->get(MutationGenerator::class);
         foreach ($files as $file) {
+            // if classes provided, ignore all files not containing the given class
+            foreach ($this->getProfile()->classes as $class) {
+                if (! class_exists($class)) {
+                    continue;
+                }
+                $reflector = new ReflectionClass($class);
+                if ($file->getRealPath() !== $reflector->getFileName()) {
+                    continue 2;
+                }
+            }
+
             $mutations = [
                 ...$mutations,
                 ...$generator->generate(

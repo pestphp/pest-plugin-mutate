@@ -11,6 +11,7 @@ use Pest\Contracts\Plugins\HandlesArguments;
 use Pest\Mutate\Boostrappers\BootSubscribers;
 use Pest\Mutate\Contracts\MutationTestRunner;
 use Pest\Mutate\Factories\ProfileFactory;
+use Pest\Mutate\Options\ClassOption;
 use Pest\Mutate\Options\CoveredOnlyOption;
 use Pest\Mutate\Options\MinMsiOption;
 use Pest\Mutate\Options\MutateOption;
@@ -45,6 +46,7 @@ class Mutate implements Bootable, HandlesArguments
         MinMsiOption::class,
         CoveredOnlyOption::class,
         ParallelOption::class,
+        ClassOption::class,
     ];
 
     /**
@@ -150,6 +152,10 @@ class Mutate implements Bootable, HandlesArguments
             unset($arguments[array_search('--'.ParallelOption::ARGUMENT, $arguments, true)]);
             $profileFactory->parallel();
             Parallel::disable();
+        }
+
+        if ($input->hasOption(ClassOption::ARGUMENT)) {
+            $profileFactory->class(explode(',', (string) $input->getOption(ClassOption::ARGUMENT))); // @phpstan-ignore-line
         }
 
         return $arguments;

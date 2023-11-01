@@ -33,10 +33,8 @@ class Profiles
      *
      * @internal
      */
-    public function reset(): void
+    public function resetFakeProfile(): void
     {
-        $this->profiles = array_filter([
-            Profile::FAKE => $this->profiles[Profile::FAKE] ?? null,
-        ]);
+        unset($this->profiles[Profile::FAKE]);
     }
 }

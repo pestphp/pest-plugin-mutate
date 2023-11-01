@@ -30,6 +30,11 @@ class Profile
 
     public bool $parallel = false;
 
+    /**
+     * @var array<int, class-string>
+     */
+    public array $classes = [];
+
     public function __construct()
     {
         $this->mutators = DefaultSet::mutators();
