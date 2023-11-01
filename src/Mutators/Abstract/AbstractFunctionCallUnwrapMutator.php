@@ -24,7 +24,7 @@ abstract class AbstractFunctionCallUnwrapMutator implements Mutator
             return false;
         }
 
-        return $node->name->getParts() === [static::functionName()]; // @phpstan-ignore-line
+        return $node->name->getParts() === [static::functionName()];
     }
 
     public static function mutate(Node $node): Node
