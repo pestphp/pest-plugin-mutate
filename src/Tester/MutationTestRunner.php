@@ -177,8 +177,8 @@ class MutationTestRunner implements MutationTestRunnerContract
                 $path = str_ireplace(dirname(__DIR__, 2).'/', '', $mutation->file->getRealPath());
 
                 $diff = <<<HTML
-                    <div class="text-green">+ {$mutation->diff()['original'][0]}</div>
-                    <div class="text-red">- {$mutation->diff()['modified'][0]}</div>
+                    <div class="text-green">+ {$mutation->diff()['modified'][0]}</div>
+                    <div class="text-red">- {$mutation->diff()['original'][0]}</div>
                     HTML;
 
                 render(<<<HTML
