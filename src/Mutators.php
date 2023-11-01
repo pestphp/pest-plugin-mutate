@@ -79,12 +79,16 @@ use Pest\Mutate\Mutators\ControlStructures\IfNegated;
 use Pest\Mutate\Mutators\ControlStructures\TernaryNegated;
 use Pest\Mutate\Mutators\ControlStructures\WhileAlwaysFalse;
 use Pest\Mutate\Mutators\Equality\EqualToIdentical;
+use Pest\Mutate\Mutators\Equality\EqualToNotEqual;
 use Pest\Mutate\Mutators\Equality\GreaterOrEqualToGreater;
 use Pest\Mutate\Mutators\Equality\GreaterOrEqualToSmaller;
 use Pest\Mutate\Mutators\Equality\GreaterToGreaterOrEqual;
 use Pest\Mutate\Mutators\Equality\GreaterToSmallerOrEqual;
 use Pest\Mutate\Mutators\Equality\IdenticalToEqual;
+use Pest\Mutate\Mutators\Equality\IdenticalToNotIdentical;
+use Pest\Mutate\Mutators\Equality\NotEqualToEqual;
 use Pest\Mutate\Mutators\Equality\NotEqualToNotIdentical;
+use Pest\Mutate\Mutators\Equality\NotIdenticalToIdentical;
 use Pest\Mutate\Mutators\Equality\NotIdenticalToNotEqual;
 use Pest\Mutate\Mutators\Equality\SmallerOrEqualToGreater;
 use Pest\Mutate\Mutators\Equality\SmallerOrEqualToSmaller;
@@ -354,6 +358,14 @@ class Mutators
     final public const CONTROL_STRUCTURES_CONTINUE_TO_BREAK = ContinueToBreak::class;
 
     /** Equality */
+    final public const EQUALITY_EQUAL_TO_NOT_EQUAL = EqualToNotEqual::class;
+
+    final public const EQUALITY_NOT_EQUAL_TO_EQUAL = NotEqualToEqual::class;
+
+    final public const EQUALITY_IDENTICAL_TO_NOT_IDENTICAL = IdenticalToNotIdentical::class;
+
+    final public const EQUALITY_NOT_IDENTICAL_TO_IDENTICAL = NotIdenticalToIdentical::class;
+
     final public const EQUALITY_GREATER_TO_GREATER_OR_EQUAL = GreaterToGreaterOrEqual::class;
 
     final public const EQUALITY_GREATER_TO_SMALLER_OR_EQUAL = GreaterToSmallerOrEqual::class;
