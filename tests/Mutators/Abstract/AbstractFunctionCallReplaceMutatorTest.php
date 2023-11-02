@@ -15,3 +15,8 @@ it('does not replace expression function calls', function (): void {
         $a = ($this->min)(1, 2);
         CODE);
 });
+
+it('can not mutate non function call nodes', function (): void {
+    expect(MinToMax::can(new \PhpParser\Node\Attribute(new \PhpParser\Node\Name('min'))))
+        ->toBeFalse();
+});

@@ -14,3 +14,8 @@ it('decrements all floats by one', function (): void {
         $a = 0.0;
         CODE);
 });
+
+it('can not mutate non dnumber nodes', function (): void {
+    expect(DecrementFloat::can(new \PhpParser\Node\Scalar\LNumber(1)))
+        ->toBeFalse();
+});

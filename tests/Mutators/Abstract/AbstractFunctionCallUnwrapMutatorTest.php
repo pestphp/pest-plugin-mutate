@@ -15,3 +15,8 @@ it('does not unwrap expression function calls', function (): void {
         $a = ($this->chop)('foo');
         CODE);
 });
+
+it('can not mutate non function call nodes', function (): void {
+    expect(UnwrapChop::can(new \PhpParser\Node\Attribute(new \PhpParser\Node\Name('chop'))))
+        ->toBeFalse();
+});
