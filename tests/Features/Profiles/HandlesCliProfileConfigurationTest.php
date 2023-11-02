@@ -8,14 +8,11 @@ use Pest\Mutate\Mutators\Sets\DefaultSet;
 use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Profile;
 use Pest\Mutate\Profiles;
-use Pest\Mutate\Tester\MutationTestRunner;
 use Pest\Support\Container;
 use Tests\Fixtures\Classes\AgeHelper;
 use Tests\Fixtures\Classes\SizeHelper;
 
 beforeEach(function (): void {
-    MutationTestRunner::fake();
-
     $this->plugin = Container::getInstance()->get(Mutate::class);
 
     $this->profile = Profiles::get(Profile::FAKE);

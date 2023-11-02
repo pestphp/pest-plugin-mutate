@@ -1,11 +1,14 @@
 
-   PASS  Tests\tests\Success\AllKilledTest
-  ✓ it kills all the mutants with (10, false)
-  ✓ it kills all the mutants with (17, false)
-  ✓ it kills all the mutants with (18, true)
-  ✓ it kills all the mutants with (25, true)
+  Running initial test suite ...  
+
+  ....
 
   Tests:    4 passed (4 assertions)
   Duration: xxx
 
-Running mutation tests...
+
+  Running mutation tests:  
+
+
+  [90mMutations:[39m    [32;1m0 killed[39;22m
+

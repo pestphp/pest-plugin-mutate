@@ -18,6 +18,7 @@ use Pest\Mutate\Options\MutateOption;
 use Pest\Mutate\Options\MutatorsOption;
 use Pest\Mutate\Options\ParallelOption;
 use Pest\Mutate\Options\PathsOption;
+use Pest\Mutate\Profile;
 use Pest\Plugins\Concerns\HandleArguments;
 use Pest\Plugins\Parallel;
 use Pest\Support\Container;
@@ -130,7 +131,9 @@ class Mutate implements Bootable, HandlesArguments
         $profileName = $input->getOption(MutateOption::ARGUMENT) ?? 'default';
         $profileFactory = new ProfileFactory($profileName); // @phpstan-ignore-line
 
-        $mutationTestRunner->enable($profileName); // @phpstan-ignore-line
+        if (! str_starts_with((string) $profileName, Profile::FAKE)) { // @phpstan-ignore-line
+            $mutationTestRunner->enable($profileName); // @phpstan-ignore-line
+        }
 
         if ($input->hasOption(PathsOption::ARGUMENT)) {
             $profileFactory->paths(explode(',', (string) $input->getOption(PathsOption::ARGUMENT))); // @phpstan-ignore-line
