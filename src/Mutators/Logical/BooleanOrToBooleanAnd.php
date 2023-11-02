@@ -14,6 +14,11 @@ class BooleanOrToBooleanAnd implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [BooleanOr::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof BooleanOr;

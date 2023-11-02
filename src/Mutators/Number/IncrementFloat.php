@@ -13,6 +13,11 @@ class IncrementFloat implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [DNumber::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof DNumber;

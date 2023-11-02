@@ -13,6 +13,11 @@ class RemoveNot implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [BooleanNot::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof BooleanNot;

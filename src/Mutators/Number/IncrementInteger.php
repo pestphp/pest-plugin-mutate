@@ -15,6 +15,11 @@ class IncrementInteger implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [LNumber::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof LNumber &&

@@ -13,6 +13,11 @@ class NotEmptyStringToEmpty implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [String_::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof String_ &&

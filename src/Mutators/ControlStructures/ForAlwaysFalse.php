@@ -15,6 +15,11 @@ class ForAlwaysFalse implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [For_::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof For_;

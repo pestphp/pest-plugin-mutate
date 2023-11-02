@@ -14,6 +14,11 @@ class ConcatEqualToEqual implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [Concat::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof Concat;

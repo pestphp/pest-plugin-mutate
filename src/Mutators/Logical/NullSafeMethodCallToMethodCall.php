@@ -14,6 +14,11 @@ class NullSafeMethodCallToMethodCall implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [NullsafeMethodCall::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof NullsafeMethodCall;

@@ -15,6 +15,11 @@ class InstanceOfToFalse implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [Instanceof_::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof Instanceof_;

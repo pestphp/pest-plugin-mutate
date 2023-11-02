@@ -14,6 +14,11 @@ class PowerToMultiplication implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [Pow::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof Pow;

@@ -14,6 +14,11 @@ class ModulusEqualToMultiplyEqual implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [Mod::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof Mod;

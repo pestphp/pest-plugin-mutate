@@ -17,6 +17,11 @@ class LaravelRemoveStringableUpper implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [MethodCall::class];
+    }
+
     public static function can(Node $node): bool
     {
         if (! $node instanceof MethodCall) {

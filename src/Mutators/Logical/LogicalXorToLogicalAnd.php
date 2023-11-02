@@ -14,6 +14,11 @@ class LogicalXorToLogicalAnd implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [LogicalXor::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof LogicalXor;

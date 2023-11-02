@@ -14,6 +14,11 @@ class PreDecrementToPreIncrement implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [PreDec::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof PreDec;

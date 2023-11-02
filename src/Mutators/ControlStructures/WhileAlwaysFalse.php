@@ -15,6 +15,11 @@ class WhileAlwaysFalse implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [While_::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof While_;

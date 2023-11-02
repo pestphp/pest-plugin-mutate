@@ -8,6 +8,8 @@ use Pest\Mutate\Contracts\Mutator;
 use Pest\Mutate\Factories\NodeTraverserFactory;
 use Pest\Mutate\Mutation;
 use PhpParser\Node;
+use PhpParser\NodeTraverser;
+use PhpParser\NodeVisitorAbstract;
 use PhpParser\ParserFactory;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -50,6 +52,8 @@ class MutationGenerator
 
         $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
 
+        $mutators = $this->filterMutators($mutators, $contents, $parser);
+
         //        $cache = MutationCache::instance();
         foreach ($mutators as $mutator) {
             //            if($cache->has($file, $mutator)){
@@ -76,9 +80,7 @@ class MutationGenerator
                     trackMutation: $this->trackMutation(...),
                 ));
 
-                $ast = $parser->parse($contents);
-
-                $modifiedAst = $traverser->traverse($ast); // @phpstan-ignore-line
+                $modifiedAst = $traverser->traverse($parser->parse($contents)); // @phpstan-ignore-line
 
                 if (! $this->hasMutated()) {
                     break;
@@ -158,5 +160,34 @@ class MutationGenerator
         }
 
         return true;
+    }
+
+    private function filterMutators(array $mutators, string $contents, \PhpParser\Parser $parser): array
+    {
+        $nodeTypes = [];
+
+        $traverser = new NodeTraverser;
+        $traverser->addVisitor(new class (function (string $nodeType) use (&$nodeTypes) {
+            return $nodeTypes[] = $nodeType;
+        }) extends NodeVisitorAbstract {
+            public function __construct(private $callback){}
+
+            public function enterNode(Node $node): void
+            {
+                ($this->callback)($node::class);
+            }
+        });
+        $traverser->traverse($parser->parse($contents));
+
+        $nodeTypes = array_unique($nodeTypes);
+
+        $mutatorsToUse = [];
+        foreach($nodeTypes as $nodeType){
+            foreach(MutatorMap::get()[$nodeType] ?? [] as $mutator){
+                $mutatorsToUse[] = $mutator;
+            }
+        }
+
+        return array_intersect($mutators, $mutatorsToUse);
     }
 }

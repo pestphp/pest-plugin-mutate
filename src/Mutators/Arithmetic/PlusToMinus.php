@@ -14,6 +14,11 @@ class PlusToMinus implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [Plus::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof Plus;

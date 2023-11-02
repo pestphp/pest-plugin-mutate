@@ -14,6 +14,11 @@ class LogicalOrToLogicalAnd implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [LogicalAnd::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof LogicalOr;

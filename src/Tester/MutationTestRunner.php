@@ -185,7 +185,7 @@ class MutationTestRunner implements MutationTestRunnerContract
             try {
                 $process->run();
             } catch (ProcessTimedOutException) {
-                $this->output->write('<fg=orange;options=bold>t</>');
+                $this->output->write('<fg=yellow;options=bold>t</>');
                 $timeoutedCount++;
                 $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' timed out. ('.$mutation->mutator.')');
 

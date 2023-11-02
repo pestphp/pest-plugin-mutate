@@ -14,6 +14,11 @@ class IfNegated implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [If_::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof If_;

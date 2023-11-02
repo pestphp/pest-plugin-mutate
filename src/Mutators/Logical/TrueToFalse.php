@@ -17,6 +17,11 @@ class TrueToFalse implements Mutator
 
     private const FUNCTIONS_TO_IGNORE = ['in_array', 'array_search'];
 
+    public static function nodesToHandle(): array
+    {
+        return [ConstFetch::class];
+    }
+
     public static function can(Node $node): bool
     {
         if (! $node instanceof ConstFetch) {

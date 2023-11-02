@@ -14,6 +14,11 @@ class ElseIfNegated implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [ElseIf_::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof ElseIf_;

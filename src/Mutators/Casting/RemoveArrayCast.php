@@ -13,6 +13,11 @@ class RemoveArrayCast implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [Array_::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof Array_;

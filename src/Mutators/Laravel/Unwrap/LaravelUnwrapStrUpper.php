@@ -16,6 +16,11 @@ class LaravelUnwrapStrUpper implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [MethodCall::class, StaticCall::class];
+    }
+
     public static function can(Node $node): bool
     {
         if (! $node instanceof MethodCall && ! $node instanceof StaticCall) {

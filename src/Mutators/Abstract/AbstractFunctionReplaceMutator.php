@@ -14,6 +14,11 @@ abstract class AbstractFunctionReplaceMutator implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [FuncCall::class];
+    }
+
     public static function can(Node $node): bool
     {
         if (! $node instanceof FuncCall) {

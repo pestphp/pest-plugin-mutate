@@ -14,6 +14,11 @@ class BreakToContinue implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [Break_::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof Break_;

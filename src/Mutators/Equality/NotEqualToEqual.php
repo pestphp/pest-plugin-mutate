@@ -14,6 +14,11 @@ class NotEqualToEqual implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [Equal::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof NotEqual;

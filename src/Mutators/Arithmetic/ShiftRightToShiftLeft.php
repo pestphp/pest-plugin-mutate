@@ -14,6 +14,11 @@ class ShiftRightToShiftLeft implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [ShiftRight::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof ShiftRight;

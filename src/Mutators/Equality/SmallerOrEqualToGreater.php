@@ -14,6 +14,11 @@ class SmallerOrEqualToGreater implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [SmallerOrEqual::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof SmallerOrEqual;

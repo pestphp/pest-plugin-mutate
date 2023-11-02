@@ -15,6 +15,11 @@ class DoWhileAlwaysFalse implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [Do_::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof Do_;

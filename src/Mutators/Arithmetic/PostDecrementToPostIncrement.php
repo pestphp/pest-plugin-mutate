@@ -14,6 +14,11 @@ class PostDecrementToPostIncrement implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [PostDec::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof PostDec;

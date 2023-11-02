@@ -14,6 +14,11 @@ class BitwiseXorToBitwiseAnd implements Mutator
 {
     use HasName;
 
+    public static function nodesToHandle(): array
+    {
+        return [BitwiseXor::class];
+    }
+
     public static function can(Node $node): bool
     {
         return $node instanceof BitwiseXor;
