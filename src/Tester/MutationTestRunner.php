@@ -106,7 +106,7 @@ class MutationTestRunner implements MutationTestRunnerContract
         $coveredLines = array_map(fn (array $lines): array => array_filter($lines, fn (array $tests): bool => $tests !== []), $codeCoverage->getData()->lineCoverage());
         $coveredLines = array_filter($coveredLines, fn (array $lines): bool => $lines !== []);
 
-        $files = $this->getFiles(array_keys($coveredLines));
+        $files = $this->getFiles($this->getProfile()->paths);
 
         /** @var array<int, Mutation> $mutations */
         $mutations = [];
@@ -114,15 +114,20 @@ class MutationTestRunner implements MutationTestRunnerContract
         /** @var MutationGenerator $generator */
         $generator = Container::getInstance()->get(MutationGenerator::class);
         foreach ($files as $file) {
+            if($this->getProfile()->coveredOnly && !isset($coveredLines[$file->getRealPath()])){
+                continue;
+            }
+
             $mutations = [
                 ...$mutations,
                 ...$generator->generate(
                     file: $file,
                     mutators: $this->getProfile()->mutators,
-                    linesToMutate: $this->getProfile()->coveredOnly ? (array_keys($coveredLines[$file->getRealPath()] ?? [])) : [],
+                    linesToMutate: $this->getProfile()->coveredOnly ? array_keys($coveredLines[$file->getRealPath()]) : [],
                     classesToMutate: $this->getProfile()->classes,
                 ),
             ];
+            $this->output->writeln('Generated '.count($mutations).' mutations for '.$file->getRealPath());
         }
 
         $survivedCount = 0;
@@ -231,7 +236,10 @@ class MutationTestRunner implements MutationTestRunnerContract
     {
         $dirs = [];
         $filePaths = [];
-        foreach (is_string($paths) ? [$paths] : $paths as $path) {
+        foreach ($paths as $path) {
+            if(!str_starts_with($path, DIRECTORY_SEPARATOR)) {
+                $path = getcwd() . DIRECTORY_SEPARATOR . $path;
+            }
             if (is_dir($path)) {
                 $dirs[] = $path;
             } elseif (is_file($path)) {

@@ -17,7 +17,7 @@ class Profile
     /**
      * @var array<int, string>
      */
-    public array $paths = [];
+    public array $paths = ['src'];
 
     /**
      * @var array<int, class-string<Mutator>>
