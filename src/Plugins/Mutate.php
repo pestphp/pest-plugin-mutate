@@ -109,7 +109,7 @@ class Mutate implements Bootable, HandlesArguments
             }
         }
 
-        $mutationTestRunner->setOriginalArguments($arguments);
+        $originalArguments = $arguments;
 
         $inputDefinition = new InputDefinition($inputOptions);
 
@@ -133,6 +133,7 @@ class Mutate implements Bootable, HandlesArguments
 
         if (! str_starts_with((string) $profileName, Profile::FAKE)) { // @phpstan-ignore-line
             $mutationTestRunner->enable($profileName); // @phpstan-ignore-line
+            $mutationTestRunner->setOriginalArguments($originalArguments);
         }
 
         if ($input->hasOption(PathsOption::ARGUMENT)) {
