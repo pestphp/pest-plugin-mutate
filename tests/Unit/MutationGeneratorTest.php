@@ -65,21 +65,25 @@ it('generates mutations for the given file if it has line coverage', function ()
         ->toHaveCount(1);
 });
 
-it('generates mutations for the given file if it contains the given class', function (string $class, int $expectedCount): void {
+it('generates mutations for the given file if it contains the given class', function (array $classes, int $expectedCount): void {
     $mutations = $this->generator->generate(
         file: new SplFileInfo(dirname(__DIR__).'/Fixtures/Classes/AgeHelper.php', '', ''),
         mutators: [GreaterOrEqualToGreater::class],
-        classesToMutate: [$class],
+        classesToMutate: $classes,
     );
 
     expect($mutations)
         ->toBeArray()
         ->toHaveCount($expectedCount);
 })->with([
-    [AgeHelper::class, 2],
-    [SizeHelper::class, 0],
-    ['AgeHelper', 2],
-    ['SizeHelper', 0],
+    [[AgeHelper::class], 2],
+    [[SizeHelper::class], 0],
+    [[AgeHelper::class, SizeHelper::class], 2],
+    [['AgeHelper'], 2],
+    [['SizeHelper'], 0],
+    [['Invalid\\Namespace\\AgeHelper'], 0],
+    [['Invalid\\Namespace\\AgeHelper', AgeHelper::class], 2],
+    [[SizeHelper::class, AgeHelper::class], 2],
 ]);
 
 it('ignores lines with the ignore annotation', function (): void {
