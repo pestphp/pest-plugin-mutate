@@ -89,6 +89,8 @@ class MutationTestRunner implements MutationTestRunnerContract
     {
         $this->assertInitialTestRunWasSuccessful();
 
+        $start = microtime(true);
+
         if (! file_exists($reportPath = Coverage::getPath())) {
             // TODO: maybe we can run without a coverage report, but it is really in performant
             $this->output->writeln('No coverage report found, aborting mutation testing.');
@@ -98,7 +100,7 @@ class MutationTestRunner implements MutationTestRunnerContract
         //        $this->output->writeln('Running mutation tests for profile: '.$this->enabledProfile);
 
         renderUsing($this->output);
-        render('<div class="m-2 my-1">Running mutation tests'.($this->enabledProfile !== 'default' ? (' (Profile: '.$this->enabledProfile.')') : '').':</div>');
+        render('<div class="mx-2 mt-1">Generating mutations ...'.($this->enabledProfile !== 'default' ? (' (Profile: '.$this->enabledProfile.')') : '').'</div>');
 
         /** @var CodeCoverage $codeCoverage */
         $codeCoverage = require $reportPath;
@@ -126,12 +128,21 @@ class MutationTestRunner implements MutationTestRunnerContract
                     classesToMutate: $this->getProfile()->classes,
                 ),
             ];
-            $this->output->writeln('Generated '.count($mutations).' mutations for '.$file->getRealPath());
         }
+
+        $this->output->writeln([
+            '  <fg=gray>'.count($mutations). ' Mutations created</>',
+            '',
+        ]);
+
+        renderUsing($this->output);
+        render('<div class="m-2 my-1">Running mutation tests:</div>');
 
         $survivedCount = 0;
         $timeoutedCount = 0;
         $notCoveredCount = 0;
+
+        $this->output->write('  ');
 
         // run tests for each mutation
         foreach ($mutations as $mutation) {
@@ -174,6 +185,7 @@ class MutationTestRunner implements MutationTestRunnerContract
             try {
                 $process->run();
             } catch (ProcessTimedOutException) {
+                $this->output->write('<fg=orange;options=bold>t</>');
                 $timeoutedCount++;
                 $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' timed out. ('.$mutation->mutator.')');
 
@@ -181,6 +193,7 @@ class MutationTestRunner implements MutationTestRunnerContract
             }
 
             if ($process->isSuccessful()) {
+                $this->output->write('<fg=red;options=bold>x</>');
                 $survivedCount++;
 
                 //                                $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' NOT killed. ('.$mutation->mutator.')');
@@ -208,12 +221,18 @@ class MutationTestRunner implements MutationTestRunnerContract
                 continue;
             }
 
+            $this->output->write('<fg=gray;options=bold>.</>');
+
 //            $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' killed.');
         }
 
+        $duration = number_format(microtime(true) - $start, 2);
+
         $this->output->writeln([
             '',
-            '  <fg=gray>Mutations:</>    <fg=default><fg=red;options=bold>'.($survivedCount !== 0 ? $survivedCount.' survived</><fg=gray>,</> ' : '').'<fg=yellow;options=bold>'.($notCoveredCount !== 0 ? $notCoveredCount.' not covered</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.($timeoutedCount !== 0 ? $timeoutedCount.' timeout</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.(count($mutations) - $survivedCount - $timeoutedCount - $notCoveredCount).' killed</>',
+            '',
+            '  <fg=gray>Mutations:</> <fg=default><fg=red;options=bold>'.($survivedCount !== 0 ? $survivedCount.' survived</><fg=gray>,</> ' : '').'<fg=yellow;options=bold>'.($notCoveredCount !== 0 ? $notCoveredCount.' not covered</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.($timeoutedCount !== 0 ? $timeoutedCount.' timeout</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.(count($mutations) - $survivedCount - $timeoutedCount - $notCoveredCount).' killed</>',
+            '  <fg=gray>Duration:</>  <fg=default>'.$duration.'s</>',
             '',
         ]);
 
@@ -282,6 +301,11 @@ class MutationTestRunner implements MutationTestRunnerContract
         ]);
 
         exit(1);
+    }
+
+    public function getEnabledProfile(): ?string
+    {
+        return $this->enabledProfile;
     }
 
     private function calculateTimeout(): int

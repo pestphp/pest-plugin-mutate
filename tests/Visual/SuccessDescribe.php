@@ -18,8 +18,6 @@ test('visual snapshot of mutation tests on success', function (): void {
 
     $output = preg_replace('/Duration: .*/', 'Duration: xxx', $output);
 
-    $this->markTestSkipped('not fully implemented yet, so there is no reason to fail the test if output does not matches');
-
     expect($output)
         ->toMatchSnapshot();
-});
+})->todo();
