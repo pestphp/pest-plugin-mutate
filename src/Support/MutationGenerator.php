@@ -10,6 +10,7 @@ use Pest\Mutate\Mutation;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
+use PhpParser\Parser;
 use PhpParser\ParserFactory;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -162,28 +163,40 @@ class MutationGenerator
         return true;
     }
 
-    private function filterMutators(array $mutators, string $contents, \PhpParser\Parser $parser): array
+    /**
+     * @param  array<int, class-string<Mutator>>  $mutators
+     * @return array<int, class-string<Mutator>>
+     */
+    private function filterMutators(array $mutators, string $contents, Parser $parser): array
     {
         $nodeTypes = [];
 
         $traverser = new NodeTraverser;
-        $traverser->addVisitor(new class (function (string $nodeType) use (&$nodeTypes) {
+        $traverser->addVisitor(new class(function (string $nodeType) use (&$nodeTypes): string {
             return $nodeTypes[] = $nodeType;
         }) extends NodeVisitorAbstract {
-            public function __construct(private $callback){}
 
-            public function enterNode(Node $node): void
+            /**
+             * @param  callable  $callback
+             */
+            public function __construct(private $callback) // @pest-ignore-type
+            {
+            }
+
+            public function enterNode(Node $node): ?Node
             {
                 ($this->callback)($node::class);
+
+                return null;
             }
         });
-        $traverser->traverse($parser->parse($contents));
+        $traverser->traverse($parser->parse($contents)); // @phpstan-ignore-line
 
         $nodeTypes = array_unique($nodeTypes);
 
         $mutatorsToUse = [];
-        foreach($nodeTypes as $nodeType){
-            foreach(MutatorMap::get()[$nodeType] ?? [] as $mutator){
+        foreach ($nodeTypes as $nodeType) {
+            foreach (MutatorMap::get()[$nodeType] ?? [] as $mutator) {
                 $mutatorsToUse[] = $mutator;
             }
         }

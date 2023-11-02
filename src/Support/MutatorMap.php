@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pest\Mutate\Support;
 
+use Pest\Mutate\Contracts\Mutator;
 use Pest\Mutate\Mutators\Sets\ArithmeticSet;
 use Pest\Mutate\Mutators\Sets\ArraySet;
 use Pest\Mutate\Mutators\Sets\AssignmentSet;
@@ -16,35 +19,41 @@ use Pest\Mutate\Mutators\Sets\StringSet;
 
 class MutatorMap
 {
-    static ?array $map = null;
+    /**
+     * @var ?array<string, array<class-string<Mutator>>>
+     */
+    public static ?array $map = null;
 
+    /**
+     * @return array<string, array<class-string<Mutator>>>
+     */
     public static function get(): array
     {
-           if(self::$map !== null) {
-               return self::$map;
-           }
+        if (self::$map !== null) {
+            return self::$map;
+        }
 
-           $mutators =  [
-               ...ArithmeticSet::mutators(),
-               ...ArraySet::mutators(),
-               ...AssignmentSet::mutators(),
-               ...CastingSet::mutators(),
-               ...ControlStructuresSet::mutators(),
-               ...EqualitySet::defaultMutators(),
-               ...LogicalSet::mutators(),
-               ...LaravelSet::mutators(),
-               ...MathSet::mutators(),
-               ...NumberSet::mutators(),
-               ...StringSet::mutators(),
-           ];
+        $mutators = [
+            ...ArithmeticSet::mutators(),
+            ...ArraySet::mutators(),
+            ...AssignmentSet::mutators(),
+            ...CastingSet::mutators(),
+            ...ControlStructuresSet::mutators(),
+            ...EqualitySet::defaultMutators(),
+            ...LogicalSet::mutators(),
+            ...LaravelSet::mutators(),
+            ...MathSet::mutators(),
+            ...NumberSet::mutators(),
+            ...StringSet::mutators(),
+        ];
 
-           $map = [];
-           foreach($mutators as $mutator){
-               foreach($mutator::nodesToHandle() as $node){
-                   $map[$node][] = $mutator;
-               }
-           }
+        $map = [];
+        foreach ($mutators as $mutator) {
+            foreach ($mutator::nodesToHandle() as $node) {
+                $map[$node][] = $mutator;
+            }
+        }
 
-           return self::$map = $map;
+        return self::$map = $map;
     }
 }

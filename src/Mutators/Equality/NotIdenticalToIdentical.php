@@ -4,24 +4,16 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Mutators\Equality;
 
-use Pest\Mutate\Contracts\Mutator;
-use Pest\Mutate\Mutators\Concerns\HasName;
+use Pest\Mutate\Mutators\Abstract\AbstractMutator;
 use PhpParser\Node;
 use PhpParser\Node\Expr\BinaryOp\Identical;
 use PhpParser\Node\Expr\BinaryOp\NotIdentical;
 
-class NotIdenticalToIdentical implements Mutator
+class NotIdenticalToIdentical extends AbstractMutator
 {
-    use HasName;
-
     public static function nodesToHandle(): array
     {
         return [NotIdentical::class];
-    }
-
-    public static function can(Node $node): bool
-    {
-        return $node instanceof NotIdentical;
     }
 
     public static function mutate(Node $node): Node

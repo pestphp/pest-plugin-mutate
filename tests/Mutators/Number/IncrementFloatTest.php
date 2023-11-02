@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 use Pest\Mutate\Mutators\Number\IncrementFloat;
+use PhpParser\Node\Scalar\LNumber;
 
 it('increments all floats by one', function (): void {
     expect(mutateCode(IncrementFloat::class, <<<'CODE'
@@ -16,6 +17,6 @@ it('increments all floats by one', function (): void {
 });
 
 it('can not mutate non dnumber nodes', function (): void {
-    expect(IncrementFloat::can(new \PhpParser\Node\Scalar\LNumber(1)))
+    expect(IncrementFloat::can(new LNumber(1)))
         ->toBeFalse();
 });

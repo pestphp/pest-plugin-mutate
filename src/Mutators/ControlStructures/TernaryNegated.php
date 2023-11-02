@@ -4,24 +4,16 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Mutators\ControlStructures;
 
-use Pest\Mutate\Contracts\Mutator;
-use Pest\Mutate\Mutators\Concerns\HasName;
+use Pest\Mutate\Mutators\Abstract\AbstractMutator;
 use PhpParser\Node;
 use PhpParser\Node\Expr\BooleanNot;
 use PhpParser\Node\Expr\Ternary;
 
-class TernaryNegated implements Mutator
+class TernaryNegated extends AbstractMutator
 {
-    use HasName;
-
     public static function nodesToHandle(): array
     {
         return [Ternary::class];
-    }
-
-    public static function can(Node $node): bool
-    {
-        return $node instanceof Ternary;
     }
 
     public static function mutate(Node $node): Node

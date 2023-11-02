@@ -8,6 +8,9 @@ use PhpParser\Node;
 
 interface Mutator
 {
+    /**
+     * @return array<int, class-string<Node>>
+     */
     public static function nodesToHandle(): array;
 
     public static function name(): string;

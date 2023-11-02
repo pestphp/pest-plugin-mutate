@@ -4,24 +4,16 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Mutators\Equality;
 
-use Pest\Mutate\Contracts\Mutator;
-use Pest\Mutate\Mutators\Concerns\HasName;
+use Pest\Mutate\Mutators\Abstract\AbstractMutator;
 use PhpParser\Node;
 use PhpParser\Node\Expr\BinaryOp\Greater;
 use PhpParser\Node\Expr\BinaryOp\GreaterOrEqual;
 
-class GreaterOrEqualToGreater implements Mutator
+class GreaterOrEqualToGreater extends AbstractMutator
 {
-    use HasName;
-
     public static function nodesToHandle(): array
     {
         return [GreaterOrEqual::class];
-    }
-
-    public static function can(Node $node): bool
-    {
-        return $node instanceof GreaterOrEqual;
     }
 
     public static function mutate(Node $node): Node

@@ -4,23 +4,15 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Mutators\Number;
 
-use Pest\Mutate\Contracts\Mutator;
-use Pest\Mutate\Mutators\Concerns\HasName;
+use Pest\Mutate\Mutators\Abstract\AbstractMutator;
 use PhpParser\Node;
 use PhpParser\Node\Scalar\DNumber;
 
-class DecrementFloat implements Mutator
+class DecrementFloat extends AbstractMutator
 {
-    use HasName;
-
     public static function nodesToHandle(): array
     {
         return [DNumber::class];
-    }
-
-    public static function can(Node $node): bool
-    {
-        return $node instanceof DNumber;
     }
 
     public static function mutate(Node $node): Node

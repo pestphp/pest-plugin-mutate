@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Mutators\Logical;
 
-use Pest\Mutate\Contracts\Mutator;
-use Pest\Mutate\Mutators\Concerns\HasName;
+use Pest\Mutate\Mutators\Abstract\AbstractMutator;
 use PhpParser\Node;
 use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Name;
 
-class TrueToFalse implements Mutator
+class TrueToFalse extends AbstractMutator
 {
-    use HasName;
-
     private const FUNCTIONS_TO_IGNORE = ['in_array', 'array_search'];
 
     public static function nodesToHandle(): array
@@ -24,10 +21,11 @@ class TrueToFalse implements Mutator
 
     public static function can(Node $node): bool
     {
-        if (! $node instanceof ConstFetch) {
+        if (! parent::can($node)) {
             return false;
         }
 
+        /** @var ConstFetch $node */
         if ($node->name->toCodeString() !== 'true') {
             return false;
         }

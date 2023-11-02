@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Mutators\Laravel\Remove;
 
-use Pest\Mutate\Contracts\Mutator;
-use Pest\Mutate\Mutators\Concerns\HasName;
+use Pest\Mutate\Mutators\Abstract\AbstractMutator;
 use PhpParser\Node;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\MethodCall;
@@ -13,10 +12,8 @@ use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Name\FullyQualified;
 
 // TODO: This is a POC, lot of refactor and extraction needed
-class LaravelRemoveStringableUpper implements Mutator
+class LaravelRemoveStringableUpper extends AbstractMutator
 {
-    use HasName;
-
     public static function nodesToHandle(): array
     {
         return [MethodCall::class];
@@ -24,7 +21,7 @@ class LaravelRemoveStringableUpper implements Mutator
 
     public static function can(Node $node): bool
     {
-        if (! $node instanceof MethodCall) {
+        if (! parent::can($node)) {
             return false;
         }
 

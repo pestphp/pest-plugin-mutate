@@ -4,24 +4,16 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Mutators\Arithmetic;
 
-use Pest\Mutate\Contracts\Mutator;
-use Pest\Mutate\Mutators\Concerns\HasName;
+use Pest\Mutate\Mutators\Abstract\AbstractMutator;
 use PhpParser\Node;
 use PhpParser\Node\Expr\BinaryOp\BitwiseAnd;
 use PhpParser\Node\Expr\BinaryOp\BitwiseOr;
 
-class BitwiseAndToBitwiseOr implements Mutator
+class BitwiseAndToBitwiseOr extends AbstractMutator
 {
-    use HasName;
-
     public static function nodesToHandle(): array
     {
         return [BitwiseAnd::class];
-    }
-
-    public static function can(Node $node): bool
-    {
-        return $node instanceof BitwiseAnd;
     }
 
     public static function mutate(Node $node): Node

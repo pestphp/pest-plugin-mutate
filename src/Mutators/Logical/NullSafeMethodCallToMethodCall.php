@@ -4,24 +4,16 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Mutators\Logical;
 
-use Pest\Mutate\Contracts\Mutator;
-use Pest\Mutate\Mutators\Concerns\HasName;
+use Pest\Mutate\Mutators\Abstract\AbstractMutator;
 use PhpParser\Node;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\NullsafeMethodCall;
 
-class NullSafeMethodCallToMethodCall implements Mutator
+class NullSafeMethodCallToMethodCall extends AbstractMutator
 {
-    use HasName;
-
     public static function nodesToHandle(): array
     {
         return [NullsafeMethodCall::class];
-    }
-
-    public static function can(Node $node): bool
-    {
-        return $node instanceof NullsafeMethodCall;
     }
 
     public static function mutate(Node $node): Node

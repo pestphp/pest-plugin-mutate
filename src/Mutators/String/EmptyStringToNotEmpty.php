@@ -4,15 +4,12 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Mutators\String;
 
-use Pest\Mutate\Contracts\Mutator;
-use Pest\Mutate\Mutators\Concerns\HasName;
+use Pest\Mutate\Mutators\Abstract\AbstractMutator;
 use PhpParser\Node;
 use PhpParser\Node\Scalar\String_;
 
-class EmptyStringToNotEmpty implements Mutator
+class EmptyStringToNotEmpty extends AbstractMutator
 {
-    use HasName;
-
     public static function nodesToHandle(): array
     {
         return [String_::class];

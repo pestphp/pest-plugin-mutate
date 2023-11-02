@@ -131,7 +131,7 @@ class MutationTestRunner implements MutationTestRunnerContract
         }
 
         $this->output->writeln([
-            '  <fg=gray>'.count($mutations). ' Mutations created</>',
+            '  <fg=gray>'.count($mutations).' Mutations created</>',
             '',
         ]);
 
@@ -223,7 +223,7 @@ class MutationTestRunner implements MutationTestRunnerContract
 
             $this->output->write('<fg=gray;options=bold>.</>');
 
-//            $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' killed.');
+            //            $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' killed.');
         }
 
         $duration = number_format(microtime(true) - $start, 2);

@@ -21,5 +21,7 @@ interface MutationTestRunner
 
     public function getProfileFactory(): ProfileFactory;
 
+    public function getEnabledProfile(): ?string;
+
     public function run(): void;
 }

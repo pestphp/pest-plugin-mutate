@@ -4,16 +4,12 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Mutators\Abstract;
 
-use Pest\Mutate\Contracts\Mutator;
-use Pest\Mutate\Mutators\Concerns\HasName;
 use PhpParser\Node;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Name;
 
-abstract class AbstractFunctionCallUnwrapMutator implements Mutator
+abstract class AbstractFunctionCallUnwrapMutator extends AbstractMutator
 {
-    use HasName;
-
     public static function nodesToHandle(): array
     {
         return [FuncCall::class];

@@ -1,8 +1,9 @@
 <?php
 
 declare(strict_types=1);
-
 use Pest\Mutate\Mutators\Math\MinToMax;
+use PhpParser\Node\Attribute;
+use PhpParser\Node\Name;
 
 it('does not replace expression function calls', function (): void {
     expect(mutateCode(MinToMax::class, <<<'CODE'
@@ -17,6 +18,6 @@ it('does not replace expression function calls', function (): void {
 });
 
 it('can not mutate non function call nodes', function (): void {
-    expect(MinToMax::can(new \PhpParser\Node\Attribute(new \PhpParser\Node\Name('min'))))
+    expect(MinToMax::can(new Attribute(new Name('min'))))
         ->toBeFalse();
 });

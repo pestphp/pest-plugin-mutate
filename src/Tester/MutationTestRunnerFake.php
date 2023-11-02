@@ -45,4 +45,9 @@ class MutationTestRunnerFake implements MutationTestRunnerContract
 
         return new ProfileFactory($this->enabledProfile);
     }
+
+    public function getEnabledProfile(): ?string
+    {
+        return $this->enabledProfile;
+    }
 }
