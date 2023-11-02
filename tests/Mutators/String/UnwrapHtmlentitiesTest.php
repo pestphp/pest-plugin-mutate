@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Pest\Mutate\Mutators\String\UnwrapHtmlentities;
 
-it('unwraps the UnwrapHtmlEntityDecode.php function', function (): void {
+it('unwraps the htmlentities function', function (): void {
     expect(mutateCode(UnwrapHtmlentities::class, <<<'CODE'
         <?php
 

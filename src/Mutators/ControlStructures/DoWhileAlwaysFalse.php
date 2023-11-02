@@ -23,7 +23,7 @@ class DoWhileAlwaysFalse implements Mutator
     public static function mutate(Node $node): Node
     {
         /** @var Node\Stmt\Do_ $node */
-        $node->cond = new ConstFetch(new Name([0 => 'false']));
+        $node->cond = new ConstFetch(new Name('false'));
 
         return $node;
     }

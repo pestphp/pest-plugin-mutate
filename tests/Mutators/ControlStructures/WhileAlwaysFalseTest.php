@@ -19,3 +19,19 @@ it('mutates a while condition to always false', function (): void {
         }
         CODE);
 });
+
+it('does not mutate other statements', function (): void {
+    expect(mutateCode(WhileAlwaysFalse::class, <<<'CODE'
+        <?php
+
+        if ($a > $b) {
+            $b++;
+        }
+        CODE))->toBe(<<<'CODE'
+        <?php
+
+        if ($a > $b) {
+            $b++;
+        }
+        CODE);
+});

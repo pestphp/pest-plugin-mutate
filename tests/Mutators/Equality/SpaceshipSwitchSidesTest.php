@@ -14,3 +14,15 @@ it('mutates a spaceship comparison by switching the parameters', function (): vo
         return $b <=> $a;
         CODE);
 });
+
+it('does not mutate other operators', function (): void {
+    expect(mutateCode(SpaceshipSwitchSides::class, <<<'CODE'
+        <?php
+
+        return $a + $b;
+        CODE))->toBe(<<<'CODE'
+        <?php
+        
+        return $a + $b;
+        CODE);
+});

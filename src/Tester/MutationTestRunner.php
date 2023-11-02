@@ -15,7 +15,6 @@ use Pest\Mutate\Support\MutationGenerator;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
 use PHPUnit\TestRunner\TestResult\Facade;
-use ReflectionClass;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
@@ -114,7 +113,7 @@ class MutationTestRunner implements MutationTestRunnerContract
         /** @var MutationGenerator $generator */
         $generator = Container::getInstance()->get(MutationGenerator::class);
         foreach ($files as $file) {
-            if($this->getProfile()->coveredOnly && !isset($coveredLines[$file->getRealPath()])){
+            if ($this->getProfile()->coveredOnly && ! isset($coveredLines[$file->getRealPath()])) {
                 continue;
             }
 
@@ -145,7 +144,7 @@ class MutationTestRunner implements MutationTestRunnerContract
             foreach (range($mutation->originalNode->getStartLine(), $mutation->originalNode->getEndLine()) as $lineNumber) {
                 foreach ($coveredLines[$mutation->file->getRealPath()][$lineNumber] ?? [] as $test) {
                     preg_match('/\\\\([a-zA-Z0-9]*)::__pest_evaluable_([^#]*)"?/', (string) $test, $matches);
-                    $filters[] = $matches[1].'::'.preg_replace(['/([^_])_([^_])/', '/__/'], ['$1 $2', '_'], $matches[2]);
+                    $filters[] = $matches[1].'::'.preg_replace(['/_([a-z])_/', '/([^_])_([^_])/', '/__/'], [' $1 ', '$1 $2', '_'], $matches[2]);
                 }
             }
             $filters = array_unique($filters);
@@ -230,15 +229,15 @@ class MutationTestRunner implements MutationTestRunnerContract
     }
 
     /**
-     * @param  array<array-key, string>|string  $paths
+     * @param  array<array-key, string>  $paths
      */
-    private function getFiles(array|string $paths): Finder
+    private function getFiles(array $paths): Finder
     {
         $dirs = [];
         $filePaths = [];
         foreach ($paths as $path) {
-            if(!str_starts_with($path, DIRECTORY_SEPARATOR)) {
-                $path = getcwd() . DIRECTORY_SEPARATOR . $path;
+            if (! str_starts_with($path, DIRECTORY_SEPARATOR)) {
+                $path = getcwd().DIRECTORY_SEPARATOR.$path;
             }
             if (is_dir($path)) {
                 $dirs[] = $path;

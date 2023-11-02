@@ -25,6 +25,8 @@
 - [ ] Awesome docs: "Why to use" and "How to use"
 
 # Current Tasks
+- [ ] Improve migration generation speed. Lookup table?
+- [ ] Cache created mutations
 - [ ] Make options singular?
 - [ ] Add option to only mutate a specific class
 - [ ] `HandleTestCallProfileConfigurationTest` has side effects on other tests, if they should be run with `--mutate`

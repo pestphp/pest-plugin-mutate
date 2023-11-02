@@ -15,3 +15,15 @@ it('mutates a coalesce operation by switching the parameters', function (): void
         $a = $c . $b;
         CODE);
 });
+
+it('does not mutate other operators', function (): void {
+    expect(mutateCode(ConcatSwitchSides::class, <<<'CODE'
+        <?php
+
+        return $a + $b;
+        CODE))->toBe(<<<'CODE'
+        <?php
+        
+        return $a + $b;
+        CODE);
+});

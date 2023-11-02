@@ -15,6 +15,18 @@ it('increments all integers by one', function (): void {
         CODE);
 });
 
+it('increments negative integers by one', function (): void {
+    expect(mutateCode(IncrementInteger::class, <<<'CODE'
+        <?php
+
+        $a = -2;
+        CODE))->toBe(<<<'CODE'
+        <?php
+
+        $a = -1;
+        CODE);
+});
+
 it('does not mutate declare strict types 1', function (): void {
     expect(mutateCode(IncrementInteger::class, <<<'CODE'
         <?php
@@ -24,5 +36,17 @@ it('does not mutate declare strict types 1', function (): void {
         <?php
 
         declare (strict_types=1);
+        CODE);
+});
+
+it('does not mutate int max', function (): void {
+    expect(mutateCode(IncrementInteger::class, <<<'CODE'
+        <?php
+
+        $a = 9223372036854775807;
+        CODE))->toBe(<<<'CODE'
+        <?php
+
+        $a = 9223372036854775807;
         CODE);
 });

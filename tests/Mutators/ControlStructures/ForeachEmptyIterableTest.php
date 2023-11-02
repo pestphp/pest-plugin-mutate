@@ -19,3 +19,19 @@ it('mutates a foreach statement to be empty', function (): void {
         }
         CODE);
 });
+
+it('does not mutate other statements', function (): void {
+    expect(mutateCode(ForeachEmptyIterable::class, <<<'CODE'
+        <?php
+
+        if ($a > $b) {
+            $b++;
+        }
+        CODE))->toBe(<<<'CODE'
+        <?php
+
+        if ($a > $b) {
+            $b++;
+        }
+        CODE);
+});

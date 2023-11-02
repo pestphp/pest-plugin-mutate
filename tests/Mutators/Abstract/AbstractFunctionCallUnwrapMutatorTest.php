@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 use Pest\Mutate\Mutators\String\UnwrapChop;
 
-it('unwraps the chop function', function (): void {
+it('does not unwrap expression function calls', function (): void {
     expect(mutateCode(UnwrapChop::class, <<<'CODE'
         <?php
 
-        $b = ($this->asdf)('foo');
-        $a = chop('foo', 'f');
+        $a = ($this->chop)('foo');
         CODE))->toBe(<<<'CODE'
         <?php
         
-        $b = ($this->asdf)('foo');
-        $a = 'foo';
+        $a = ($this->chop)('foo');
         CODE);
 });

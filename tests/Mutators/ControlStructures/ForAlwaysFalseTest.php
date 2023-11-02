@@ -19,3 +19,19 @@ it('mutates a for statement to be always false', function (): void {
         }
         CODE);
 });
+
+it('does not mutate other statements', function (): void {
+    expect(mutateCode(ForAlwaysFalse::class, <<<'CODE'
+        <?php
+
+        if ($a > $b) {
+            $b++;
+        }
+        CODE))->toBe(<<<'CODE'
+        <?php
+
+        if ($a > $b) {
+            $b++;
+        }
+        CODE);
+});

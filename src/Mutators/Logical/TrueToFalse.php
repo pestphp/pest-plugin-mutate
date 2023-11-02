@@ -37,14 +37,16 @@ class TrueToFalse implements Mutator
 
     private static function isNotOnFunctionToIgnore(ConstFetch $node): bool
     {
-        $possibleFuncCall = $node->getAttribute('parent')?->getAttribute('parent'); // @phpstan-ignore-line
+        $possibleFuncCall = $node->getAttribute('parent')->getAttribute('parent'); // @phpstan-ignore-line
 
-        return ! ($possibleFuncCall instanceof FuncCall &&
-            $possibleFuncCall->name instanceof Name &&
-            in_array(
-                $possibleFuncCall->name->toCodeString(),
-                self::FUNCTIONS_TO_IGNORE,
-                true)
-        );
+        if (! $possibleFuncCall instanceof FuncCall) { // @pest-mutate-ignore: InstanceOfToTrue
+            return true;
+        }
+
+        if (! $possibleFuncCall->name instanceof Name) {
+            return true;
+        }
+
+        return ! in_array($possibleFuncCall->name->toCodeString(), self::FUNCTIONS_TO_IGNORE, true);
     }
 }

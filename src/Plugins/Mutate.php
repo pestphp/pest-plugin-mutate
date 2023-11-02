@@ -126,6 +126,7 @@ class Mutate implements Bootable, HandlesArguments
 
         if (! $input->hasOption(MutateOption::ARGUMENT)) {
             $mutationTestRunner->setOriginalArguments($originalArguments);
+
             return $arguments;
         }
 

@@ -16,7 +16,7 @@ abstract class AbstractFunctionReplaceMutator implements Mutator
 
     public static function can(Node $node): bool
     {
-        if (! $node instanceof FuncCall) {
+        if (! $node instanceof FuncCall) { // @pest-mutate-ignore: InstanceOfToTrue
             return false;
         }
 

@@ -23,7 +23,7 @@ class WhileAlwaysFalse implements Mutator
     public static function mutate(Node $node): Node
     {
         /** @var While_ $node */
-        $node->cond = new ConstFetch(new Name([0 => 'false']));
+        $node->cond = new ConstFetch(new Name('false'));
 
         return $node;
     }
