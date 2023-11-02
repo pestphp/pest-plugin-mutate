@@ -10,7 +10,7 @@ use PhpParser\NodeVisitorAbstract;
 
 class NodeVisitor extends NodeVisitorAbstract
 {
-    private int $nodeCount = 0;
+    private int $nodeCount = 0; // @pest-mutate-ignore: IncrementInteger,DecrementInteger
 
     /**
      * @param  array<int, int>  $linesToMutate

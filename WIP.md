@@ -30,6 +30,7 @@
 - [ ] `HandleTestCallProfileConfigurationTest` has side effects on other tests, if they should be run with `--mutate`
 - [ ] `->mutate()` should not override `--covered-only=false`
 - [ ] Set proper default paths `src` or `app`  if Laravel. see src/Plugins/Parallel/Handlers/Laravel.php:29, or maybe use the "coverage" config from phpunit.xml
+- [ ] Better loop detection. For example when mutate break to continue in a while true loop
 
 # Backlog Prio 1
 - [ ] Improve test filtering. For ex. "a" in test name does not work

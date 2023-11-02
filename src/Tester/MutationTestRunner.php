@@ -115,15 +115,15 @@ class MutationTestRunner implements MutationTestRunnerContract
         $generator = Container::getInstance()->get(MutationGenerator::class);
         foreach ($files as $file) {
             // if classes provided, ignore all files not containing the given class
-            foreach ($this->getProfile()->classes as $class) {
-                if (! class_exists($class)) {
-                    continue;
-                }
-                $reflector = new ReflectionClass($class);
-                if ($file->getRealPath() !== $reflector->getFileName()) {
-                    continue 2;
-                }
-            }
+            //            foreach ($this->getProfile()->classes as $class) {
+            //                if (! class_exists($class)) {
+            //                    continue;
+            //                }
+            //                $reflector = new ReflectionClass($class);
+            //                if ($file->getRealPath() !== $reflector->getFileName()) {
+            //                    continue 2;
+            //                }
+            //            }
 
             $mutations = [
                 ...$mutations,
@@ -131,11 +131,13 @@ class MutationTestRunner implements MutationTestRunnerContract
                     file: $file,
                     mutators: $this->getProfile()->mutators,
                     linesToMutate: $this->getProfile()->coveredOnly ? (array_keys($coveredLines[$file->getRealPath()] ?? [])) : [],
+                    classesToMutate: $this->getProfile()->classes,
                 ),
             ];
         }
 
         $survivedCount = 0;
+        $timeoutedCount = 0;
         $notCoveredCount = 0;
 
         // run tests for each mutation
@@ -146,14 +148,16 @@ class MutationTestRunner implements MutationTestRunnerContract
 
             // TODO: we should pass the tests to run in another way, maybe via cache, mutation or env variable
             $filters = [];
-            foreach ($coveredLines[$mutation->file->getRealPath()][$mutation->originalNode->getLine()] ?? [] as $test) {
-                preg_match('/\\\\([a-zA-Z0-9]*)::__pest_evaluable_([^#]*)"?/', (string) $test, $matches);
-                $filters[] = $matches[1].'::'.preg_replace(['/([^_])_([^_])/', '/__/'], ['$1 $2', '_'], $matches[2]);
-                $filters = array_unique($filters);
+            foreach (range($mutation->originalNode->getStartLine(), $mutation->originalNode->getEndLine()) as $lineNumber) {
+                foreach ($coveredLines[$mutation->file->getRealPath()][$lineNumber] ?? [] as $test) {
+                    preg_match('/\\\\([a-zA-Z0-9]*)::__pest_evaluable_([^#]*)"?/', (string) $test, $matches);
+                    $filters[] = $matches[1].'::'.preg_replace(['/([^_])_([^_])/', '/__/'], ['$1 $2', '_'], $matches[2]);
+                }
             }
+            $filters = array_unique($filters);
 
             if ($filters === []) {
-                //                $this->output->writeln('No tests found for mutation: '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine());
+                $this->output->writeln('No tests found for mutation: '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' ('.$mutation->mutator::name().')');
                 $notCoveredCount++;
 
                 continue;
@@ -177,7 +181,8 @@ class MutationTestRunner implements MutationTestRunnerContract
             try {
                 $process->run();
             } catch (ProcessTimedOutException) {
-                //                $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' timed out.');
+                $timeoutedCount++;
+                $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' timed out. ('.$mutation->mutator.')');
 
                 continue;
             }
@@ -185,7 +190,7 @@ class MutationTestRunner implements MutationTestRunnerContract
             if ($process->isSuccessful()) {
                 $survivedCount++;
 
-                //                $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' NOT killed. ('.$mutation->mutator.')');
+                //                                $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' NOT killed. ('.$mutation->mutator.')');
                 $path = str_ireplace(getcwd().'/', '', $mutation->file->getRealPath());
 
                 $diff = <<<HTML
@@ -215,7 +220,7 @@ class MutationTestRunner implements MutationTestRunnerContract
 
         $this->output->writeln([
             '',
-            '  <fg=gray>Mutations:</>    <fg=default><fg=red;options=bold>'.($survivedCount !== 0 ? $survivedCount.' survived</><fg=gray>,</> ' : '').'<fg=yellow;options=bold>'.($notCoveredCount !== 0 ? $notCoveredCount.' not covered</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.(count($mutations) - $survivedCount - $notCoveredCount).' killed</>',
+            '  <fg=gray>Mutations:</>    <fg=default><fg=red;options=bold>'.($survivedCount !== 0 ? $survivedCount.' survived</><fg=gray>,</> ' : '').'<fg=yellow;options=bold>'.($notCoveredCount !== 0 ? $notCoveredCount.' not covered</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.($timeoutedCount !== 0 ? $timeoutedCount.' timeout</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.(count($mutations) - $survivedCount - $timeoutedCount - $notCoveredCount).' killed</>',
             '',
         ]);
 

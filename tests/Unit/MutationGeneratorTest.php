@@ -1,12 +1,13 @@
 <?php
 
 declare(strict_types=1);
-
 use Pest\Mutate\Mutation;
 use Pest\Mutate\Mutators\Equality\GreaterOrEqualToGreater;
 use Pest\Mutate\Mutators\Equality\SmallerToSmallerOrEqual;
 use Pest\Mutate\Support\MutationGenerator;
 use Symfony\Component\Finder\SplFileInfo;
+use Tests\Fixtures\Classes\AgeHelper;
+use Tests\Fixtures\Classes\SizeHelper;
 
 beforeEach(function (): void {
     $this->generator = new MutationGenerator();
@@ -63,6 +64,23 @@ it('generates mutations for the given file if it has line coverage', function ()
         ->toBeArray()
         ->toHaveCount(1);
 });
+
+it('generates mutations for the given file if it contains the given class', function (string $class, int $expectedCount): void {
+    $mutations = $this->generator->generate(
+        file: new SplFileInfo(dirname(__DIR__).'/Fixtures/Classes/AgeHelper.php', '', ''),
+        mutators: [GreaterOrEqualToGreater::class],
+        classesToMutate: [$class],
+    );
+
+    expect($mutations)
+        ->toBeArray()
+        ->toHaveCount($expectedCount);
+})->with([
+    [AgeHelper::class, 2],
+    [SizeHelper::class, 0],
+    ['AgeHelper', 2],
+    ['SizeHelper', 0],
+]);
 
 it('ignores lines with the ignore annotation', function (): void {
     $mutations = $this->generator->generate(

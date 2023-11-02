@@ -8,6 +8,7 @@ use Pest\Mutate\Contracts\Mutator;
 use Pest\Mutate\Mutators\Concerns\HasName;
 use PhpParser\Node;
 use PhpParser\Node\Scalar\LNumber;
+use PhpParser\Node\Stmt\DeclareDeclare;
 
 class DecrementInteger implements Mutator
 {
@@ -16,7 +17,7 @@ class DecrementInteger implements Mutator
     public static function can(Node $node): bool
     {
         return $node instanceof LNumber &&
-            !$node->getAttribute('parent') instanceof Node\Stmt\DeclareDeclare;
+            ! $node->getAttribute('parent') instanceof DeclareDeclare;
     }
 
     public static function mutate(Node $node): Node
