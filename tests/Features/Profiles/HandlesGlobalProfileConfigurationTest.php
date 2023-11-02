@@ -24,13 +24,13 @@ test('configure profile globally', function (): void {
 
 test('globally configure paths', function (): void {
     expect($this->profile->paths)
-        ->toEqual([]);
+        ->toEqual(['src']);
 
     mutate(Profile::FAKE)
-        ->paths(['src']);
+        ->paths(['app']);
 
     expect($this->profile->paths)
-        ->toEqual(['src']);
+        ->toEqual(['app']);
 
     mutate(Profile::FAKE)
         ->paths(['src/path-1', 'src/path-2'], 'src/path-3');
