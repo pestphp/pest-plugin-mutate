@@ -25,6 +25,7 @@
 - [ ] Awesome docs: "Why to use" and "How to use"
 
 # Current Tasks
+- [ ] Make options singular?
 - [ ] Add option to only mutate a specific class
 - [ ] `HandleTestCallProfileConfigurationTest` has side effects on other tests, if they should be run with `--mutate`
 - [ ] `->mutate()` should not override `--covered-only=false`

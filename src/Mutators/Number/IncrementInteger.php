@@ -15,7 +15,8 @@ class IncrementInteger implements Mutator
 
     public static function can(Node $node): bool
     {
-        return $node instanceof LNumber;
+        return $node instanceof LNumber &&
+            !$node->getAttribute('parent') instanceof Node\Stmt\DeclareDeclare;
     }
 
     public static function mutate(Node $node): Node
