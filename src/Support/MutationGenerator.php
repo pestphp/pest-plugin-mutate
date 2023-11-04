@@ -55,56 +55,50 @@ class MutationGenerator
 
         $mutators = $this->filterMutators($mutators, $contents, $parser);
 
-        //        $cache = MutationCache::instance();
+        $cache = MutationCache::instance();
         foreach ($mutators as $mutator) {
-            //            if($cache->has($file, $mutator)){
-            //                $mutations = [
-            //                    ...$mutations,
-            //                    ...$cache->get($file, $mutator),
-            //                ];
-            //                continue;
-            //            }
+            if ($cache->has($file, $contents, $linesToMutate, $mutator)) {
+                $newMutations = $cache->get($file, $contents, $linesToMutate, $mutator);
+            } else {
+                $newMutations = [];
 
-            $newMutations = [];
+                $this->offset = 0; // @pest-mutate-ignore: IntegerIncrement,IntegerDecrement
 
-            $this->offset = 0; // @pest-mutate-ignore: IntegerIncrement,IntegerDecrement
+                while (true) {
+                    $this->mutated = false;
 
-            while (true) {
-                $this->mutated = false;
+                    $traverser = NodeTraverserFactory::create();
+                    $traverser->addVisitor(new NodeVisitor(
+                        mutator: $mutator,
+                        linesToMutate: $linesToMutate,
+                        offset: $this->offset,
+                        hasAlreadyMutated: $this->hasMutated(...),
+                        trackMutation: $this->trackMutation(...),
+                    ));
 
-                $traverser = NodeTraverserFactory::create();
-                $traverser->addVisitor(new NodeVisitor(
-                    mutator: $mutator,
-                    linesToMutate: $linesToMutate,
-                    offset: $this->offset,
-                    hasAlreadyMutated: $this->hasMutated(...),
-                    trackMutation: $this->trackMutation(...),
-                ));
+                    $modifiedAst = $traverser->traverse($parser->parse($contents)); // @phpstan-ignore-line
 
-                $modifiedAst = $traverser->traverse($parser->parse($contents)); // @phpstan-ignore-line
+                    if (! $this->hasMutated()) {
+                        break;
+                    }
 
-                if (! $this->hasMutated()) {
-                    break;
+                    $newMutations[] = new Mutation(
+                        file: $file,
+                        mutator: $mutator,
+                        originalNode: $this->originalNode,
+                        modifiedNode: $this->modifiedNode,
+                        modifiedAst: $modifiedAst,
+                    );
                 }
 
-                $newMutations[] = new Mutation(
-                    file: $file,
-                    mutator: $mutator,
-                    originalNode: $this->originalNode,
-                    modifiedNode: $this->modifiedNode,
-                    modifiedAst: $modifiedAst,
-                );
+                $cache->put($file, $contents, $linesToMutate, $mutator, $newMutations);
             }
-
-            //            $cache->put($file, $mutator, $newMutations);
 
             $mutations = [
                 ...$mutations,
                 ...$newMutations,
             ];
         }
-
-        //        $cache->persist();
 
         // filter out mutations that are ignored
         $mutations = array_filter($mutations, function (Mutation $mutation) use ($ignoreComments): bool {

@@ -4,12 +4,14 @@
 - [x] Run mutation tests in CLI
 - [x] Configure and run mutation tests by appending "->mutate()" to a test or describe block
 - [ ] Support xdebug and pcov
-- [ ] Comprehensive sets of mutators, reasonable default set
-- [ ] paths()
-- [ ] mutators() / except()
-- [ ] coveredOnly()
+- [x] Comprehensive sets of mutators, reasonable default set
+- [x] paths()
+- [x] mutators()
+- [ ] except()
+- [x] coveredOnly()
 - [ ] uncommittedOnly()
 - [ ] changedOnly()
+- [ ] bail()
 - [ ] stopOnSurvival()
 - [ ] stopOnUncovered()
 - [ ] Parallel support
@@ -22,11 +24,9 @@
 - [ ] Text log
 - [ ] HTML report
 - [ ] Automatically skip "Arch" tests
-- [ ] Awesome docs: "Why to use" and "How to use"
+- [ ] Awesome docs
 
 # Current Tasks
-- [ ] Improve migration generation speed. Lookup table?
-- [ ] Cache created mutations
 - [ ] Make options singular?
 - [ ] `->mutate()` should not override `--covered-only=false`
 - [ ] Set proper default paths `src` or `app`  if Laravel. see src/Plugins/Parallel/Handlers/Laravel.php:29, or maybe use the "coverage" config from phpunit.xml
@@ -39,6 +39,7 @@
 - [ ] Create a sensible default set
 
 # Backlog Prio 2
+- [ ] Allow to pass a custom cache instance mutate()->cache(MyRedisCache::getInstance())
 - [ ] Dedicated help output (`vendor/bin/pest --mutate --help`)
 - [ ] Add help to show available mutators and sets
 - [ ] Make the output cristal clear that "survived" is bad and "killed" is good. Maybe change the wording to "missed" and "detected"? What do other libraries to work around the confusion? https://x.com/tfidry/status/1719293281568215499?s=46&t=DEd0fniSoLaUYk0rCiXljw
