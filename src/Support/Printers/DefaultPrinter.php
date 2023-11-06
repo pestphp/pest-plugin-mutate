@@ -8,6 +8,7 @@ use Pest\Mutate\Contracts\Printer;
 use Pest\Mutate\MutationSuite;
 use Pest\Mutate\MutationTest;
 use Pest\Mutate\MutationTestCollection;
+use Pest\Mutate\Support\MutationTestResult;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use function Termwind\render;
@@ -20,53 +21,34 @@ class DefaultPrinter implements Printer
 
     public function reportKilledMutation(MutationTest $test): void
     {
-        //        $this->output->write('<fg=gray;options=bold>.</>');
+        $this->writeMutationTestLine('green', '✓', $test);
     }
 
     public function reportSurvivedMutation(MutationTest $test): void
     {
-        //        $this->output->write('<fg=red;options=bold>x</>');
-
-        $path = str_ireplace(getcwd().'/', '', $test->mutation->file->getRealPath());
-
-        $diff = <<<HTML
-                    <div class="text-green">+ {$test->mutation->diff()['modified'][0]}</div>
-                    <div class="text-red">- {$test->mutation->diff()['original'][0]}</div>
-                    HTML;
-
-        render(<<<HTML
-                        <div class="mx-2 flex">
-                            <span>at {$path}:{$test->mutation->originalNode->getLine()} </span>
-                            <span class="flex-1 content-repeat-[.] text-gray mx-1"></span>
-                            <span>{$test->mutation->mutator::name()}</span>
-                        </div>
-                    HTML
-        );
-
-        render(<<<HTML
-                        <div class="mx-2 mb-1 flex">
-                            {$diff}
-                        </div>
-                    HTML
-        );
-
+        $this->writeMutationTestLine('red', '⨯', $test);
     }
 
     public function reportNotCoveredMutation(MutationTest $test): void
     {
-        //        $this->output->write('<fg=yellow;options=bold>-</>');
-        $this->output->writeln('No tests found for mutation: '.$test->mutation->file->getRealPath().':'.$test->mutation->originalNode->getLine().' ('.$test->mutation->mutator::name().')');
+        $this->writeMutationTestLine('yellow', '-', $test);
+
+        //        $this->output->writeln('No tests found for mutation: '.$test->mutation->file->getRealPath().':'.$test->mutation->originalNode->getLine().' ('.$test->mutation->mutator::name().')');
     }
 
     public function reportTimedOutMutation(MutationTest $test): void
     {
-        //        $this->output->write('<fg=yellow;options=bold>t</>');
-        $this->output->writeln('Mutant for '.$test->mutation->file->getRealPath().':'.$test->mutation->originalNode->getLine().' timed out. ('.$test->mutation->mutator.')');
+        $this->writeMutationTestLine('yellow', 't', $test);
+
+        //        $this->output->writeln('Mutant for '.$test->mutation->file->getRealPath().':'.$test->mutation->originalNode->getLine().' timed out. ('.$test->mutation->mutator.')');
     }
 
     public function printFilename(MutationTestCollection $testCollection): void
     {
-        $this->output->writeln($testCollection->file->getRealPath());
+        $path = str_ireplace(getcwd().'/', '', $testCollection->file->getRealPath());
+
+        $this->output->writeln('');
+        $this->output->writeln('  <fg=default;bg=gray;options=bold> RUN </> '.$path);
     }
 
     public function reportError(string $message): void
@@ -95,13 +77,12 @@ class DefaultPrinter implements Printer
     {
         $this->output->writeln([
             '  Running mutation tests:',
-            '',
         ]);
     }
 
     public function reportMutationSuiteFinished(MutationSuite $mutationSuite): void
     {
-        $duration = number_format($mutationSuite->duration(), 2);
+        $this->writeMutationSuiteSummary($mutationSuite);
 
         $this->output->writeln([
             '',
@@ -109,8 +90,66 @@ class DefaultPrinter implements Printer
             '  <fg=gray>Mutations:</> <fg=default><fg=red;options=bold>'.($mutationSuite->repository->survived() !== 0 ? $mutationSuite->repository->survived().' survived</><fg=gray>,</> ' : '').'<fg=yellow;options=bold>'.($mutationSuite->repository->notCovered() !== 0 ? $mutationSuite->repository->notCovered().' not covered</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.($mutationSuite->repository->timedOut() !== 0 ? $mutationSuite->repository->timedOut().' timeout</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.$mutationSuite->repository->killed().' killed</>',
         ]);
 
+        $duration = number_format($mutationSuite->duration(), 2);
         $this->output->writeln('  <fg=gray>Duration:</>  <fg=default>'.$duration.'s</>');
 
         $this->output->writeln('');
+    }
+
+    private function writeMutationTestLine(string $color, string $symbol, MutationTest $test): void
+    {
+        $this->output->writeln('  <fg='.$color.';options=bold>'.$symbol.'</> <fg=gray>Line '.$test->mutation->originalNode->getStartLine().': '.$test->mutation->mutator::name().'</>');
+    }
+
+    private function writeMutationSuiteSummary(MutationSuite $mutationSuite): void
+    {
+        foreach ($mutationSuite->repository->all() as $testCollection) {
+            foreach ($testCollection->tests() as $test) {
+                $this->writeMutationTestSummary($test);
+            }
+        }
+    }
+
+    private function writeMutationTestSummary(MutationTest $test): void
+    {
+        if (! in_array($test->result(), [MutationTestResult::Survived, MutationTestResult::NotCovered], true)) {
+            return;
+        }
+
+        $path = str_ireplace(getcwd().'/', '', $test->mutation->file->getRealPath());
+
+        render(<<<'HTML'
+                        <div class="mx-2 mt-1 flex">
+                            <span class="flex-1 content-repeat-[-] text-red"></span>
+                        </div>
+                    HTML
+        );
+
+        if ($test->result() === MutationTestResult::Survived) {
+            $color = 'red';
+            $label = 'SURVIVED';
+            $error = 'Mutant has survived.';
+        } else {
+            $color = 'yellow';
+            $label = 'NOT COVERED';
+            $error = 'Mutation is not covered by any test.';
+        }
+
+        $this->output->writeln([
+            '  <fg=default;bg='.$color.';options=bold> '.$label.' </> <fg=default;options=bold>'.$path.' <fg=gray> > Line '.$test->mutation->originalNode->getStartLine().': '.$test->mutation->mutator::name().'</>',
+            '  <fg=default;options=bold>'.$error.'</>',
+        ]);
+
+        $diff = <<<HTML
+                    <div class="text-green">+ {$test->mutation->diff()['modified'][0]}</div>
+                    <div class="text-red">- {$test->mutation->diff()['original'][0]}</div>
+                    HTML;
+
+        render(<<<HTML
+                        <div class="mx-2 flex">
+                            {$diff}
+                        </div>
+                    HTML
+        );
     }
 }

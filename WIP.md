@@ -27,7 +27,6 @@
 - [ ] Awesome docs
 
 # Current Tasks - required for first Alpha release
-- [ ] Fix output; Render survived mutations after progress has finished.
 - [ ] Make options singular?
 - [ ] `->mutate()` should not override `--covered-only=false`
 - [ ] Set proper default paths `src` or `app`  if Laravel. see src/Plugins/Parallel/Handlers/Laravel.php:29, or maybe use the "coverage" config from phpunit.xml

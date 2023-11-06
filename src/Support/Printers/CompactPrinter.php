@@ -40,6 +40,7 @@ class CompactPrinter extends DefaultPrinter implements Printer
     {
         parent::reportMutationSuiteStarted($mutationSuite);
 
+        $this->output->writeln('');
         $this->output->write('  ');  // ensure proper indentation before compact test output
     }
 
