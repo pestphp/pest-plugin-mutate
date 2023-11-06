@@ -11,8 +11,6 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class Mutation
 {
-    public MutationTestResult $result;
-
     /**
      * @param  array<array-key, Node>  $modifiedAst
      */
@@ -73,10 +71,5 @@ class Mutation
         $this->originalNode = $data['originalNode'];
         $this->modifiedNode = $data['mutatedNode'];
         $this->modifiedAst = $data['modifiedAst'];
-    }
-
-    public function updateResult(MutationTestResult $result): void
-    {
-        $this->result = $result;
     }
 }

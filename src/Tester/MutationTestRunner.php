@@ -145,92 +145,9 @@ class MutationTestRunner implements MutationTestRunnerContract
         $this->output->write('  ');
 
         // run tests for each mutation
-        foreach ($mutationSuite->repository->all() as $mutations) {
-            foreach ($mutations as $mutation) {
-                /** @var string $tmpfname */
-                $tmpfname = tempnam('/tmp', 'pest_mutation_');
-                file_put_contents($tmpfname, $mutation->modifiedSource());
-
-                // TODO: we should pass the tests to run in another way, maybe via cache, mutation or env variable
-                $filters = [];
-                foreach (range($mutation->originalNode->getStartLine(), $mutation->originalNode->getEndLine()) as $lineNumber) {
-                    foreach ($coveredLines[$mutation->file->getRealPath()][$lineNumber] ?? [] as $test) {
-                        preg_match('/\\\\([a-zA-Z0-9]*)::__pest_evaluable_([^#]*)"?/', (string) $test, $matches);
-                        $filters[] = $matches[1].'::'.preg_replace(['/_([a-z])_/', '/([^_])_([^_])/', '/__/'], [' $1 ', '$1 $2', '_'], $matches[2]);
-                    }
-                }
-                $filters = array_unique($filters);
-
-                if ($filters === []) {
-                    $mutation->updateResult(MutationTestResult::NotCovered);
-                    $this->output->writeln('No tests found for mutation: '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' ('.$mutation->mutator::name().')');
-                    $notCoveredCount++;
-
-                    continue;
-                }
-
-                // TODO: filter arguments to remove unnecessary stuff (Teamcity, Coverage, etc.)
-                $process = new Process(
-                    command: [
-                        ...$this->originalArguments,
-                        '--bail',
-                        '--filter="'.implode('|', $filters).'"',
-                        $this->getProfile()->parallel ? '--parallel' : '',
-                    ],
-                    env: [
-                        Mutate::ENV_MUTATION_TESTING => $mutation->file->getRealPath(),
-                        Mutate::ENV_MUTATION_FILE => $tmpfname,
-                    ],
-                    timeout: $this->calculateTimeout(),
-                );
-
-                try {
-                    $process->run();
-                } catch (ProcessTimedOutException) {
-                    $mutation->updateResult(MutationTestResult::Timeout);
-                    $this->output->write('<fg=yellow;options=bold>t</>');
-                    $timeoutedCount++;
-                    $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' timed out. ('.$mutation->mutator.')');
-
-                    continue;
-                }
-
-                if ($process->isSuccessful()) {
-                    $mutation->updateResult(MutationTestResult::Survived);
-                    $this->output->write('<fg=red;options=bold>x</>');
-                    $survivedCount++;
-
-                    //                                $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' NOT killed. ('.$mutation->mutator.')');
-                    $path = str_ireplace(getcwd().'/', '', $mutation->file->getRealPath());
-
-                    $diff = <<<HTML
-                    <div class="text-green">+ {$mutation->diff()['modified'][0]}</div>
-                    <div class="text-red">- {$mutation->diff()['original'][0]}</div>
-                    HTML;
-
-                    render(<<<HTML
-                        <div class="mx-2 flex">
-                            <span>at {$path}:{$mutation->originalNode->getLine()} </span>
-                            <span class="flex-1 content-repeat-[.] text-gray mx-1"></span>
-                            <span>{$mutation->mutator::name()}</span>
-                        </div>
-                    HTML
-                    );
-
-                    render(<<<HTML
-                        <div class="mx-2 mb-1 flex">
-                            {$diff}
-                        </div>
-                    HTML
-                    );
-
-                    continue;
-                }
-
-                $mutation->updateResult(MutationTestResult::Killed);
-                $this->output->write('<fg=gray;options=bold>.</>');
-
-                //            $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' killed.');
+        foreach ($mutationSuite->repository->all() as $tests) {
+            foreach ($tests as $test) {
+                $test->run($coveredLines, $this->output, $this->getProfile(), $this->originalArguments);
             }
         }
 
@@ -314,11 +231,5 @@ class MutationTestRunner implements MutationTestRunnerContract
     public function getEnabledProfile(): ?string
     {
         return $this->enabledProfile;
-    }
-
-    private function calculateTimeout(): int
-    {
-        // TODO: calculate a reasonable timeout
-        return 3;
     }
 }
