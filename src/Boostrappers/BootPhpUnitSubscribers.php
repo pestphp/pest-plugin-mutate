@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace Pest\Mutate\Boostrappers;
 
 use Pest\Contracts\Bootstrapper;
-use Pest\Mutate\Contracts\Subscriber;
-use Pest\Mutate\Event\Facade;
-use Pest\Mutate\Subscribers\MutationTest\MutationKilled;
-use Pest\Mutate\Subscribers\MutationTest\MutationNotCovered;
-use Pest\Mutate\Subscribers\MutationTest\MutationSurvived;
-use Pest\Mutate\Subscribers\MutationTest\MutationTimedOut;
+use Pest\Mutate\Subscribers\DisablePhpCodeCoverageIfNotRequired;
+use Pest\Mutate\Subscribers\DisplayInitialTestRunMessage;
+use Pest\Mutate\Subscribers\EnsureToRunMutationTestingIfRequired;
+use Pest\Mutate\Subscribers\PrepareForInitialTestRun;
+use Pest\Subscribers;
 use Pest\Support\Container;
+use PHPUnit\Event\Facade;
+use PHPUnit\Event\Subscriber;
 
 /**
  * @internal
  */
-final class BootSubscribers implements Bootstrapper
+final class BootPhpUnitSubscribers implements Bootstrapper
 {
     /**
      * The list of Subscribers.
@@ -24,10 +25,10 @@ final class BootSubscribers implements Bootstrapper
      * @var array<int, class-string<Subscriber>>
      */
     private const SUBSCRIBERS = [
-        MutationKilled::class,
-        MutationSurvived::class,
-        MutationTimedOut::class,
-        MutationNotCovered::class,
+        DisablePhpCodeCoverageIfNotRequired::class,
+        DisplayInitialTestRunMessage::class,
+        PrepareForInitialTestRun::class,
+        EnsureToRunMutationTestingIfRequired::class,
     ];
 
     /**

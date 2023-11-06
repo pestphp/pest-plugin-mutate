@@ -2,6 +2,7 @@
 
 namespace Pest\Mutate;
 
+use Pest\Mutate\Event\Facade;
 use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Support\MutationTestResult;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
@@ -26,7 +27,7 @@ class MutationTest
         $this->result = $result;
     }
 
-    public function run($coveredLines, $output, $profile, $originalArguments): void
+    public function run($coveredLines, $profile, $originalArguments): void
     {
         /** @var string $tmpfname */
         $tmpfname = tempnam('/tmp', 'pest_mutation_');
@@ -44,7 +45,7 @@ class MutationTest
 
         if ($filters === []) {
             $this->updateResult(MutationTestResult::NotCovered);
-            $output->writeln('No tests found for mutation: '.$this->mutation->file->getRealPath().':'.$this->mutation->originalNode->getLine().' ('.$this->mutation->mutator::name().')');
+            Facade::instance()->emitter()->mutationNotCovered($this);
 
             return;
         }
@@ -68,15 +69,14 @@ class MutationTest
             $process->run();
         } catch (ProcessTimedOutException) {
             $this->updateResult->updateResult(MutationTestResult::Timeout);
-            $output->write('<fg=yellow;options=bold>t</>');
-            $output->writeln('Mutant for '.$this->mutation->file->getRealPath().':'.$this->mutation->originalNode->getLine().' timed out. ('.$this->mutation->mutator.')');
+            Facade::instance()->emitter()->mutationTimedOut($this);
 
             return;
         }
 
         if ($process->isSuccessful()) {
             $this->updateResult(MutationTestResult::Survived);
-            $output->write('<fg=red;options=bold>x</>');
+            Facade::instance()->emitter()->mutationSurvived($this);
 
             $path = str_ireplace(getcwd().'/', '', $this->mutation->file->getRealPath());
 
@@ -105,7 +105,7 @@ class MutationTest
         }
 
         $this->updateResult(MutationTestResult::Killed);
-        $output->write('<fg=gray;options=bold>.</>');
+        Facade::instance()->emitter()->mutationKilled($this);
     }
 
     private function calculateTimeout(): int

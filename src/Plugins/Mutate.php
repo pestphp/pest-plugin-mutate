@@ -8,6 +8,7 @@ use Infection\StreamWrapper\IncludeInterceptor;
 use Pest\Contracts\Bootstrapper;
 use Pest\Contracts\Plugins\Bootable;
 use Pest\Contracts\Plugins\HandlesArguments;
+use Pest\Mutate\Boostrappers\BootPhpUnitSubscribers;
 use Pest\Mutate\Boostrappers\BootSubscribers;
 use Pest\Mutate\Contracts\MutationTestRunner;
 use Pest\Mutate\Factories\ProfileFactory;
@@ -23,6 +24,7 @@ use Pest\Plugins\Concerns\HandleArguments;
 use Pest\Plugins\Parallel;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
+use PHPUnit\Event\Facade;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -56,6 +58,7 @@ class Mutate implements Bootable, HandlesArguments
      * @var array<int, class-string>
      */
     private const BOOTSTRAPPERS = [
+        BootPhpUnitSubscribers::class,
         BootSubscribers::class,
     ];
 

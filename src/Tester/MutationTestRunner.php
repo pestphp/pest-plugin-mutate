@@ -147,7 +147,7 @@ class MutationTestRunner implements MutationTestRunnerContract
         // run tests for each mutation
         foreach ($mutationSuite->repository->all() as $tests) {
             foreach ($tests as $test) {
-                $test->run($coveredLines, $this->output, $this->getProfile(), $this->originalArguments);
+                $test->run($coveredLines, $this->getProfile(), $this->originalArguments);
             }
         }
 
