@@ -9,12 +9,12 @@ interface ProfileFactory
     /**
      * @param  array<int, string>|string  ...$paths
      */
-    public function paths(array|string ...$paths): self;
+    public function path(array|string ...$paths): self;
 
     /**
      * @param  array<int, class-string<Mutator|MutatorSet>>|class-string<Mutator|MutatorSet>  ...$mutators
      */
-    public function mutators(array|string ...$mutators): self;
+    public function mutator(array|string ...$mutators): self;
 
     public function min(float $minMSI): self;
 

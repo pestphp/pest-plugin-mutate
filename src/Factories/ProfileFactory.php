@@ -23,7 +23,7 @@ class ProfileFactory implements ProfileFactoryContract
     /**
      * {@inheritDoc}
      */
-    public function paths(array|string ...$paths): self
+    public function path(array|string ...$paths): self
     {
         $this->profile->paths = array_merge(...array_map(fn (string|array $path): array => is_string($path) ? [$path] : $path, $paths));
 
@@ -33,7 +33,7 @@ class ProfileFactory implements ProfileFactoryContract
     /**
      * {@inheritDoc}
      */
-    public function mutators(array|string ...$mutators): self
+    public function mutator(array|string ...$mutators): self
     {
         $mutators = array_map(fn (string|array $mutator): array => is_string($mutator) ? [$mutator] : $mutator, $mutators);
 

@@ -30,23 +30,23 @@ it('overrides global values', function (): void {
 it('sets the paths if --paths argument is passed', function (): void {
     expect($this->profile->paths)->toEqual(['src']);
 
-    $this->plugin->handleArguments(['--mutate=fake-profile', '--paths=app']);
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--path=app']);
     expect($this->profile->paths)->toEqual(['app']);
 
-    $this->plugin->handleArguments(['--mutate=fake-profile', '--paths=src/path-1,src/path-2']);
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--path=src/path-1,src/path-2']);
     expect($this->profile->paths)->toEqual(['src/path-1', 'src/path-2']);
 });
 
 it('sets the mutators if --mutators argument is passed', function (): void {
     expect($this->profile->mutators)->toEqual(DefaultSet::mutators());
 
-    $this->plugin->handleArguments(['--mutate=fake-profile', '--mutators=SetArithmetic']);
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--mutator=SetArithmetic']);
     expect($this->profile->mutators)->toEqual(ArithmeticSet::mutators());
 
-    $this->plugin->handleArguments(['--mutate=fake-profile', '--mutators=ArithmeticPlusToMinus']);
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--mutator=ArithmeticPlusToMinus']);
     expect($this->profile->mutators)->toEqual([PlusToMinus::class]);
 
-    $this->plugin->handleArguments(['--mutate=fake-profile', '--mutators=ArithmeticPlusToMinus,ArithmeticMinusToPlus']);
+    $this->plugin->handleArguments(['--mutate=fake-profile', '--mutator=ArithmeticPlusToMinus,ArithmeticMinusToPlus']);
     expect($this->profile->mutators)->toEqual([PlusToMinus::class, MinusToPlus::class]);
 });
 

@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class PathsOption
 {
-    final public const ARGUMENT = 'paths';
+    final public const ARGUMENT = 'path';
 
     public static function remove(): bool
     {
@@ -22,6 +22,6 @@ class PathsOption
 
     public static function inputOption(): InputOption
     {
-        return new InputOption('--paths', null, InputOption::VALUE_REQUIRED, '', 0);
+        return new InputOption('--path', null, InputOption::VALUE_REQUIRED, '', 0);
     }
 }

@@ -144,11 +144,11 @@ class Mutate implements Bootable, HandlesArguments
         }
 
         if ($input->hasOption(PathsOption::ARGUMENT)) {
-            $profileFactory->paths(explode(',', (string) $input->getOption(PathsOption::ARGUMENT))); // @phpstan-ignore-line
+            $profileFactory->path(explode(',', (string) $input->getOption(PathsOption::ARGUMENT))); // @phpstan-ignore-line
         }
 
         if ($input->hasOption(MutatorsOption::ARGUMENT)) {
-            $profileFactory->mutators(explode(',', (string) $input->getOption(MutatorsOption::ARGUMENT))); // @phpstan-ignore-line
+            $profileFactory->mutator(explode(',', (string) $input->getOption(MutatorsOption::ARGUMENT))); // @phpstan-ignore-line
         }
 
         if ($input->hasOption(MinMsiOption::ARGUMENT)) {

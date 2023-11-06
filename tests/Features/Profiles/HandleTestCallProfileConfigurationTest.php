@@ -34,7 +34,7 @@ it('sets the paths from test', function (): void {
     expect($profile->paths)
         ->toBe(['src/folder-1', 'src/folder-2']);
 })->mutate(Profile::FAKE.'_3')
-    ->paths('src/folder-1', 'src/folder-2');
+    ->path('src/folder-1', 'src/folder-2');
 
 it('sets the mutators from test', function (): void {
     $profile = Profiles::get(Profile::FAKE.'_4');
@@ -42,7 +42,7 @@ it('sets the mutators from test', function (): void {
     expect($profile->mutators)
         ->toBe([PlusToMinus::class, GreaterToGreaterOrEqual::class]);
 })->mutate(Profile::FAKE.'_4')
-    ->mutators(PlusToMinus::class, GreaterToGreaterOrEqual::class);
+    ->mutator(PlusToMinus::class, GreaterToGreaterOrEqual::class);
 
 it('sets the parallel option from test', function (): void {
     $profile = Profiles::get(Profile::FAKE.'_5');

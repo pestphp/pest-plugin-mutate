@@ -64,9 +64,9 @@ class TestCallDecorator implements \Pest\Mutate\Contracts\ProfileFactory
     /**
      * @param  array<int, string>|string  ...$paths
      */
-    public function paths(array|string ...$paths): self
+    public function path(array|string ...$paths): self
     {
-        $this->_profileFactory()->paths(...$paths);
+        $this->_profileFactory()->path(...$paths);
 
         return $this;
     }
@@ -74,9 +74,9 @@ class TestCallDecorator implements \Pest\Mutate\Contracts\ProfileFactory
     /**
      * {@inheritDoc}
      */
-    public function mutators(string|array ...$mutators): self
+    public function mutator(string|array ...$mutators): self
     {
-        $this->_profileFactory()->mutators(...$mutators);
+        $this->_profileFactory()->mutator(...$mutators);
 
         return $this;
     }

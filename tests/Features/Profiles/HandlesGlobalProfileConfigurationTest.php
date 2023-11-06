@@ -27,13 +27,13 @@ test('globally configure paths', function (): void {
         ->toEqual(['src']);
 
     mutate(Profile::FAKE)
-        ->paths(['app']);
+        ->path(['app']);
 
     expect($this->profile->paths)
         ->toEqual(['app']);
 
     mutate(Profile::FAKE)
-        ->paths(['src/path-1', 'src/path-2'], 'src/path-3');
+        ->path(['src/path-1', 'src/path-2'], 'src/path-3');
 
     expect($this->profile->paths)
         ->toEqual(['src/path-1', 'src/path-2', 'src/path-3']);
@@ -44,19 +44,19 @@ test('globally configure mutators', function (): void {
         ->toEqual(DefaultSet::mutators());
 
     mutate(Profile::FAKE)
-        ->mutators(Mutators::SET_ARITHMETIC);
+        ->mutator(Mutators::SET_ARITHMETIC);
 
     expect($this->profile->mutators)
         ->toEqual(ArithmeticSet::mutators());
 
     mutate(Profile::FAKE)
-        ->mutators(Mutators::ARITHMETIC_PLUS_TO_MINUS);
+        ->mutator(Mutators::ARITHMETIC_PLUS_TO_MINUS);
 
     expect($this->profile->mutators)
         ->toEqual([PlusToMinus::class]);
 
     mutate(Profile::FAKE)
-        ->mutators(Mutators::ARITHMETIC_PLUS_TO_MINUS, Mutators::ARITHMETIC_MINUS_TO_PLUS);
+        ->mutator(Mutators::ARITHMETIC_PLUS_TO_MINUS, Mutators::ARITHMETIC_MINUS_TO_PLUS);
 
     expect($this->profile->mutators)
         ->toEqual([PlusToMinus::class, MinusToPlus::class]);
