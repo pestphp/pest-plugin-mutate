@@ -12,6 +12,10 @@ class MutationSuite
 
     public readonly MutationRepository $repository;
 
+    private float $start;
+
+    private float $finish;
+
     public function __construct()
     {
         $this->repository = new MutationRepository();
@@ -24,5 +28,20 @@ class MutationSuite
         }
 
         return self::$instance;
+    }
+
+    public function duration(): float
+    {
+        return $this->finish - $this->start;
+    }
+
+    public function trackStart(): void
+    {
+        $this->start = microtime(true);
+    }
+
+    public function trackFinish(): void
+    {
+        $this->finish = microtime(true);
     }
 }

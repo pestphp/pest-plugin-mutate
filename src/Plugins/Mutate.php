@@ -76,7 +76,7 @@ class Mutate implements Bootable, HandlesArguments
 
     public function boot(): void
     {
-        $this->container->add(MutationTestRunner::class, new \Pest\Mutate\Tester\MutationTestRunner($this->output));
+        $this->container->add(MutationTestRunner::class, new \Pest\Mutate\Tester\MutationTestRunner());
 
         foreach (self::BOOTSTRAPPERS as $bootstrapper) {
             $bootstrapper = Container::getInstance()->get($bootstrapper);

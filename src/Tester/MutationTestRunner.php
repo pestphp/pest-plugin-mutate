@@ -6,6 +6,8 @@ namespace Pest\Mutate\Tester;
 
 use Pest\Exceptions\ShouldNotHappen;
 use Pest\Mutate\Contracts\MutationTestRunner as MutationTestRunnerContract;
+use Pest\Mutate\Contracts\Printer;
+use Pest\Mutate\Event\Facade;
 use Pest\Mutate\Factories\ProfileFactory;
 use Pest\Mutate\Mutation;
 use Pest\Mutate\MutationSuite;
@@ -15,14 +17,9 @@ use Pest\Mutate\Profiles;
 use Pest\Mutate\Support\MutationGenerator;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
-use PHPUnit\TestRunner\TestResult\Facade;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-
-use function Termwind\render;
-use function Termwind\renderUsing;
 
 class MutationTestRunner implements MutationTestRunnerContract
 {
@@ -42,10 +39,6 @@ class MutationTestRunner implements MutationTestRunnerContract
         Container::getInstance()->add(MutationTestRunnerContract::class, $fake);
 
         return $fake;
-    }
-
-    public function __construct(private readonly OutputInterface $output)
-    {
     }
 
     /**
@@ -86,22 +79,17 @@ class MutationTestRunner implements MutationTestRunnerContract
 
     public function run(): void
     {
-        $this->assertInitialTestRunWasSuccessful();
-
         $start = microtime(true);
 
         if (! file_exists($reportPath = Coverage::getPath())) {
             // TODO: maybe we can run without a coverage report, but it is really in performant
-            $this->output->writeln('No coverage report found, aborting mutation testing.');
+            Container::getInstance()->get(Printer::class)->reportError('No coverage report found, aborting mutation testing.'); // @phpstan-ignore-line
             exit(1);
         }
 
         $mutationSuite = MutationSuite::instance();
 
-        //        $this->output->writeln('Running mutation tests for profile: '.$this->enabledProfile);
-
-        renderUsing($this->output);
-        render('<div class="mx-2 mt-1">Generating mutations ...'.($this->enabledProfile !== 'default' ? (' (Profile: '.$this->enabledProfile.')') : '').'</div>');
+        Facade::instance()->emitter()->startMutationGeneration($mutationSuite);
 
         /** @var CodeCoverage $codeCoverage */
         $codeCoverage = require $reportPath;
@@ -127,43 +115,22 @@ class MutationTestRunner implements MutationTestRunnerContract
             }
         }
 
-        $this->output->writeln([
-            '  <fg=gray>'.$mutationSuite->repository->total().' Mutations for '.$mutationSuite->repository->count().' Files created</>',
-            '',
-        ]);
+        Facade::instance()->emitter()->finishMutationGeneration($mutationSuite);
 
-        renderUsing($this->output);
-        render('<div class="m-2 my-1">Running mutation tests:</div>');
-
-        $this->output->write('  ');
+        Facade::instance()->emitter()->startMutationSuite($mutationSuite);
 
         // run tests for each mutation
         foreach ($mutationSuite->repository->all() as $testCollection) {
-            \Pest\Mutate\Event\Facade::instance()->emitter()->startTestCollection($testCollection);
+            Facade::instance()->emitter()->startTestCollection($testCollection);
+
             foreach ($testCollection->tests() as $test) {
                 $test->run($coveredLines, $this->getProfile(), $this->originalArguments);
             }
         }
 
-        $duration = number_format(microtime(true) - $start, 2);
+        Facade::instance()->emitter()->finishMutationSuite($mutationSuite);
 
-        $this->output->writeln([
-            '',
-            '',
-            '  <fg=gray>Mutations:</> <fg=default><fg=red;options=bold>'.($mutationSuite->repository->survived() !== 0 ? $mutationSuite->repository->survived().' survived</><fg=gray>,</> ' : '').'<fg=yellow;options=bold>'.($mutationSuite->repository->notCovered() !== 0 ? $mutationSuite->repository->notCovered().' not covered</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.($mutationSuite->repository->timedOut() !== 0 ? $mutationSuite->repository->timedOut().' timeout</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.$mutationSuite->repository->killed().' killed</>',
-            '  <fg=gray>Duration:</>  <fg=default>'.$duration.'s</>',
-            '',
-        ]);
-
-        //        if($survivedCount){
-        //            $this->output->writeln([
-        //                '',
-        //                '  <fg=default;bg=yellow;options=bold> WARNING </> '.$survivedCount.' of '.count($mutations).' Mutants have survived</>',
-        //                '',
-        //            ]);
-        //        }
-
-        exit(0);
+        exit(0); // TODO: exit with error on failure
     }
 
     /**
@@ -205,21 +172,6 @@ class MutationTestRunner implements MutationTestRunnerContract
     public function getProfileFactory(): ProfileFactory
     {
         return new ProfileFactory($this->enabledProfile ?? 'default');
-    }
-
-    private function assertInitialTestRunWasSuccessful(): void
-    {
-        if (Facade::result()->wasSuccessful()) {
-            return;
-        }
-
-        $this->output->writeln([
-            '',
-            '  <fg=default;bg=red;options=bold> ERROR </> Initial test run failed, aborting mutation testing.</>',
-            '',
-        ]);
-
-        exit(1);
     }
 
     public function getEnabledProfile(): ?string

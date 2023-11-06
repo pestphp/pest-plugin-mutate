@@ -16,6 +16,14 @@ use Pest\Mutate\Event\Events\Test\Outcome\Survived;
 use Pest\Mutate\Event\Events\Test\Outcome\SurvivedSubscriber;
 use Pest\Mutate\Event\Events\Test\Outcome\Timeout;
 use Pest\Mutate\Event\Events\Test\Outcome\TimeoutSubscriber;
+use Pest\Mutate\Event\Events\TestSuite\FinishMutationGeneration;
+use Pest\Mutate\Event\Events\TestSuite\FinishMutationGenerationSubscriber;
+use Pest\Mutate\Event\Events\TestSuite\FinishMutationSuite;
+use Pest\Mutate\Event\Events\TestSuite\FinishMutationSuiteSubscriber;
+use Pest\Mutate\Event\Events\TestSuite\StartMutationGeneration;
+use Pest\Mutate\Event\Events\TestSuite\StartMutationGenerationSubscriber;
+use Pest\Mutate\Event\Events\TestSuite\StartMutationSuite;
+use Pest\Mutate\Event\Events\TestSuite\StartMutationSuiteSubscriber;
 use Pest\Mutate\Event\Facade;
 use Pest\Support\Container;
 use PHPUnit\Event\Application\Started;
@@ -78,6 +86,39 @@ final class EnsurePrinterIsRegisteredSubscriber implements StartedSubscriber
                 public function notify(NotCovered $event): void
                 {
                     $this->printer()->reportNotCoveredMutation($event->test);
+                }
+            },
+
+            // MutationSuite
+            new class($printer) extends PrinterSubscriber implements StartMutationGenerationSubscriber
+            {
+                public function notify(StartMutationGeneration $event): void
+                {
+                    $this->printer()->reportMutationGenerationStarted($event->mutationSuite);
+                }
+            },
+
+            new class($printer) extends PrinterSubscriber implements FinishMutationGenerationSubscriber
+            {
+                public function notify(FinishMutationGeneration $event): void
+                {
+                    $this->printer()->reportMutationGenerationFinished($event->mutationSuite);
+                }
+            },
+
+            new class($printer) extends PrinterSubscriber implements StartMutationSuiteSubscriber
+            {
+                public function notify(StartMutationSuite $event): void
+                {
+                    $this->printer()->reportMutationSuiteStarted($event->mutationSuite);
+                }
+            },
+
+            new class($printer) extends PrinterSubscriber implements FinishMutationSuiteSubscriber
+            {
+                public function notify(FinishMutationSuite $event): void
+                {
+                    $this->printer()->reportMutationSuiteFinished($event->mutationSuite);
                 }
             },
         ];

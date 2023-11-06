@@ -7,6 +7,8 @@ namespace Pest\Mutate\Boostrappers;
 use Pest\Contracts\Bootstrapper;
 use Pest\Mutate\Contracts\Subscriber;
 use Pest\Mutate\Event\Facade;
+use Pest\Mutate\Subscribers\TrackMutationSuiteFinish;
+use Pest\Mutate\Subscribers\TrackMutationSuiteStart;
 use Pest\Support\Container;
 
 /**
@@ -14,14 +16,14 @@ use Pest\Support\Container;
  */
 final class BootSubscribers implements Bootstrapper
 {
-    // TODO: we will use this later to register the subscribers to stop the execution on first not killed mutation
-
     /**
      * The list of Subscribers.
      *
      * @var array<int, class-string<Subscriber>>
      */
     private const SUBSCRIBERS = [
+        TrackMutationSuiteStart::class,
+        TrackMutationSuiteFinish::class,
     ];
 
     /**
@@ -37,7 +39,7 @@ final class BootSubscribers implements Bootstrapper
      */
     public function boot(): void
     {
-        foreach (self::SUBSCRIBERS as $subscriber) { // @phpstan-ignore-line
+        foreach (self::SUBSCRIBERS as $subscriber) {
             $instance = $this->container->get($subscriber);
 
             assert($instance instanceof Subscriber);
