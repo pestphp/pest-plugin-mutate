@@ -10,8 +10,6 @@ use Pest\Mutate\Support\MutationTestResult;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Symfony\Component\Process\Process;
 
-use function Termwind\render;
-
 class MutationTest
 {
     private MutationTestResult $result;
@@ -52,6 +50,7 @@ class MutationTest
 
         if ($filters === []) {
             $this->updateResult(MutationTestResult::NotCovered);
+
             Facade::instance()->emitter()->mutationNotCovered($this);
 
             return;
@@ -76,6 +75,7 @@ class MutationTest
             $process->run();
         } catch (ProcessTimedOutException) {
             $this->updateResult(MutationTestResult::Timeout);
+
             Facade::instance()->emitter()->mutationTimedOut($this);
 
             return;
@@ -83,35 +83,14 @@ class MutationTest
 
         if ($process->isSuccessful()) {
             $this->updateResult(MutationTestResult::Survived);
+
             Facade::instance()->emitter()->mutationSurvived($this);
-
-            $path = str_ireplace(getcwd().'/', '', $this->mutation->file->getRealPath());
-
-            $diff = <<<HTML
-                    <div class="text-green">+ {$this->mutation->diff()['modified'][0]}</div>
-                    <div class="text-red">- {$this->mutation->diff()['original'][0]}</div>
-                    HTML;
-
-            render(<<<HTML
-                        <div class="mx-2 flex">
-                            <span>at {$path}:{$this->mutation->originalNode->getLine()} </span>
-                            <span class="flex-1 content-repeat-[.] text-gray mx-1"></span>
-                            <span>{$this->mutation->mutator::name()}</span>
-                        </div>
-                    HTML
-            );
-
-            render(<<<HTML
-                        <div class="mx-2 mb-1 flex">
-                            {$diff}
-                        </div>
-                    HTML
-            );
 
             return;
         }
 
         $this->updateResult(MutationTestResult::Killed);
+
         Facade::instance()->emitter()->mutationKilled($this);
     }
 

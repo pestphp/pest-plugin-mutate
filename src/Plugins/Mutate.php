@@ -22,6 +22,7 @@ use Pest\Mutate\Options\ParallelOption;
 use Pest\Mutate\Options\PathsOption;
 use Pest\Mutate\Profile;
 use Pest\Mutate\Support\Printers\CompactPrinter;
+use Pest\Mutate\Support\Printers\DefaultPrinter;
 use Pest\Plugins\Concerns\HandleArguments;
 use Pest\Plugins\Parallel;
 use Pest\Support\Container;
@@ -76,7 +77,6 @@ class Mutate implements Bootable, HandlesArguments
     public function boot(): void
     {
         $this->container->add(MutationTestRunner::class, new \Pest\Mutate\Tester\MutationTestRunner($this->output));
-        $this->container->add(Printer::class, new CompactPrinter($this->output));
 
         foreach (self::BOOTSTRAPPERS as $bootstrapper) {
             $bootstrapper = Container::getInstance()->get($bootstrapper);
@@ -167,6 +167,12 @@ class Mutate implements Bootable, HandlesArguments
 
         if ($input->hasOption(ClassOption::ARGUMENT)) {
             $profileFactory->class(explode(',', (string) $input->getOption(ClassOption::ARGUMENT))); // @phpstan-ignore-line
+        }
+
+        if ($_SERVER['COLLISION_PRINTER_COMPACT'] ?? false) {
+            $this->container->add(Printer::class, new CompactPrinter($this->output));
+        } else {
+            $this->container->add(Printer::class, new DefaultPrinter($this->output));
         }
 
         return $arguments;
