@@ -26,19 +26,26 @@
 - [ ] Automatically skip "Arch" tests
 - [ ] Awesome docs
 
-# Current Tasks
+# Current Tasks - required for first Alpha release
+- [ ] Fix output; Render survived mutations after progress has finished.
 - [ ] Make options singular?
 - [ ] `->mutate()` should not override `--covered-only=false`
 - [ ] Set proper default paths `src` or `app`  if Laravel. see src/Plugins/Parallel/Handlers/Laravel.php:29, or maybe use the "coverage" config from phpunit.xml
-- [ ] Better loop detection. For example when mutate break to continue in a while true loop
+- [ ] Update the docs
+- [ ] Auto generate mutators and sets docs
+- [ ] Update README to contain the full docs
+- [ ] Write Article about mutation testing
 
 # Backlog Prio 1
 - [ ] Improve test filtering. For ex. "a" in test name does not work
+- [ ] Better loop detection. For example when mutate break to continue in a while true loop
 - [ ] Automatically create documentation from mutators
-- [ ] Add more mutators and sets
 - [ ] Create a sensible default set
 
 # Backlog Prio 2
+- [ ] Sort test runs to run quick tests first; and if available the test a mutation killed in a previous run
+- [ ] Beautify output / respect --compact option
+- [ ] Add more Laravel mutators
 - [ ] Allow to pass a custom cache instance mutate()->cache(MyRedisCache::getInstance())
 - [ ] Dedicated help output (`vendor/bin/pest --mutate --help`)
 - [ ] Add help to show available mutators and sets
