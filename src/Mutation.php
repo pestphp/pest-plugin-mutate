@@ -4,21 +4,24 @@ declare(strict_types=1);
 
 namespace Pest\Mutate;
 
+use Pest\Mutate\Support\MutationTestResult;
 use PhpParser\Node;
 use PhpParser\PrettyPrinter\Standard;
 use Symfony\Component\Finder\SplFileInfo;
 
 class Mutation
 {
+    public MutationTestResult $result;
+
     /**
      * @param  array<array-key, Node>  $modifiedAst
      */
     public function __construct(
-        public SplFileInfo $file,
-        public string $mutator,
-        public Node $originalNode,
-        public ?Node $modifiedNode,
-        public array $modifiedAst,
+        public readonly SplFileInfo $file,
+        public readonly string $mutator,
+        public readonly Node $originalNode,
+        public readonly ?Node $modifiedNode,
+        public readonly array $modifiedAst,
     ) {
     }
 
@@ -70,5 +73,10 @@ class Mutation
         $this->originalNode = $data['originalNode'];
         $this->modifiedNode = $data['mutatedNode'];
         $this->modifiedAst = $data['modifiedAst'];
+    }
+
+    public function updateResult(MutationTestResult $result): void
+    {
+        $this->result = $result;
     }
 }

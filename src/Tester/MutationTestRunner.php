@@ -13,6 +13,7 @@ use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Profile;
 use Pest\Mutate\Profiles;
 use Pest\Mutate\Support\MutationGenerator;
+use Pest\Mutate\Support\MutationTestResult;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
 use PHPUnit\TestRunner\TestResult\Facade;
@@ -98,6 +99,8 @@ class MutationTestRunner implements MutationTestRunnerContract
             exit(1);
         }
 
+        $mutationSuite = MutationSuite::instance();
+
         //        $this->output->writeln('Running mutation tests for profile: '.$this->enabledProfile);
 
         renderUsing($this->output);
@@ -123,12 +126,12 @@ class MutationTestRunner implements MutationTestRunnerContract
                 linesToMutate: $this->getProfile()->coveredOnly ? array_keys($coveredLines[$file->getRealPath()]) : [],
                 classesToMutate: $this->getProfile()->classes,
             ) as $mutation) {
-                MutationSuite::instance()->repository->add($mutation);
+                $mutationSuite->repository->add($mutation);
             }
         }
 
         $this->output->writeln([
-            '  <fg=gray>'.MutationSuite::instance()->repository->total().' Mutations for '.MutationSuite::instance()->repository->count().' Files created</>',
+            '  <fg=gray>'.$mutationSuite->repository->total().' Mutations for '.$mutationSuite->repository->count().' Files created</>',
             '',
         ]);
 
@@ -142,7 +145,7 @@ class MutationTestRunner implements MutationTestRunnerContract
         $this->output->write('  ');
 
         // run tests for each mutation
-        foreach (MutationSuite::instance()->repository->all() as $mutations) {
+        foreach ($mutationSuite->repository->all() as $mutations) {
             foreach ($mutations as $mutation) {
                 /** @var string $tmpfname */
                 $tmpfname = tempnam('/tmp', 'pest_mutation_');
@@ -159,6 +162,7 @@ class MutationTestRunner implements MutationTestRunnerContract
                 $filters = array_unique($filters);
 
                 if ($filters === []) {
+                    $mutation->updateResult(MutationTestResult::NotCovered);
                     $this->output->writeln('No tests found for mutation: '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' ('.$mutation->mutator::name().')');
                     $notCoveredCount++;
 
@@ -183,6 +187,7 @@ class MutationTestRunner implements MutationTestRunnerContract
                 try {
                     $process->run();
                 } catch (ProcessTimedOutException) {
+                    $mutation->updateResult(MutationTestResult::Timeout);
                     $this->output->write('<fg=yellow;options=bold>t</>');
                     $timeoutedCount++;
                     $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' timed out. ('.$mutation->mutator.')');
@@ -191,6 +196,7 @@ class MutationTestRunner implements MutationTestRunnerContract
                 }
 
                 if ($process->isSuccessful()) {
+                    $mutation->updateResult(MutationTestResult::Survived);
                     $this->output->write('<fg=red;options=bold>x</>');
                     $survivedCount++;
 
@@ -221,6 +227,7 @@ class MutationTestRunner implements MutationTestRunnerContract
                     continue;
                 }
 
+                $mutation->updateResult(MutationTestResult::Killed);
                 $this->output->write('<fg=gray;options=bold>.</>');
 
                 //            $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' killed.');
@@ -232,7 +239,7 @@ class MutationTestRunner implements MutationTestRunnerContract
         $this->output->writeln([
             '',
             '',
-            '  <fg=gray>Mutations:</> <fg=default><fg=red;options=bold>'.($survivedCount !== 0 ? $survivedCount.' survived</><fg=gray>,</> ' : '').'<fg=yellow;options=bold>'.($notCoveredCount !== 0 ? $notCoveredCount.' not covered</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.($timeoutedCount !== 0 ? $timeoutedCount.' timeout</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.(MutationSuite::instance()->repository->total() - $survivedCount - $timeoutedCount - $notCoveredCount).' killed</>',
+            '  <fg=gray>Mutations:</> <fg=default><fg=red;options=bold>'.($mutationSuite->repository->survived() !== 0 ? $mutationSuite->repository->survived().' survived</><fg=gray>,</> ' : '').'<fg=yellow;options=bold>'.($mutationSuite->repository->notCovered() !== 0 ? $mutationSuite->repository->notCovered().' not covered</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.($mutationSuite->repository->timedOut() !== 0 ? $mutationSuite->repository->timedOut().' timeout</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.$mutationSuite->repository->killed().' killed</>',
             '  <fg=gray>Duration:</>  <fg=default>'.$duration.'s</>',
             '',
         ]);

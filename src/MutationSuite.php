@@ -10,7 +10,7 @@ class MutationSuite
 {
     private static ?MutationSuite $instance = null;
 
-    public MutationRepository $repository;
+    public readonly MutationRepository $repository;
 
     public function __construct()
     {
