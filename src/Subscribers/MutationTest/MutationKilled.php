@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pest\Mutate\Subscribers\MutationTest;
 
 use Pest\Mutate\Contracts\Printer;
@@ -11,6 +13,6 @@ class MutationKilled implements KilledSubscriber
 {
     public function notify(Killed $event): void
     {
-        Container::getInstance()->get(Printer::class)->reportKilledMutation($event->test);
+        Container::getInstance()->get(Printer::class)->reportKilledMutation($event->test); // @phpstan-ignore-line
     }
 }

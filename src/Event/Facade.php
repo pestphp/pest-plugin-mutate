@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pest\Mutate\Event;
 
 use Pest\Mutate\Contracts\Subscriber;
@@ -9,17 +11,23 @@ class Facade
 {
     private static ?self $instance = null;
 
+    /**
+     * @var array<class-string<Subscriber>, array<int, Subscriber>>
+     */
     private array $subscribers = [];
 
     public static function instance(): self
     {
-        if(!isset(self::$instance)) {
+        if (! isset(self::$instance)) {
             self::$instance = new self;
         }
 
         return self::$instance;
     }
 
+    /**
+     * @return array<class-string<Subscriber>, array<int, Subscriber>>
+     */
     public function subscribers(): array
     {
         return $this->subscribers;
@@ -34,6 +42,6 @@ class Facade
     {
         $reflection = new ReflectionClass($subscriber);
 
-        $this->subscribers[$reflection->getInterfaceNames()[0]][] = $subscriber;
+        $this->subscribers[$reflection->getInterfaceNames()[0]][] = $subscriber; // @phpstan-ignore-line
     }
 }

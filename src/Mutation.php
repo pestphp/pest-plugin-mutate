@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Pest\Mutate;
 
-use Pest\Mutate\Support\MutationTestResult;
 use PhpParser\Node;
 use PhpParser\PrettyPrinter\Standard;
 use Symfony\Component\Finder\SplFileInfo;

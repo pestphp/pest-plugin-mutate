@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pest\Mutate;
 
 use Pest\Mutate\Event\Facade;
@@ -7,6 +9,7 @@ use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Support\MutationTestResult;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Symfony\Component\Process\Process;
+
 use function Termwind\render;
 
 class MutationTest
@@ -27,7 +30,11 @@ class MutationTest
         $this->result = $result;
     }
 
-    public function run($coveredLines, $profile, $originalArguments): void
+    /**
+     * @param  array<string, array<int, array<int, string>>>  $coveredLines
+     * @param  array<int, string>  $originalArguments
+     */
+    public function run(array $coveredLines, Profile $profile, array $originalArguments): void
     {
         /** @var string $tmpfname */
         $tmpfname = tempnam('/tmp', 'pest_mutation_');
@@ -37,7 +44,7 @@ class MutationTest
         $filters = [];
         foreach (range($this->mutation->originalNode->getStartLine(), $this->mutation->originalNode->getEndLine()) as $lineNumber) {
             foreach ($coveredLines[$this->mutation->file->getRealPath()][$lineNumber] ?? [] as $test) {
-                preg_match('/\\\\([a-zA-Z0-9]*)::__pest_evaluable_([^#]*)"?/', (string) $test, $matches);
+                preg_match('/\\\\([a-zA-Z0-9]*)::__pest_evaluable_([^#]*)"?/', $test, $matches);
                 $filters[] = $matches[1].'::'.preg_replace(['/_([a-z])_/', '/([^_])_([^_])/', '/__/'], [' $1 ', '$1 $2', '_'], $matches[2]);
             }
         }
@@ -68,7 +75,7 @@ class MutationTest
         try {
             $process->run();
         } catch (ProcessTimedOutException) {
-            $this->updateResult->updateResult(MutationTestResult::Timeout);
+            $this->updateResult(MutationTestResult::Timeout);
             Facade::instance()->emitter()->mutationTimedOut($this);
 
             return;

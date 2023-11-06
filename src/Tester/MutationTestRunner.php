@@ -13,7 +13,6 @@ use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Profile;
 use Pest\Mutate\Profiles;
 use Pest\Mutate\Support\MutationGenerator;
-use Pest\Mutate\Support\MutationTestResult;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
 use PHPUnit\TestRunner\TestResult\Facade;
@@ -21,8 +20,6 @@ use SebastianBergmann\CodeCoverage\CodeCoverage;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\Process\Exception\ProcessTimedOutException;
-use Symfony\Component\Process\Process;
 
 use function Termwind\render;
 use function Termwind\renderUsing;
@@ -137,10 +134,6 @@ class MutationTestRunner implements MutationTestRunnerContract
 
         renderUsing($this->output);
         render('<div class="m-2 my-1">Running mutation tests:</div>');
-
-        $survivedCount = 0;
-        $timeoutedCount = 0;
-        $notCoveredCount = 0;
 
         $this->output->write('  ');
 

@@ -3,16 +3,22 @@
 declare(strict_types=1);
 use Pest\Mutate\Contracts\Mutator;
 use Pest\Mutate\Contracts\MutatorSet;
+use Pest\Mutate\Contracts\Subscriber;
 use Pest\Mutate\Mutators;
-use PHPUnit\Event\Subscriber;
+use PHPUnit\Event\Subscriber as PhpUnitSubscriber;
 use Symfony\Component\Finder\Finder;
 
 test('contract')
     ->expect('Pest\Mutate\Contracts')
     ->toBeInterface();
 
-test('subscribers')
+test('phpunit subscribers')
     ->expect('Pest\Mutate\Subscribers')
+    ->toImplement(PhpUnitSubscriber::class)
+    ->ignoring('Pest\Mutate\Subscribers\MutationTest');
+
+test('subscribers')
+    ->expect('Pest\Mutate\Subscribers\MutationTest')
     ->toImplement(Subscriber::class);
 
 test('mutators')

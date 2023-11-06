@@ -1,14 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Pest\Mutate\Support\Printers;
 
 use Pest\Mutate\Contracts\Printer;
 use Pest\Mutate\MutationTest;
-use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class CompactPrinter implements Printer
 {
-    public function __construct(private ConsoleOutput $output)
+    public function __construct(private readonly OutputInterface $output)
     {
     }
 
