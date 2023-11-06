@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Event;
 
+use Pest\Mutate\Event\Events\Test\HookMethod\BeforeFirstTestExecuted;
+use Pest\Mutate\Event\Events\Test\HookMethod\BeforeFirstTestExecutedSubscriber;
 use Pest\Mutate\Event\Events\Test\Outcome\Killed;
 use Pest\Mutate\Event\Events\Test\Outcome\KilledSubscriber;
 use Pest\Mutate\Event\Events\Test\Outcome\NotCovered;
@@ -13,6 +15,7 @@ use Pest\Mutate\Event\Events\Test\Outcome\SurvivedSubscriber;
 use Pest\Mutate\Event\Events\Test\Outcome\Timeout;
 use Pest\Mutate\Event\Events\Test\Outcome\TimeoutSubscriber;
 use Pest\Mutate\MutationTest;
+use Pest\Mutate\MutationTestCollection;
 
 class Emitter
 {
@@ -63,6 +66,16 @@ class Emitter
 
         foreach (Facade::instance()->subscribers()[NotCoveredSubscriber::class] ?? [] as $subscriber) {
             /** @var NotCoveredSubscriber $subscriber */
+            $subscriber->notify($event);
+        }
+    }
+
+    public function startTestCollection(MutationTestCollection $testCollection): void
+    {
+        $event = new BeforeFirstTestExecuted($testCollection);
+
+        foreach (Facade::instance()->subscribers()[BeforeFirstTestExecutedSubscriber::class] ?? [] as $subscriber) {
+            /** @var BeforeFirstTestExecutedSubscriber $subscriber */
             $subscriber->notify($event);
         }
     }

@@ -7,10 +7,6 @@ namespace Pest\Mutate\Boostrappers;
 use Pest\Contracts\Bootstrapper;
 use Pest\Mutate\Contracts\Subscriber;
 use Pest\Mutate\Event\Facade;
-use Pest\Mutate\Subscribers\MutationTest\MutationKilled;
-use Pest\Mutate\Subscribers\MutationTest\MutationNotCovered;
-use Pest\Mutate\Subscribers\MutationTest\MutationSurvived;
-use Pest\Mutate\Subscribers\MutationTest\MutationTimedOut;
 use Pest\Support\Container;
 
 /**
@@ -18,16 +14,14 @@ use Pest\Support\Container;
  */
 final class BootSubscribers implements Bootstrapper
 {
+    // TODO: we will use this later to register the subscribers to stop the execution on first not killed mutation
+
     /**
      * The list of Subscribers.
      *
      * @var array<int, class-string<Subscriber>>
      */
     private const SUBSCRIBERS = [
-        MutationKilled::class,
-        MutationSurvived::class,
-        MutationTimedOut::class,
-        MutationNotCovered::class,
     ];
 
     /**
@@ -43,7 +37,7 @@ final class BootSubscribers implements Bootstrapper
      */
     public function boot(): void
     {
-        foreach (self::SUBSCRIBERS as $subscriber) {
+        foreach (self::SUBSCRIBERS as $subscriber) { // @phpstan-ignore-line
             $instance = $this->container->get($subscriber);
 
             assert($instance instanceof Subscriber);

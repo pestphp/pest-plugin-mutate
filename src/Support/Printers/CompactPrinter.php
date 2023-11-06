@@ -6,6 +6,7 @@ namespace Pest\Mutate\Support\Printers;
 
 use Pest\Mutate\Contracts\Printer;
 use Pest\Mutate\MutationTest;
+use Pest\Mutate\MutationTestCollection;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CompactPrinter implements Printer
@@ -32,5 +33,10 @@ class CompactPrinter implements Printer
     public function reportTimedOutMutation(MutationTest $test): void
     {
         $this->output->write('<fg=yellow;options=bold>t</>');
+    }
+
+    public function printFilename(MutationTestCollection $testCollection): void
+    {
+        // nothing to do here
     }
 }

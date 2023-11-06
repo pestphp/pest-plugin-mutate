@@ -6,24 +6,29 @@ namespace Pest\Mutate\Repositories;
 
 use Pest\Mutate\Mutation;
 use Pest\Mutate\MutationTest;
-use Pest\Mutate\Support\MutationTestResult;
+use Pest\Mutate\MutationTestCollection;
 
 class MutationRepository
 {
     /**
      * Holds the mutation tests per file.
      *
-     * @var array<string, array<int, MutationTest>>
+     * @var array<string, MutationTestCollection>
      */
     private array $tests = [];
 
     public function add(Mutation $mutation): void
     {
-        $this->tests[$mutation->file->getRealPath()][] = new MutationTest($mutation);
+        if (! isset($this->tests[$mutation->file->getRealPath()])) {
+            $this->tests[$mutation->file->getRealPath()] = new MutationTestCollection($mutation->file);
+        }
+
+        $test = new MutationTest($mutation);
+        $this->tests[$mutation->file->getRealPath()]->add($test);
     }
 
     /**
-     * @return array<string, array<int, MutationTest>>
+     * @return array<string, MutationTestCollection>
      */
     public function all(): array
     {
@@ -37,34 +42,26 @@ class MutationRepository
 
     public function total(): int
     {
-        return array_sum(array_map(fn (array $mutations): int => count($mutations), $this->tests));
+        return array_sum(array_map(fn (MutationTestCollection $testCollection): int => $testCollection->count(), $this->tests));
     }
 
     public function survived(): int
     {
-        return count($this->testsByResult(MutationTestResult::Survived));
+        return array_sum(array_map(fn (MutationTestCollection $testCollection): int => $testCollection->survived(), $this->tests));
     }
 
     public function killed(): int
     {
-        return count($this->testsByResult(MutationTestResult::Killed));
+        return array_sum(array_map(fn (MutationTestCollection $testCollection): int => $testCollection->killed(), $this->tests));
     }
 
     public function timedOut(): int
     {
-        return count($this->testsByResult(MutationTestResult::Timeout));
+        return array_sum(array_map(fn (MutationTestCollection $testCollection): int => $testCollection->timedOut(), $this->tests));
     }
 
     public function notCovered(): int
     {
-        return count($this->testsByResult(MutationTestResult::NotCovered));
-    }
-
-    /**
-     * @return array<int, MutationTest>
-     */
-    private function testsByResult(MutationTestResult $result): array
-    {
-        return array_merge(...array_values(array_map(fn (array $tests): array => array_filter($tests, fn (MutationTest $test): bool => $test->result() === $result), $this->tests)));
+        return array_sum(array_map(fn (MutationTestCollection $testCollection): int => $testCollection->notCovered(), $this->tests));
     }
 }

@@ -6,6 +6,7 @@ namespace Pest\Mutate\Support\Printers;
 
 use Pest\Mutate\Contracts\Printer;
 use Pest\Mutate\MutationTest;
+use Pest\Mutate\MutationTestCollection;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use function Termwind\render;
@@ -60,5 +61,10 @@ class DefaultPrinter implements Printer
     {
         //        $this->output->write('<fg=yellow;options=bold>t</>');
         $this->output->writeln('Mutant for '.$test->mutation->file->getRealPath().':'.$test->mutation->originalNode->getLine().' timed out. ('.$test->mutation->mutator.')');
+    }
+
+    public function printFilename(MutationTestCollection $testCollection): void
+    {
+        $this->output->writeln($testCollection->file->getRealPath());
     }
 }

@@ -44,4 +44,11 @@ class Facade
 
         $this->subscribers[$reflection->getInterfaceNames()[0]][] = $subscriber; // @phpstan-ignore-line
     }
+
+    public function registerSubscribers(Subscriber ...$subscribers): void
+    {
+        foreach ($subscribers as $subscriber) {
+            $this->registerSubscriber($subscriber);
+        }
+    }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pest\Mutate\Contracts;
 
 use Pest\Mutate\MutationTest;
+use Pest\Mutate\MutationTestCollection;
 
 interface Printer
 {
@@ -15,4 +16,6 @@ interface Printer
     public function reportNotCoveredMutation(MutationTest $test): void;
 
     public function reportTimedOutMutation(MutationTest $test): void;
+
+    public function printFilename(MutationTestCollection $testCollection): void;
 }

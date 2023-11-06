@@ -138,8 +138,9 @@ class MutationTestRunner implements MutationTestRunnerContract
         $this->output->write('  ');
 
         // run tests for each mutation
-        foreach ($mutationSuite->repository->all() as $tests) {
-            foreach ($tests as $test) {
+        foreach ($mutationSuite->repository->all() as $testCollection) {
+            \Pest\Mutate\Event\Facade::instance()->emitter()->startTestCollection($testCollection);
+            foreach ($testCollection->tests() as $test) {
                 $test->run($coveredLines, $this->getProfile(), $this->originalArguments);
             }
         }
