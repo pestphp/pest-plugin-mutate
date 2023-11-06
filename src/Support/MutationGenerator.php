@@ -144,10 +144,10 @@ class MutationGenerator
             $class = array_pop($parts);
             $namespace = preg_quote(implode('\\', $parts));
 
-            if (preg_match("/namespace\\s+${namespace}/", $contents) !== 1) {
+            if (preg_match("/namespace\\s+$namespace/", $contents) !== 1) {
                 continue;
             }
-            if (preg_match("/class\\s+${class}/", $contents) !== 1) {
+            if (preg_match("/class\\s+$class/", $contents) !== 1) {
                 continue;
             }
 

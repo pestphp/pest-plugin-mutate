@@ -8,6 +8,7 @@ use Pest\Exceptions\ShouldNotHappen;
 use Pest\Mutate\Contracts\MutationTestRunner as MutationTestRunnerContract;
 use Pest\Mutate\Factories\ProfileFactory;
 use Pest\Mutate\Mutation;
+use Pest\Mutate\MutationSuite;
 use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Profile;
 use Pest\Mutate\Profiles;
@@ -109,9 +110,6 @@ class MutationTestRunner implements MutationTestRunnerContract
 
         $files = $this->getFiles($this->getProfile()->paths);
 
-        /** @var array<int, Mutation> $mutations */
-        $mutations = [];
-
         /** @var MutationGenerator $generator */
         $generator = Container::getInstance()->get(MutationGenerator::class);
         foreach ($files as $file) {
@@ -119,19 +117,18 @@ class MutationTestRunner implements MutationTestRunnerContract
                 continue;
             }
 
-            $mutations = [
-                ...$mutations,
-                ...$generator->generate(
-                    file: $file,
-                    mutators: $this->getProfile()->mutators,
-                    linesToMutate: $this->getProfile()->coveredOnly ? array_keys($coveredLines[$file->getRealPath()]) : [],
-                    classesToMutate: $this->getProfile()->classes,
-                ),
-            ];
+            foreach ($generator->generate(
+                file: $file,
+                mutators: $this->getProfile()->mutators,
+                linesToMutate: $this->getProfile()->coveredOnly ? array_keys($coveredLines[$file->getRealPath()]) : [],
+                classesToMutate: $this->getProfile()->classes,
+            ) as $mutation) {
+                MutationSuite::instance()->repository->add($mutation);
+            }
         }
 
         $this->output->writeln([
-            '  <fg=gray>'.count($mutations).' Mutations created</>',
+            '  <fg=gray>'.MutationSuite::instance()->repository->total().' Mutations for '.MutationSuite::instance()->repository->count().' Files created</>',
             '',
         ]);
 
@@ -145,85 +142,89 @@ class MutationTestRunner implements MutationTestRunnerContract
         $this->output->write('  ');
 
         // run tests for each mutation
-        foreach ($mutations as $mutation) {
-            /** @var string $tmpfname */
-            $tmpfname = tempnam('/tmp', 'pest_mutation_');
-            file_put_contents($tmpfname, $mutation->modifiedSource());
+        foreach (MutationSuite::instance()->repository->all() as $mutations) {
+            foreach ($mutations as $mutation) {
+                /** @var string $tmpfname */
+                $tmpfname = tempnam('/tmp', 'pest_mutation_');
+                file_put_contents($tmpfname, $mutation->modifiedSource());
 
-            // TODO: we should pass the tests to run in another way, maybe via cache, mutation or env variable
-            $filters = [];
-            foreach (range($mutation->originalNode->getStartLine(), $mutation->originalNode->getEndLine()) as $lineNumber) {
-                foreach ($coveredLines[$mutation->file->getRealPath()][$lineNumber] ?? [] as $test) {
-                    preg_match('/\\\\([a-zA-Z0-9]*)::__pest_evaluable_([^#]*)"?/', (string) $test, $matches);
-                    $filters[] = $matches[1].'::'.preg_replace(['/_([a-z])_/', '/([^_])_([^_])/', '/__/'], [' $1 ', '$1 $2', '_'], $matches[2]);
+                // TODO: we should pass the tests to run in another way, maybe via cache, mutation or env variable
+                $filters = [];
+                foreach (range($mutation->originalNode->getStartLine(), $mutation->originalNode->getEndLine()) as $lineNumber) {
+                    foreach ($coveredLines[$mutation->file->getRealPath()][$lineNumber] ?? [] as $test) {
+                        preg_match('/\\\\([a-zA-Z0-9]*)::__pest_evaluable_([^#]*)"?/', (string) $test, $matches);
+                        $filters[] = $matches[1].'::'.preg_replace(['/_([a-z])_/', '/([^_])_([^_])/', '/__/'], [' $1 ', '$1 $2', '_'], $matches[2]);
+                    }
                 }
-            }
-            $filters = array_unique($filters);
+                $filters = array_unique($filters);
 
-            if ($filters === []) {
-                $this->output->writeln('No tests found for mutation: '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' ('.$mutation->mutator::name().')');
-                $notCoveredCount++;
+                if ($filters === []) {
+                    $this->output->writeln('No tests found for mutation: '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' ('.$mutation->mutator::name().')');
+                    $notCoveredCount++;
 
-                continue;
-            }
+                    continue;
+                }
 
-            // TODO: filter arguments to remove unnecessary stuff (Teamcity, Coverage, etc.)
-            $process = new Process(
-                command: [
-                    ...$this->originalArguments,
-                    '--bail',
-                    '--filter="'.implode('|', $filters).'"',
-                    $this->getProfile()->parallel ? '--parallel' : '',
-                ],
-                env: [
-                    Mutate::ENV_MUTATION_TESTING => $mutation->file->getRealPath(),
-                    Mutate::ENV_MUTATION_FILE => $tmpfname,
-                ],
-                timeout: $this->calculateTimeout(),
-            );
+                // TODO: filter arguments to remove unnecessary stuff (Teamcity, Coverage, etc.)
+                $process = new Process(
+                    command: [
+                        ...$this->originalArguments,
+                        '--bail',
+                        '--filter="'.implode('|', $filters).'"',
+                        $this->getProfile()->parallel ? '--parallel' : '',
+                    ],
+                    env: [
+                        Mutate::ENV_MUTATION_TESTING => $mutation->file->getRealPath(),
+                        Mutate::ENV_MUTATION_FILE => $tmpfname,
+                    ],
+                    timeout: $this->calculateTimeout(),
+                );
 
-            try {
-                $process->run();
-            } catch (ProcessTimedOutException) {
-                $this->output->write('<fg=yellow;options=bold>t</>');
-                $timeoutedCount++;
-                $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' timed out. ('.$mutation->mutator.')');
+                try {
+                    $process->run();
+                } catch (ProcessTimedOutException) {
+                    $this->output->write('<fg=yellow;options=bold>t</>');
+                    $timeoutedCount++;
+                    $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' timed out. ('.$mutation->mutator.')');
 
-                continue;
-            }
+                    continue;
+                }
 
-            if ($process->isSuccessful()) {
-                $this->output->write('<fg=red;options=bold>x</>');
-                $survivedCount++;
+                if ($process->isSuccessful()) {
+                    $this->output->write('<fg=red;options=bold>x</>');
+                    $survivedCount++;
 
-                //                                $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' NOT killed. ('.$mutation->mutator.')');
-                $path = str_ireplace(getcwd().'/', '', $mutation->file->getRealPath());
+                    //                                $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' NOT killed. ('.$mutation->mutator.')');
+                    $path = str_ireplace(getcwd().'/', '', $mutation->file->getRealPath());
 
-                $diff = <<<HTML
+                    $diff = <<<HTML
                     <div class="text-green">+ {$mutation->diff()['modified'][0]}</div>
                     <div class="text-red">- {$mutation->diff()['original'][0]}</div>
                     HTML;
 
-                render(<<<HTML
+                    render(<<<HTML
                         <div class="mx-2 flex">
                             <span>at {$path}:{$mutation->originalNode->getLine()} </span>
                             <span class="flex-1 content-repeat-[.] text-gray mx-1"></span>
                             <span>{$mutation->mutator::name()}</span>
                         </div>
-                    HTML);
+                    HTML
+                    );
 
-                render(<<<HTML
+                    render(<<<HTML
                         <div class="mx-2 mb-1 flex">
                             {$diff}
                         </div>
-                    HTML);
+                    HTML
+                    );
 
-                continue;
+                    continue;
+                }
+
+                $this->output->write('<fg=gray;options=bold>.</>');
+
+                //            $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' killed.');
             }
-
-            $this->output->write('<fg=gray;options=bold>.</>');
-
-            //            $this->output->writeln('Mutant for '.$mutation->file->getRealPath().':'.$mutation->originalNode->getLine().' killed.');
         }
 
         $duration = number_format(microtime(true) - $start, 2);
@@ -231,7 +232,7 @@ class MutationTestRunner implements MutationTestRunnerContract
         $this->output->writeln([
             '',
             '',
-            '  <fg=gray>Mutations:</> <fg=default><fg=red;options=bold>'.($survivedCount !== 0 ? $survivedCount.' survived</><fg=gray>,</> ' : '').'<fg=yellow;options=bold>'.($notCoveredCount !== 0 ? $notCoveredCount.' not covered</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.($timeoutedCount !== 0 ? $timeoutedCount.' timeout</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.(count($mutations) - $survivedCount - $timeoutedCount - $notCoveredCount).' killed</>',
+            '  <fg=gray>Mutations:</> <fg=default><fg=red;options=bold>'.($survivedCount !== 0 ? $survivedCount.' survived</><fg=gray>,</> ' : '').'<fg=yellow;options=bold>'.($notCoveredCount !== 0 ? $notCoveredCount.' not covered</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.($timeoutedCount !== 0 ? $timeoutedCount.' timeout</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.(MutationSuite::instance()->repository->total() - $survivedCount - $timeoutedCount - $notCoveredCount).' killed</>',
             '  <fg=gray>Duration:</>  <fg=default>'.$duration.'s</>',
             '',
         ]);
