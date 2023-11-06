@@ -11,6 +11,7 @@ use Pest\Contracts\Plugins\HandlesArguments;
 use Pest\Mutate\Boostrappers\BootPhpUnitSubscribers;
 use Pest\Mutate\Boostrappers\BootSubscribers;
 use Pest\Mutate\Contracts\MutationTestRunner;
+use Pest\Mutate\Contracts\Printer;
 use Pest\Mutate\Factories\ProfileFactory;
 use Pest\Mutate\Options\ClassOption;
 use Pest\Mutate\Options\CoveredOnlyOption;
@@ -20,11 +21,11 @@ use Pest\Mutate\Options\MutatorsOption;
 use Pest\Mutate\Options\ParallelOption;
 use Pest\Mutate\Options\PathsOption;
 use Pest\Mutate\Profile;
+use Pest\Mutate\Support\Printers\CompactPrinter;
 use Pest\Plugins\Concerns\HandleArguments;
 use Pest\Plugins\Parallel;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
-use PHPUnit\Event\Facade;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -75,6 +76,7 @@ class Mutate implements Bootable, HandlesArguments
     public function boot(): void
     {
         $this->container->add(MutationTestRunner::class, new \Pest\Mutate\Tester\MutationTestRunner($this->output));
+        $this->container->add(Printer::class, new CompactPrinter($this->output));
 
         foreach (self::BOOTSTRAPPERS as $bootstrapper) {
             $bootstrapper = Container::getInstance()->get($bootstrapper);

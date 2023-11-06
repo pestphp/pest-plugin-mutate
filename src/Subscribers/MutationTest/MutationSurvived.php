@@ -2,6 +2,7 @@
 
 namespace Pest\Mutate\Subscribers\MutationTest;
 
+use Pest\Mutate\Contracts\Printer;
 use Pest\Mutate\Event\Events\Test\Outcome\Killed;
 use Pest\Mutate\Event\Events\Test\Outcome\KilledSubscriber;
 use Pest\Mutate\Event\Events\Test\Outcome\Survived;
@@ -13,6 +14,6 @@ class MutationSurvived implements SurvivedSubscriber
 {
     public function notify(Survived $event): void
     {
-        Container::getInstance()->get(OutputInterface::class)->write('<fg=red;options=bold>x</>');
+        Container::getInstance()->get(Printer::class)->reportSurvivedMutation($event->test);
     }
 }
