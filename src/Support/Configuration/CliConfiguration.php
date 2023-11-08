@@ -11,7 +11,6 @@ use Pest\Mutate\Options\MutateOption;
 use Pest\Mutate\Options\MutatorsOption;
 use Pest\Mutate\Options\ParallelOption;
 use Pest\Mutate\Options\PathsOption;
-use Pest\Plugins\Parallel;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputDefinition;
 
@@ -71,9 +70,11 @@ class CliConfiguration extends AbstractConfiguration
         }
 
         if ($input->hasOption(ParallelOption::ARGUMENT)) {
-            unset($arguments[array_search('--'.ParallelOption::ARGUMENT, $arguments, true)]);
             $this->parallel();
-            Parallel::disable();
+
+            if (($index = array_search('--parallel', $_SERVER['argv'], true)) !== false) {
+                unset($_SERVER['argv'][$index]);
+            }
         }
 
         if ($input->hasOption(ClassOption::ARGUMENT)) {

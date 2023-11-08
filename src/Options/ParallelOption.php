@@ -12,7 +12,7 @@ class ParallelOption
 
     public static function remove(): bool
     {
-        return false;
+        return true;
     }
 
     public static function match(string $argument): bool

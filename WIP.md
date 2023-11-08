@@ -27,7 +27,6 @@
 - [ ] Awesome docs
 
 # Current Tasks - required for first Alpha release
-- [ ] `->mutate()` should not override `--covered-only=false`
 - [ ] Changes on the Pest main repository required
 - [ ] Maybe we could move the file cache to the Pest main repository. I think other plugins like type-coverage could make use of it too.
 - [ ] Set proper default paths `src` or `app`  if Laravel. see src/Plugins/Parallel/Handlers/Laravel.php:29, or maybe use the "coverage" config from phpunit.xml
