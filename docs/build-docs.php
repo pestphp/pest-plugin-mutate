@@ -7,7 +7,7 @@ use Pest\Mutate\Support\DocGenerator;
 include __DIR__.'/../vendor/autoload.php';
 
 // load skeleton
-$readMe = file_get_contents(__DIR__.'/README.md');
+$readMe = file_get_contents(__DIR__.'/README.stub.md');
 
 // replace file placeholders
 $readMe = str_replace('___mutation-testing.md___', file_get_contents(__DIR__.'/mutation-testing.md'), $readMe);
