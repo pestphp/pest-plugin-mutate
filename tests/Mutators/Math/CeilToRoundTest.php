@@ -3,7 +3,7 @@
 declare(strict_types=1);
 use Pest\Mutate\Mutators\Math\CeilToRound;
 
-it('mutates a cail to a round function call', function (): void {
+it('mutates a ceil to a round function call', function (): void {
     expect(mutateCode(CeilToRound::class, <<<'CODE'
         <?php
 

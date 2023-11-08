@@ -98,7 +98,7 @@ class DefaultPrinter implements Printer
 
     private function writeMutationTestLine(string $color, string $symbol, MutationTest $test): void
     {
-        $this->output->writeln('  <fg='.$color.';options=bold>'.$symbol.'</> <fg=gray>Line '.$test->mutation->originalNode->getStartLine().': '.$test->mutation->mutator::name().'</>');
+        $this->output->writeln('  <fg='.$color.';options=bold>'.$symbol.'</> <fg=gray>Line '.$test->mutation->originalNode->getStartLine().': '.$test->mutation->mutator::name().'</>'); // @pest-mutate-ignore
     }
 
     private function writeMutationSuiteSummary(MutationSuite $mutationSuite): void
@@ -136,7 +136,7 @@ class DefaultPrinter implements Printer
         }
 
         $this->output->writeln([
-            '  <fg=default;bg='.$color.';options=bold> '.$label.' </> <fg=default;options=bold>'.$path.' <fg=gray> > Line '.$test->mutation->originalNode->getStartLine().': '.$test->mutation->mutator::name().'</>',
+            '  <fg=default;bg='.$color.';options=bold> '.$label.' </> <fg=default;options=bold>'.$path.' <fg=gray> > Line '.$test->mutation->originalNode->getStartLine().': '.$test->mutation->mutator::name().'</>', // @pest-mutate-ignore
             '  <fg=default;options=bold>'.$error.'</>',
         ]);
 

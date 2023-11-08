@@ -169,12 +169,6 @@ class Mutate implements Bootable, HandlesArguments
             $profileFactory->class(explode(',', (string) $input->getOption(ClassOption::ARGUMENT))); // @phpstan-ignore-line
         }
 
-        if ($_SERVER['COLLISION_PRINTER_COMPACT'] ?? false) {
-            $this->container->add(Printer::class, new CompactPrinter($this->output));
-        } else {
-            $this->container->add(Printer::class, new DefaultPrinter($this->output));
-        }
-
         return $arguments;
     }
 }

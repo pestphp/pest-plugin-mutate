@@ -25,14 +25,17 @@ use Pest\Mutate\Event\Events\TestSuite\StartMutationGenerationSubscriber;
 use Pest\Mutate\Event\Events\TestSuite\StartMutationSuite;
 use Pest\Mutate\Event\Events\TestSuite\StartMutationSuiteSubscriber;
 use Pest\Mutate\Event\Facade;
+use Pest\Mutate\Support\Printers\CompactPrinter;
+use Pest\Mutate\Support\Printers\DefaultPrinter;
 use Pest\Support\Container;
 use PHPUnit\Event\Application\Started;
 use PHPUnit\Event\Application\StartedSubscriber;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @internal
  */
-final class EnsurePrinterIsRegisteredSubscriber implements StartedSubscriber
+class EnsurePrinterIsRegistered implements StartedSubscriber
 {
     public function notify(Started $event): void
     {
@@ -43,8 +46,13 @@ final class EnsurePrinterIsRegisteredSubscriber implements StartedSubscriber
             return;
         }
 
-        /** @var Printer $printer */
-        $printer = Container::getInstance()->get(Printer::class);
+        if ($_SERVER['COLLISION_PRINTER_COMPACT'] ?? false) {
+            $printer = new CompactPrinter(Container::getInstance()->get(OutputInterface::class));
+        } else {
+            $printer = new DefaultPrinter(Container::getInstance()->get(OutputInterface::class));
+        }
+
+        Container::getInstance()->add(Printer::class, $printer);
 
         $subscribers = [
             // Test > Hook Methods
