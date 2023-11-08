@@ -9,6 +9,11 @@ use Pest\Mutate\Support\Configuration\CliConfiguration;
 use Pest\Mutate\Support\Configuration\Configuration;
 use Pest\Mutate\Support\Configuration\GlobalConfiguration;
 use Pest\Mutate\Support\Configuration\TestConfiguration;
+use Pest\Support\Container;
+use PHPUnit\TextUI\Configuration\Configuration as PhpUnitConfiguration;
+use PHPUnit\TextUI\Configuration\File;
+use PHPUnit\TextUI\Configuration\FilterDirectory;
+use PHPUnit\TextUI\Configuration\Source;
 
 class ConfigurationRepository
 {
@@ -76,11 +81,25 @@ class ConfigurationRepository
 
         return new Configuration(
             coveredOnly: $config['covered_only'] ?? false,
-            paths: $config['paths'] ?? ['src'],
+            paths: $config['paths'] ?? $this->pathsFromPhpunitConfiguration(),
             mutators: $config['mutators'] ?? DefaultSet::mutators(),
             classes: $config['classes'] ?? [],
             parallel: $config['parallel'] ?? false,
             minMSI: $config['min_msi'] ?? 0.0,
         );
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function pathsFromPhpunitConfiguration(): array
+    {
+        /** @var Source $source */
+        $source = Container::getInstance()->get(PhpUnitConfiguration::class)->source(); // @phpstan-ignore-line
+
+        return array_map(fn (FilterDirectory|File $path): string => $path->path(), [
+            ...$source->includeDirectories(),
+            ...$source->includeFiles(),
+        ]);
     }
 }
