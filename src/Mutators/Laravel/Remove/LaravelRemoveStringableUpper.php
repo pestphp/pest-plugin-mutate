@@ -14,6 +14,15 @@ use PhpParser\Node\Name\FullyQualified;
 // TODO: This is a POC, lot of refactor and extraction needed
 class LaravelRemoveStringableUpper extends AbstractMutator
 {
+    public const SET = 'Laravel';
+
+    public const DESCRIPTION = 'Removes the upper method call from a stringable object.';
+
+    public const DIFF = <<<'DIFF'
+        Str::of('hello')->upper();  // [tl! remove]
+        Str::of('hello');  // [tl! add]
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [MethodCall::class];

@@ -10,6 +10,15 @@ use PhpParser\Node\Expr\BinaryOp\Concat;
 
 class ConcatSwitchSides extends AbstractMutator
 {
+    public const SET = 'String';
+
+    public const DESCRIPTION = 'Switches the sides of a concat expression.';
+
+    public const DIFF = <<<'DIFF'
+        $a = 'Hello' . ' World';  // [tl! remove]
+        $a = ' World' . 'Hello';  // [tl! add]
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [Concat::class];

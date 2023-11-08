@@ -45,9 +45,12 @@ use Pest\Mutate\Mutators\Array\UnwrapArrayUintersectAssoc;
 use Pest\Mutate\Mutators\Array\UnwrapArrayUintersectUassoc;
 use Pest\Mutate\Mutators\Array\UnwrapArrayUnique;
 use Pest\Mutate\Mutators\Array\UnwrapArrayValues;
+use Pest\Mutate\Mutators\Concerns\HasName;
 
 class ArraySet implements MutatorSet
 {
+    use HasName;
+
     /**
      * {@inheritDoc}
      */

@@ -15,6 +15,8 @@ interface Mutator
 
     public static function name(): string;
 
+    public static function set(): string;
+
     public static function can(Node $node): bool;
 
     public static function mutate(Node $node): Node|int;

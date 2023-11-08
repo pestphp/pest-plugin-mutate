@@ -10,10 +10,31 @@ use PhpParser\Node;
 
 abstract class AbstractMutator implements Mutator
 {
+    public const SET = '';
+
+    public const DESCRIPTION = '';
+
+    public const DIFF = '';
+
     use HasName;
 
     public static function can(Node $node): bool
     {
         return in_array($node::class, static::nodesToHandle(), true);
+    }
+
+    public static function set(): string
+    {
+        return static::SET;
+    }
+
+    public static function description(): string
+    {
+        return static::DESCRIPTION;
+    }
+
+    public static function diff(): string
+    {
+        return static::DIFF;
     }
 }

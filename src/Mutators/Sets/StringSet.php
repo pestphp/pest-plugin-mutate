@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pest\Mutate\Mutators\Sets;
 
 use Pest\Mutate\Contracts\MutatorSet;
+use Pest\Mutate\Mutators\Concerns\HasName;
 use Pest\Mutate\Mutators\String\ConcatRemoveLeft;
 use Pest\Mutate\Mutators\String\ConcatRemoveRight;
 use Pest\Mutate\Mutators\String\ConcatSwitchSides;
@@ -40,6 +41,8 @@ use Pest\Mutate\Mutators\String\UnwrapWordwrap;
 
 class StringSet implements MutatorSet
 {
+    use HasName;
+
     /**
      * {@inheritDoc}
      */

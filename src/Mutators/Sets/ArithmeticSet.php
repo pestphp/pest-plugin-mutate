@@ -20,9 +20,12 @@ use Pest\Mutate\Mutators\Arithmetic\PreDecrementToPreIncrement;
 use Pest\Mutate\Mutators\Arithmetic\PreIncrementToPreDecrement;
 use Pest\Mutate\Mutators\Arithmetic\ShiftLeftToShiftRight;
 use Pest\Mutate\Mutators\Arithmetic\ShiftRightToShiftLeft;
+use Pest\Mutate\Mutators\Concerns\HasName;
 
 class ArithmeticSet implements MutatorSet
 {
+    use HasName;
+
     /**
      * {@inheritDoc}
      */

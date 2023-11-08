@@ -8,6 +8,15 @@ use Pest\Mutate\Mutators\Abstract\AbstractFunctionReplaceMutator;
 
 class CeilToFloor extends AbstractFunctionReplaceMutator
 {
+    public const SET = 'Math';
+
+    public const DESCRIPTION = 'Replaces `ceil` function with `floor` function.';
+
+    public const DIFF = <<<'DIFF'
+        $a = ceil(1.2);  // [tl! remove]
+        $a = floor(1.2);  // [tl! add]
+        DIFF;
+
     public static function from(): string
     {
         return 'ceil';

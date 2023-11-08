@@ -11,6 +11,17 @@ use PhpParser\Node\Expr\BinaryOp\LogicalOr;
 
 class LogicalAndToLogicalOr extends AbstractMutator
 {
+    public const SET = 'Logical';
+
+    public const DESCRIPTION = 'Converts the logical and operator to the logical or operator.';
+
+    public const DIFF = <<<'DIFF'
+        if ($a && $b) {  // [tl! remove]
+        if ($a || $b) {  // [tl! add]
+            // ...
+        }
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [LogicalAnd::class];

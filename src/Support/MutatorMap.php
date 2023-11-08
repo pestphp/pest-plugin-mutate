@@ -39,7 +39,7 @@ class MutatorMap
             ...AssignmentSet::mutators(),
             ...CastingSet::mutators(),
             ...ControlStructuresSet::mutators(),
-            ...EqualitySet::defaultMutators(),
+            ...EqualitySet::mutators(),
             ...LogicalSet::mutators(),
             ...LaravelSet::mutators(),
             ...MathSet::mutators(),

@@ -9,6 +9,15 @@ use PhpParser\Node;
 
 class UnwrapArrayMap extends AbstractFunctionCallUnwrapMutator
 {
+    public const SET = 'Array';
+
+    public const DESCRIPTION = 'Unwraps `array_map` calls.';
+
+    public const DIFF = <<<'DIFF'
+        $a = array_map(fn ($value) => $value + 1, [1, 2, 3]);  // [tl! remove]
+        $a = [1, 2, 3];  // [tl! add]
+        DIFF;
+
     public static function functionName(): string
     {
         return 'array_map';

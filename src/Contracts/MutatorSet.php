@@ -10,4 +10,6 @@ interface MutatorSet
      * @return array<int, class-string<Mutator>>
      */
     public static function mutators(): array;
+
+    public static function name(): string;
 }

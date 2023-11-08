@@ -10,6 +10,15 @@ use PhpParser\Node\Expr\Cast\Bool_;
 
 class RemoveBooleanCast extends AbstractMutator
 {
+    public const SET = 'Casting';
+
+    public const DESCRIPTION = 'Removes boolean cast.';
+
+    public const DIFF = <<<'DIFF'
+        $a = (bool) $b;  // [tl! remove]
+        $a = $b;         // [tl! add]
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [Bool_::class];

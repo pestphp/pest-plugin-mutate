@@ -6,6 +6,7 @@ namespace Pest\Mutate\Mutators\Sets;
 
 use Pest\Mutate\Contracts\Mutator;
 use Pest\Mutate\Contracts\MutatorSet;
+use Pest\Mutate\Mutators\Concerns\HasName;
 use Pest\Mutate\Mutators\Equality\EqualToIdentical;
 use Pest\Mutate\Mutators\Equality\EqualToNotEqual;
 use Pest\Mutate\Mutators\Equality\GreaterOrEqualToGreater;
@@ -26,6 +27,8 @@ use Pest\Mutate\Mutators\Equality\SpaceshipSwitchSides;
 
 class EqualitySet implements MutatorSet
 {
+    use HasName;
+
     /**
      * {@inheritDoc}
      */

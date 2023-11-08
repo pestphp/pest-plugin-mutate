@@ -11,6 +11,17 @@ use PhpParser\Node\Expr\BinaryOp\NotEqual;
 
 class EqualToNotEqual extends AbstractMutator
 {
+    public const SET = 'Equality';
+
+    public const DESCRIPTION = 'Converts the equality operator to the not equal operator.';
+
+    public const DIFF = <<<'DIFF'
+        if ($a == $b) {  // [tl! remove]
+        if ($a != $b) {  // [tl! add]
+            // ...
+        }
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [Equal::class];

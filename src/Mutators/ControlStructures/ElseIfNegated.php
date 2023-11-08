@@ -11,6 +11,19 @@ use PhpParser\Node\Stmt\ElseIf_;
 
 class ElseIfNegated extends AbstractMutator
 {
+    public const SET = 'ControlStructures';
+
+    public const DESCRIPTION = 'Negates the condition in an elseif statement.';
+
+    public const DIFF = <<<'DIFF'
+        if ($a === 1) {
+            // ...
+        } elseif ($a === 2) {  // [tl! remove]
+        } elseif (!($a === 2)) {  // [tl! add]
+            // ...
+        }
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [ElseIf_::class];

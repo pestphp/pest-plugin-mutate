@@ -9,6 +9,15 @@ use PhpParser\Node;
 
 class UnwrapStrIreplace extends AbstractFunctionCallUnwrapMutator
 {
+    public const SET = 'String';
+
+    public const DESCRIPTION = 'Unwraps `str_ireplace` calls.';
+
+    public const DIFF = <<<'DIFF'
+        $a = str_ireplace('Hello', 'Hi', 'Hello World');  // [tl! remove]
+        $a = 'Hello World';  // [tl! add]
+        DIFF;
+
     public static function functionName(): string
     {
         return 'str_ireplace';

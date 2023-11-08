@@ -27,9 +27,7 @@
 - [ ] Awesome docs
 
 # Current Tasks - required for first Alpha release
-- [ ] Update the docs
-- [ ] Auto generate mutators and sets docs
-- [ ] Update README to contain the full docs
+- [ ] Implement stopOnSurvival(), stopOnUncovered(), bail()
 - [ ] Write Article about mutation testing
 
 # Backlog Prio 1

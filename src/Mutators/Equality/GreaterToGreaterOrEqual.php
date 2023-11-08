@@ -11,6 +11,17 @@ use PhpParser\Node\Expr\BinaryOp\GreaterOrEqual;
 
 class GreaterToGreaterOrEqual extends AbstractMutator
 {
+    public const SET = 'Equality';
+
+    public const DESCRIPTION = 'Converts the greater operator to the greater or equal operator.';
+
+    public const DIFF = <<<'DIFF'
+        if ($a > $b) {  // [tl! remove]
+        if ($a >= $b) {  // [tl! add]
+            // ...
+        }
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [Greater::class];

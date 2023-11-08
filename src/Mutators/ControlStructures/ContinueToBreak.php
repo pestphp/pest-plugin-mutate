@@ -11,6 +11,19 @@ use PhpParser\Node\Stmt\Continue_;
 
 class ContinueToBreak extends AbstractMutator
 {
+    public const SET = 'ControlStructures';
+
+    public const DESCRIPTION = 'Replaces `continue` with `break`.';
+
+    public const DIFF = <<<'DIFF'
+        foreach ($items as $item) {
+            if ($item === 'foo') {
+                continue;  // [tl! remove]
+                break;  // [tl! add]
+            }
+        }
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [Continue_::class];

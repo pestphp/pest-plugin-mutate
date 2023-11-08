@@ -11,6 +11,17 @@ use PhpParser\Node\Stmt\If_;
 
 class IfNegated extends AbstractMutator
 {
+    public const SET = 'ControlStructures';
+
+    public const DESCRIPTION = 'Negates the condition in an if statement.';
+
+    public const DIFF = <<<'DIFF'
+        if ($a === 1) {  // [tl! remove]
+        if (!($a === 1)) {  // [tl! add]
+            // ...
+        }
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [If_::class];

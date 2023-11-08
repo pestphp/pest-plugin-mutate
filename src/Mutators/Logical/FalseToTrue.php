@@ -11,6 +11,17 @@ use PhpParser\Node\Name;
 
 class FalseToTrue extends AbstractMutator
 {
+    public const SET = 'Logical';
+
+    public const DESCRIPTION = 'Converts `false` to `true`.';
+
+    public const DIFF = <<<'DIFF'
+        if (false) {  // [tl! remove]
+        if (true) {  // [tl! add]
+            // ...
+        }
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [ConstFetch::class];

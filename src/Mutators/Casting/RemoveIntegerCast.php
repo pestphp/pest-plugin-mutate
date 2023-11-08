@@ -10,6 +10,15 @@ use PhpParser\Node\Expr\Cast\Int_;
 
 class RemoveIntegerCast extends AbstractMutator
 {
+    public const SET = 'Casting';
+
+    public const DESCRIPTION = 'Removes integer cast.';
+
+    public const DIFF = <<<'DIFF'
+        $a = (int) $b;  // [tl! remove]
+        $a = $b;        // [tl! add]
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [Int_::class];

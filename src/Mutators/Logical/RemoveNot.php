@@ -10,6 +10,17 @@ use PhpParser\Node\Expr\BooleanNot;
 
 class RemoveNot extends AbstractMutator
 {
+    public const SET = 'Logical';
+
+    public const DESCRIPTION = 'Removes the not operator.';
+
+    public const DIFF = <<<'DIFF'
+        if (!$a) {  // [tl! remove]
+        if ($a) {  // [tl! add]
+            // ...
+        }
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [BooleanNot::class];

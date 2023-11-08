@@ -12,6 +12,17 @@ use PhpParser\Node\Stmt\For_;
 
 class ForAlwaysFalse extends AbstractMutator
 {
+    public const SET = 'ControlStructures';
+
+    public const DESCRIPTION = 'Makes the condition in a for loop always false.';
+
+    public const DIFF = <<<'DIFF'
+        for ($i = 0; $i < 10; $i++) {  // [tl! remove]
+        for ($i = 0; false; $i++) {  // [tl! add]
+            // ...
+        }
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [For_::class];

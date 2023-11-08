@@ -10,6 +10,15 @@ use PhpParser\Node\Scalar\String_;
 
 class EmptyStringToNotEmpty extends AbstractMutator
 {
+    public const SET = 'String';
+
+    public const DESCRIPTION = 'Changes an empty string to a non-empty string.';
+
+    public const DIFF = <<<'DIFF'
+        $a = '';  // [tl! remove]
+        $a = 'PEST Mutator was here!';  // [tl! add]
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [String_::class];

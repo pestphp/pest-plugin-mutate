@@ -10,6 +10,15 @@ use PhpParser\Node\Expr\BinaryOp\Coalesce;
 
 class CoalesceRemoveLeft extends AbstractMutator
 {
+    public const SET = 'Logical';
+
+    public const DESCRIPTION = 'Removes the left side of the coalesce operator.';
+
+    public const DIFF = <<<'DIFF'
+        return $a ?? $b;  // [tl! remove]
+        return $b;  // [tl! add]
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [Coalesce::class];

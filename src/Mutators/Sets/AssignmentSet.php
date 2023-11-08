@@ -18,9 +18,12 @@ use Pest\Mutate\Mutators\Assignment\PlusEqualToMinusEqual;
 use Pest\Mutate\Mutators\Assignment\PowerEqualToMultiplyEqual;
 use Pest\Mutate\Mutators\Assignment\ShiftLeftToShiftRight;
 use Pest\Mutate\Mutators\Assignment\ShiftRightToShiftLeft;
+use Pest\Mutate\Mutators\Concerns\HasName;
 
 class AssignmentSet implements MutatorSet
 {
+    use HasName;
+
     /**
      * {@inheritDoc}
      */

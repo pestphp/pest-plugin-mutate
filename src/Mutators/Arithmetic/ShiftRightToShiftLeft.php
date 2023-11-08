@@ -11,6 +11,15 @@ use PhpParser\Node\Expr\BinaryOp\ShiftRight;
 
 class ShiftRightToShiftLeft extends AbstractMutator
 {
+    public const SET = 'Arithmetic';
+
+    public const DESCRIPTION = 'Replaces `>>` with `<<`.';
+
+    public const DIFF = <<<'DIFF'
+        $b = $a >> 1;  // [tl! remove]
+        $b = $a << 1;  // [tl! add]
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [ShiftRight::class];

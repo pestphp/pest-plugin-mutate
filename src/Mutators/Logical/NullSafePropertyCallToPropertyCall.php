@@ -11,6 +11,15 @@ use PhpParser\Node\Expr\PropertyFetch;
 
 class NullSafePropertyCallToPropertyCall extends AbstractMutator
 {
+    public const SET = 'Logical';
+
+    public const DESCRIPTION = 'Converts nullsafe property call to property call.';
+
+    public const DIFF = <<<'DIFF'
+        $a?->b;  // [tl! remove]
+        $a->b;  // [tl! add]
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [NullsafePropertyFetch::class];

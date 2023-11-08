@@ -11,6 +11,15 @@ use PhpParser\Node\Expr\BinaryOp\Plus;
 
 class PlusToMinus extends AbstractMutator
 {
+    public const SET = 'Arithmetic';
+
+    public const DESCRIPTION = 'Replaces `+` with `-`.';
+
+    public const DIFF = <<<'DIFF'
+        $c = $a + $b;  // [tl! remove]
+        $c = $a - $b;  // [tl! add]
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [Plus::class];

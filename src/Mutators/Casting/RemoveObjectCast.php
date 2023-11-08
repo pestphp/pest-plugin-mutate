@@ -10,6 +10,15 @@ use PhpParser\Node\Expr\Cast\Object_;
 
 class RemoveObjectCast extends AbstractMutator
 {
+    public const SET = 'Casting';
+
+    public const DESCRIPTION = 'Removes object cast.';
+
+    public const DIFF = <<<'DIFF'
+        $a = (object) $b;  // [tl! remove]
+        $a = $b;           // [tl! add]
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [Object_::class];

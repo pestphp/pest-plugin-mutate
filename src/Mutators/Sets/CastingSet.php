@@ -11,9 +11,12 @@ use Pest\Mutate\Mutators\Casting\RemoveDoubleCast;
 use Pest\Mutate\Mutators\Casting\RemoveIntegerCast;
 use Pest\Mutate\Mutators\Casting\RemoveObjectCast;
 use Pest\Mutate\Mutators\Casting\RemoveStringCast;
+use Pest\Mutate\Mutators\Concerns\HasName;
 
 class CastingSet implements MutatorSet
 {
+    use HasName;
+
     /**
      * {@inheritDoc}
      */

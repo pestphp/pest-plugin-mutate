@@ -12,6 +12,15 @@ use PhpParser\Node\Stmt\DeclareDeclare;
 
 class DecrementInteger extends AbstractMutator
 {
+    public const SET = 'Number';
+
+    public const DESCRIPTION = 'Decrements an integer number by 1.';
+
+    public const DIFF = <<<'DIFF'
+        $a = 1;  // [tl! remove]
+        $a = 0;  // [tl! add]
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [LNumber::class];

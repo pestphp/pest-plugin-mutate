@@ -10,6 +10,15 @@ use PhpParser\Node\Expr\BinaryOp\Concat;
 
 class ConcatRemoveRight extends AbstractMutator
 {
+    public const SET = 'String';
+
+    public const DESCRIPTION = 'Removes the right part of a concat expression.';
+
+    public const DIFF = <<<'DIFF'
+        $a = 'Hello' . ' World';  // [tl! remove]
+        $a = 'Hello';  // [tl! add]
+        DIFF;
+
     public static function nodesToHandle(): array
     {
         return [Concat::class];
