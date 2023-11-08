@@ -73,6 +73,15 @@ class Mutate implements Bootable, HandlesArguments
         /** @var \Pest\Mutate\Tester\MutationTestRunner $mutationTestRunner */
         $mutationTestRunner = Container::getInstance()->get(MutationTestRunner::class);
 
+        // always enable php coverage report, but it will be disabled if not required
+        if (Coverage::isAvailable()) {
+            $coverageRequired = array_filter($arguments, fn (string $argument): bool => str_starts_with($argument, '--coverage')) !== [];
+            if ($coverageRequired) {
+                $mutationTestRunner->doNotDisableCodeCoverage();
+            }
+            $arguments[] = '--coverage-php='.Coverage::getPath();
+        }
+
         if (array_filter($arguments, fn (string $argument): bool => str_starts_with($argument, '--mutate=') || $argument === '--mutate') === []) {
             $mutationTestRunner->setOriginalArguments($arguments);
 
@@ -84,15 +93,6 @@ class Mutate implements Bootable, HandlesArguments
 
         $mutationTestRunner->enable();
         $mutationTestRunner->setOriginalArguments($arguments);
-
-        // always enable php coverage report, but it will be disabled if not required
-        if (Coverage::isAvailable()) {
-            $coverageRequired = array_filter($arguments, fn (string $argument): bool => str_starts_with($argument, '--coverage')) !== [];
-            if ($coverageRequired) {
-                $mutationTestRunner->doNotDisableCodeCoverage();
-            }
-            $arguments[] = '--coverage-php='.Coverage::getPath();
-        }
 
         return $arguments;
     }
