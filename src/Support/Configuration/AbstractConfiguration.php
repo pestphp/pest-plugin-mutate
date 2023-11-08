@@ -2,30 +2,42 @@
 
 declare(strict_types=1);
 
-namespace Pest\Mutate\Factories;
+namespace Pest\Mutate\Support\Configuration;
 
+use Pest\Mutate\Contracts\Configuration as ConfigurationContract;
 use Pest\Mutate\Contracts\Mutator;
 use Pest\Mutate\Contracts\MutatorSet;
-use Pest\Mutate\Contracts\ProfileFactory as ProfileFactoryContract;
 use Pest\Mutate\Exceptions\InvalidMutatorException;
-use Pest\Mutate\Profile;
-use Pest\Mutate\Profiles;
 
-class ProfileFactory implements ProfileFactoryContract
+abstract class AbstractConfiguration implements ConfigurationContract
 {
-    private readonly Profile $profile;
+    /**
+     * @var string[]|null
+     */
+    private ?array $paths = null;
 
-    public function __construct(string $name)
-    {
-        $this->profile = Profiles::get($name);
-    }
+    /**
+     * @var class-string<Mutator>[]|null
+     */
+    private ?array $mutators = null;
+
+    /**
+     * @var string[]|null
+     */
+    private ?array $classes = null;
+
+    private ?float $minMSI = null;
+
+    private ?bool $coveredOnly = null;
+
+    private ?bool $parallel = null;
 
     /**
      * {@inheritDoc}
      */
     public function path(array|string ...$paths): self
     {
-        $this->profile->paths = array_merge(...array_map(fn (string|array $path): array => is_string($path) ? [$path] : $path, $paths));
+        $this->paths = array_merge(...array_map(fn (string|array $path): array => is_string($path) ? [$path] : $path, $paths));
 
         return $this;
     }
@@ -59,28 +71,28 @@ class ProfileFactory implements ProfileFactoryContract
             }
         }
 
-        $this->profile->mutators = $mutators; // @phpstan-ignore-line
+        $this->mutators = $mutators; // @phpstan-ignore-line
 
         return $this;
     }
 
     public function min(float $minMSI): self
     {
-        $this->profile->minMSI = $minMSI;
+        $this->minMSI = $minMSI;
 
         return $this;
     }
 
     public function coveredOnly(bool $coveredOnly = true): self
     {
-        $this->profile->coveredOnly = $coveredOnly;
+        $this->coveredOnly = $coveredOnly;
 
         return $this;
     }
 
     public function parallel(bool $parallel = true): self
     {
-        $this->profile->parallel = $parallel;
+        $this->parallel = $parallel;
 
         return $this;
     }
@@ -88,10 +100,25 @@ class ProfileFactory implements ProfileFactoryContract
     /**
      * {@inheritDoc}
      */
-    public function class(string|array ...$classes): ProfileFactoryContract
+    public function class(string|array ...$classes): self
     {
-        $this->profile->classes = array_merge(...array_map(fn (string|array $class): array => is_string($class) ? [$class] : $class, $classes));
+        $this->classes = array_merge(...array_map(fn (string|array $class): array => is_string($class) ? [$class] : $class, $classes));
 
         return $this;
+    }
+
+    /**
+     * @return array{paths?: string[], mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, min_msi?: float, covered_only?: bool}
+     */
+    public function toArray(): array
+    {
+        return array_filter([
+            'paths' => $this->paths,
+            'mutators' => $this->mutators,
+            'classes' => $this->classes,
+            'parallel' => $this->parallel,
+            'min_msi' => $this->minMSI,
+            'covered_only' => $this->coveredOnly,
+        ], fn (mixed $value): bool => ! is_null($value));
     }
 }

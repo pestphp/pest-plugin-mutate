@@ -11,25 +11,10 @@ use Pest\Contracts\Plugins\HandlesArguments;
 use Pest\Mutate\Boostrappers\BootPhpUnitSubscribers;
 use Pest\Mutate\Boostrappers\BootSubscribers;
 use Pest\Mutate\Contracts\MutationTestRunner;
-use Pest\Mutate\Contracts\Printer;
-use Pest\Mutate\Factories\ProfileFactory;
-use Pest\Mutate\Options\ClassOption;
-use Pest\Mutate\Options\CoveredOnlyOption;
-use Pest\Mutate\Options\MinMsiOption;
-use Pest\Mutate\Options\MutateOption;
-use Pest\Mutate\Options\MutatorsOption;
-use Pest\Mutate\Options\ParallelOption;
-use Pest\Mutate\Options\PathsOption;
-use Pest\Mutate\Profile;
-use Pest\Mutate\Support\Printers\CompactPrinter;
-use Pest\Mutate\Support\Printers\DefaultPrinter;
+use Pest\Mutate\Repositories\ConfigurationRepository;
 use Pest\Plugins\Concerns\HandleArguments;
-use Pest\Plugins\Parallel;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
-use Symfony\Component\Console\Input\ArgvInput;
-use Symfony\Component\Console\Input\InputDefinition;
-use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @internal
@@ -43,16 +28,6 @@ class Mutate implements Bootable, HandlesArguments
     final public const ENV_MUTATION_TESTING = 'PEST_MUTATION_TESTING';
 
     final public const ENV_MUTATION_FILE = 'PEST_MUTATION_FILE';
-
-    private const OPTIONS = [
-        MutateOption::class,
-        PathsOption::class,
-        MutatorsOption::class,
-        MinMsiOption::class,
-        CoveredOnlyOption::class,
-        ParallelOption::class,
-        ClassOption::class,
-    ];
 
     /**
      * The Kernel bootstrappers.
@@ -68,8 +43,7 @@ class Mutate implements Bootable, HandlesArguments
      * Creates a new Plugin instance.
      */
     public function __construct(
-        private readonly Container $container,
-        private readonly OutputInterface $output
+        private readonly Container $container
     ) {
         //
     }
@@ -99,26 +73,17 @@ class Mutate implements Bootable, HandlesArguments
         /** @var \Pest\Mutate\Tester\MutationTestRunner $mutationTestRunner */
         $mutationTestRunner = Container::getInstance()->get(MutationTestRunner::class);
 
-        $filteredArguments = ['vendor/bin/pest'];
-        $inputOptions = [];
-        foreach ($arguments as $key => $argument) {
-            foreach (self::OPTIONS as $option) {
-                if ($option::match($argument)) {
-                    $filteredArguments[] = $argument;
-                    $inputOptions[] = $option::inputOption();
+        if (array_filter($arguments, fn (string $argument): bool => str_starts_with($argument, '--mutate=') || $argument === '--mutate') === []) {
+            $mutationTestRunner->setOriginalArguments($arguments);
 
-                    if ($option::remove()) {
-                        unset($arguments[$key]);
-                    }
-                }
-            }
+            return $arguments;
         }
 
-        $originalArguments = $arguments;
+        $arguments = Container::getInstance()->get(ConfigurationRepository::class) // @phpstan-ignore-line
+            ->cliConfiguration->fromArguments($arguments);
 
-        $inputDefinition = new InputDefinition($inputOptions);
-
-        $input = new ArgvInput($filteredArguments, $inputDefinition);
+        $mutationTestRunner->enable();
+        $mutationTestRunner->setOriginalArguments($arguments);
 
         // always enable php coverage report, but it will be disabled if not required
         if (Coverage::isAvailable()) {
@@ -127,46 +92,6 @@ class Mutate implements Bootable, HandlesArguments
                 $mutationTestRunner->doNotDisableCodeCoverage();
             }
             $arguments[] = '--coverage-php='.Coverage::getPath();
-        }
-
-        if (! $input->hasOption(MutateOption::ARGUMENT)) {
-            $mutationTestRunner->setOriginalArguments($originalArguments);
-
-            return $arguments;
-        }
-
-        $profileName = $input->getOption(MutateOption::ARGUMENT) ?? 'default';
-        $profileFactory = new ProfileFactory($profileName); // @phpstan-ignore-line
-
-        if (! str_starts_with((string) $profileName, Profile::FAKE)) { // @phpstan-ignore-line
-            $mutationTestRunner->enable($profileName); // @phpstan-ignore-line
-            $mutationTestRunner->setOriginalArguments($originalArguments);
-        }
-
-        if ($input->hasOption(PathsOption::ARGUMENT)) {
-            $profileFactory->path(explode(',', (string) $input->getOption(PathsOption::ARGUMENT))); // @phpstan-ignore-line
-        }
-
-        if ($input->hasOption(MutatorsOption::ARGUMENT)) {
-            $profileFactory->mutator(explode(',', (string) $input->getOption(MutatorsOption::ARGUMENT))); // @phpstan-ignore-line
-        }
-
-        if ($input->hasOption(MinMsiOption::ARGUMENT)) {
-            $profileFactory->min((float) $input->getOption(MinMsiOption::ARGUMENT)); // @phpstan-ignore-line
-        }
-
-        if ($input->hasOption(CoveredOnlyOption::ARGUMENT)) {
-            $profileFactory->coveredOnly($input->getOption(CoveredOnlyOption::ARGUMENT) !== 'false');
-        }
-
-        if ($input->hasOption(ParallelOption::ARGUMENT)) {
-            unset($arguments[array_search('--'.ParallelOption::ARGUMENT, $arguments, true)]);
-            $profileFactory->parallel();
-            Parallel::disable();
-        }
-
-        if ($input->hasOption(ClassOption::ARGUMENT)) {
-            $profileFactory->class(explode(',', (string) $input->getOption(ClassOption::ARGUMENT))); // @phpstan-ignore-line
         }
 
         return $arguments;

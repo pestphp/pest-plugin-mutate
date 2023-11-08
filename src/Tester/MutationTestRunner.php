@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Tester;
 
-use Pest\Exceptions\ShouldNotHappen;
 use Pest\Mutate\Contracts\MutationTestRunner as MutationTestRunnerContract;
 use Pest\Mutate\Contracts\Printer;
 use Pest\Mutate\Event\Facade;
-use Pest\Mutate\Factories\ProfileFactory;
 use Pest\Mutate\Mutation;
 use Pest\Mutate\MutationSuite;
 use Pest\Mutate\Plugins\Mutate;
-use Pest\Mutate\Profile;
-use Pest\Mutate\Profiles;
+use Pest\Mutate\Repositories\ConfigurationRepository;
+use Pest\Mutate\Support\Configuration\Configuration;
 use Pest\Mutate\Support\MutationGenerator;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
@@ -23,7 +21,7 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class MutationTestRunner implements MutationTestRunnerContract
 {
-    private ?string $enabledProfile = null;
+    private bool $enabled = false;
 
     private bool $codeCoverageRequested = false;
 
@@ -49,22 +47,22 @@ class MutationTestRunner implements MutationTestRunnerContract
         $this->originalArguments = $arguments;
     }
 
-    public function enable(string $profile): void
+    public function enable(): void
     {
         if (getenv(Mutate::ENV_MUTATION_TESTING) !== false) {
             return;
         }
 
-        $this->enabledProfile = $profile;
+        $this->enabled = true;
     }
 
     public function isEnabled(): bool
     {
-        if (str_starts_with((string) $this->enabledProfile, Profile::FAKE)) {
+        if (str_starts_with((string) $this->enabled, ConfigurationRepository::FAKE)) {
             return false;
         }
 
-        return $this->enabledProfile !== null;
+        return $this->enabled;
     }
 
     public function doNotDisableCodeCoverage(): void
@@ -96,20 +94,20 @@ class MutationTestRunner implements MutationTestRunnerContract
         $coveredLines = array_map(fn (array $lines): array => array_filter($lines, fn (array $tests): bool => $tests !== []), $codeCoverage->getData()->lineCoverage());
         $coveredLines = array_filter($coveredLines, fn (array $lines): bool => $lines !== []);
 
-        $files = $this->getFiles($this->getProfile()->paths);
+        $files = $this->getFiles($this->getConfiguration()->paths);
 
         /** @var MutationGenerator $generator */
         $generator = Container::getInstance()->get(MutationGenerator::class);
         foreach ($files as $file) {
-            if ($this->getProfile()->coveredOnly && ! isset($coveredLines[$file->getRealPath()])) {
+            if ($this->getConfiguration()->coveredOnly && ! isset($coveredLines[$file->getRealPath()])) {
                 continue;
             }
 
             foreach ($generator->generate(
                 file: $file,
-                mutators: $this->getProfile()->mutators,
-                linesToMutate: $this->getProfile()->coveredOnly ? array_keys($coveredLines[$file->getRealPath()]) : [],
-                classesToMutate: $this->getProfile()->classes,
+                mutators: $this->getConfiguration()->mutators,
+                linesToMutate: $this->getConfiguration()->coveredOnly ? array_keys($coveredLines[$file->getRealPath()]) : [],
+                classesToMutate: $this->getConfiguration()->classes,
             ) as $mutation) {
                 $mutationSuite->repository->add($mutation);
             }
@@ -124,7 +122,7 @@ class MutationTestRunner implements MutationTestRunnerContract
             Facade::instance()->emitter()->startTestCollection($testCollection);
 
             foreach ($testCollection->tests() as $test) {
-                $test->run($coveredLines, $this->getProfile(), $this->originalArguments);
+                $test->run($coveredLines, $this->getConfiguration(), $this->originalArguments);
             }
         }
 
@@ -160,22 +158,8 @@ class MutationTestRunner implements MutationTestRunnerContract
             ->files();
     }
 
-    private function getProfile(): Profile
+    private function getConfiguration(): Configuration
     {
-        if ($this->enabledProfile === null) {
-            throw ShouldNotHappen::fromMessage('No profile enabled');
-        }
-
-        return Profiles::get($this->enabledProfile);
-    }
-
-    public function getProfileFactory(): ProfileFactory
-    {
-        return new ProfileFactory($this->enabledProfile ?? 'default');
-    }
-
-    public function getEnabledProfile(): ?string
-    {
-        return $this->enabledProfile;
+        return Container::getInstance()->get(ConfigurationRepository::class)->mergedConfiguration(); // @phpstan-ignore-line
     }
 }

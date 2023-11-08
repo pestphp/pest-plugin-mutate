@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Contracts;
 
-interface ProfileFactory
+interface Configuration
 {
     /**
      * @param  array<int, string>|string  ...$paths

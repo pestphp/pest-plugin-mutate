@@ -4,18 +4,21 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Decorators;
 
+use Pest\Mutate\Contracts\Configuration;
 use Pest\Mutate\Contracts\MutationTestRunner;
-use Pest\Mutate\Factories\ProfileFactory;
-use Pest\Mutate\Profile;
+use Pest\Mutate\Repositories\ConfigurationRepository;
+use Pest\Mutate\Support\Configuration\TestConfiguration;
 use Pest\Mutate\Tester\MutationTestRunnerFake;
 use Pest\PendingCalls\TestCall;
 use Pest\Plugins\Only;
 use Pest\Support\Container;
 
 // @codeCoverageIgnoreStart
-class TestCallDecorator implements \Pest\Mutate\Contracts\ProfileFactory
+class TestCallDecorator implements Configuration
 {
     private MutationTestRunner $testRunner;
+
+    private TestConfiguration $configuration;
 
     public function __construct(private readonly TestCall $testCall)
     {
@@ -31,16 +34,24 @@ class TestCallDecorator implements \Pest\Mutate\Contracts\ProfileFactory
 
     public function mutate(string $profile = 'default'): self
     {
-        if (! str_starts_with($profile, Profile::FAKE)) {
+        if (! str_starts_with($profile, ConfigurationRepository::FAKE)) {
             Only::enable($this->testCall);
 
             $this->testRunner = Container::getInstance() // @phpstan-ignore-line
                 ->get(MutationTestRunner::class);
+
+            Container::getInstance()->get(ConfigurationRepository::class)->setProfile($profile); // @phpstan-ignore-line
+
+            $this->configuration = Container::getInstance()->get(ConfigurationRepository::class) // @phpstan-ignore-line
+                ->testConfiguration;
         } else {
             $this->testRunner = new MutationTestRunnerFake();
+
+            $this->configuration = Container::getInstance()->get(ConfigurationRepository::class) // @phpstan-ignore-line
+                ->fakeTestConfiguration($profile);
         }
 
-        $this->testRunner->enable($profile); // @phpstan-ignore-line
+        $this->testRunner->enable(); // @phpstan-ignore-line
 
         $this->coveredOnly();
 
@@ -49,14 +60,14 @@ class TestCallDecorator implements \Pest\Mutate\Contracts\ProfileFactory
 
     public function coveredOnly(bool $coveredOnly = true): self
     {
-        $this->_profileFactory()->coveredOnly($coveredOnly);
+        $this->configuration->coveredOnly($coveredOnly);
 
         return $this;
     }
 
     public function min(float $minMSI): self
     {
-        $this->_profileFactory()->min($minMSI);
+        $this->configuration->min($minMSI);
 
         return $this;
     }
@@ -66,7 +77,7 @@ class TestCallDecorator implements \Pest\Mutate\Contracts\ProfileFactory
      */
     public function path(array|string ...$paths): self
     {
-        $this->_profileFactory()->path(...$paths);
+        $this->configuration->path(...$paths);
 
         return $this;
     }
@@ -76,14 +87,14 @@ class TestCallDecorator implements \Pest\Mutate\Contracts\ProfileFactory
      */
     public function mutator(string|array ...$mutators): self
     {
-        $this->_profileFactory()->mutator(...$mutators);
+        $this->configuration->mutator(...$mutators);
 
         return $this;
     }
 
     public function parallel(bool $parallel = true): self
     {
-        $this->_profileFactory()->parallel($parallel);
+        $this->configuration->parallel($parallel);
 
         return $this;
     }
@@ -93,14 +104,9 @@ class TestCallDecorator implements \Pest\Mutate\Contracts\ProfileFactory
      */
     public function class(string|array ...$classes): self
     {
-        $this->_profileFactory()->class(...$classes);
+        $this->configuration->class(...$classes);
 
         return $this;
-    }
-
-    private function _profileFactory(): ProfileFactory
-    {
-        return $this->testRunner->getProfileFactory();
     }
 }
 // @codeCoverageIgnoreEnd

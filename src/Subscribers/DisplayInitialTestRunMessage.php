@@ -31,6 +31,7 @@ final class DisplayInitialTestRunMessage implements LoadedSubscriber
         }
 
         renderUsing(Container::getInstance()->get(OutputInterface::class)); // @phpstan-ignore-line
-        render('<div class="mx-2 mt-1">Running initial test suite:'.($mutationTestRunner->getEnabledProfile() !== 'default' ? (' (Profile: '.$mutationTestRunner->getEnabledProfile().')') : '').'</div>');
+        render('<div class="mx-2 mt-1">Running initial test suite:</div>');
+        // render('<div class="mx-2 mt-1">Running initial test suite:'.($mutationTestRunner->getEnabledProfile() !== 'default' ? (' (Profile: '.$mutationTestRunner->getEnabledProfile().')') : '').'</div>');
     }
 }

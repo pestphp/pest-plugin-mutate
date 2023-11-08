@@ -6,6 +6,7 @@ namespace Pest\Mutate;
 
 use Pest\Mutate\Event\Facade;
 use Pest\Mutate\Plugins\Mutate;
+use Pest\Mutate\Support\Configuration\Configuration;
 use Pest\Mutate\Support\MutationTestResult;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Symfony\Component\Process\Process;
@@ -32,7 +33,7 @@ class MutationTest
      * @param  array<string, array<int, array<int, string>>>  $coveredLines
      * @param  array<int, string>  $originalArguments
      */
-    public function run(array $coveredLines, Profile $profile, array $originalArguments): void
+    public function run(array $coveredLines, Configuration $configuration, array $originalArguments): void
     {
         /** @var string $tmpfname */
         $tmpfname = tempnam('/tmp', 'pest_mutation_');
@@ -62,7 +63,7 @@ class MutationTest
                 ...$originalArguments,
                 '--bail',
                 '--filter="'.implode('|', $filters).'"',
-                $profile->parallel ? '--parallel' : '',
+                $configuration->parallel ? '--parallel' : '',
             ],
             env: [
                 Mutate::ENV_MUTATION_TESTING => $this->mutation->file->getRealPath(),

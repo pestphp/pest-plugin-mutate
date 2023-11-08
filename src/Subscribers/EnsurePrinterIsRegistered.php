@@ -47,9 +47,9 @@ class EnsurePrinterIsRegistered implements StartedSubscriber
         }
 
         if ($_SERVER['COLLISION_PRINTER_COMPACT'] ?? false) {
-            $printer = new CompactPrinter(Container::getInstance()->get(OutputInterface::class));
+            $printer = new CompactPrinter(Container::getInstance()->get(OutputInterface::class)); // @phpstan-ignore-line
         } else {
-            $printer = new DefaultPrinter(Container::getInstance()->get(OutputInterface::class));
+            $printer = new DefaultPrinter(Container::getInstance()->get(OutputInterface::class)); // @phpstan-ignore-line
         }
 
         Container::getInstance()->add(Printer::class, $printer);

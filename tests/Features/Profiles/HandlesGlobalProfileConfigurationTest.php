@@ -5,115 +5,96 @@ use Pest\Mutate\Mutators;
 use Pest\Mutate\Mutators\Arithmetic\MinusToPlus;
 use Pest\Mutate\Mutators\Arithmetic\PlusToMinus;
 use Pest\Mutate\Mutators\Sets\ArithmeticSet;
-use Pest\Mutate\Mutators\Sets\DefaultSet;
-use Pest\Mutate\Profile;
-use Pest\Mutate\Profiles;
+use Pest\Mutate\Repositories\ConfigurationRepository;
+use Pest\Support\Container;
 use Tests\Fixtures\Classes\AgeHelper;
 
 beforeEach(function (): void {
-    $this->profile = Profiles::get(Profile::FAKE);
+    $this->configuration = Container::getInstance()->get(ConfigurationRepository::class)->globalConfiguration(ConfigurationRepository::FAKE);
 });
 
 test('configure profile globally', function (): void {
-    mutate(Profile::FAKE)
+    mutate(ConfigurationRepository::FAKE)
         ->min(20.0);
 
-    expect($this->profile->minMSI)
+    expect($this->configuration->toArray()['min_msi'])
         ->toEqual(20.0);
 });
 
 test('globally configure paths', function (): void {
-    expect($this->profile->paths)
-        ->toEqual(['src']);
-
-    mutate(Profile::FAKE)
+    mutate(ConfigurationRepository::FAKE)
         ->path(['app']);
 
-    expect($this->profile->paths)
+    expect($this->configuration->toArray()['paths'])
         ->toEqual(['app']);
 
-    mutate(Profile::FAKE)
+    mutate(ConfigurationRepository::FAKE)
         ->path(['src/path-1', 'src/path-2'], 'src/path-3');
 
-    expect($this->profile->paths)
+    expect($this->configuration->toArray()['paths'])
         ->toEqual(['src/path-1', 'src/path-2', 'src/path-3']);
 });
 
 test('globally configure mutators', function (): void {
-    expect($this->profile->mutators)
-        ->toEqual(DefaultSet::mutators());
-
-    mutate(Profile::FAKE)
+    mutate(ConfigurationRepository::FAKE)
         ->mutator(Mutators::SET_ARITHMETIC);
 
-    expect($this->profile->mutators)
+    expect($this->configuration->toArray()['mutators'])
         ->toEqual(ArithmeticSet::mutators());
 
-    mutate(Profile::FAKE)
+    mutate(ConfigurationRepository::FAKE)
         ->mutator(Mutators::ARITHMETIC_PLUS_TO_MINUS);
 
-    expect($this->profile->mutators)
+    expect($this->configuration->toArray()['mutators'])
         ->toEqual([PlusToMinus::class]);
 
-    mutate(Profile::FAKE)
+    mutate(ConfigurationRepository::FAKE)
         ->mutator(Mutators::ARITHMETIC_PLUS_TO_MINUS, Mutators::ARITHMETIC_MINUS_TO_PLUS);
 
-    expect($this->profile->mutators)
+    expect($this->configuration->toArray()['mutators'])
         ->toEqual([PlusToMinus::class, MinusToPlus::class]);
 });
 
 test('globally configure min MSI threshold', function (): void {
-    expect($this->profile->minMSI)
-        ->toEqual(0);
-
-    mutate(Profile::FAKE)
+    mutate(ConfigurationRepository::FAKE)
         ->min(10.0);
 
-    expect($this->profile->minMSI)
+    expect($this->configuration->toArray()['min_msi'])
         ->toEqual(10.0);
 });
 
 test('globally configure covered only option', function (): void {
-    expect($this->profile->coveredOnly)
-        ->toBeFalse();
-
-    mutate(Profile::FAKE)
+    mutate(ConfigurationRepository::FAKE)
         ->coveredOnly();
 
-    expect($this->profile->coveredOnly)
+    expect($this->configuration->toArray()['covered_only'])
         ->toBeTrue();
 
-    mutate(Profile::FAKE)
+    mutate(ConfigurationRepository::FAKE)
         ->coveredOnly(false);
 
-    expect($this->profile->coveredOnly)
+    expect($this->configuration->toArray()['covered_only'])
         ->toBeFalse();
 });
 
 test('globally configure parallel option', function (): void {
-    expect($this->profile->parallel)
-        ->toBeFalse();
-
-    mutate(Profile::FAKE)
+    mutate(ConfigurationRepository::FAKE)
         ->parallel();
 
-    expect($this->profile->parallel)
+    expect($this->configuration->toArray()['parallel'])
         ->toBeTrue();
 
-    mutate(Profile::FAKE)
+    mutate(ConfigurationRepository::FAKE)
         ->parallel(false);
 
-    expect($this->profile->parallel)
+    expect($this->configuration->toArray()['parallel'])
         ->toBeFalse();
 });
 
 test('globally configure class option', function (): void {
-    expect($this->profile->classes)
-        ->toBe([]);
-
-    mutate(Profile::FAKE)
+    mutate(ConfigurationRepository::FAKE)
         ->class(AgeHelper::class);
 
-    expect($this->profile->classes)
+    expect($this->configuration->toArray()['classes'])
         ->toBe([AgeHelper::class]);
 });

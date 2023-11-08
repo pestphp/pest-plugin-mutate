@@ -23,6 +23,6 @@ class CoveredOnlyOption
 
     public static function inputOption(): InputOption
     {
-        return new InputOption('--covered-only', null, InputOption::VALUE_OPTIONAL, '');
+        return new InputOption(sprintf('--%s', self::ARGUMENT), null, InputOption::VALUE_OPTIONAL, '');
     }
 }

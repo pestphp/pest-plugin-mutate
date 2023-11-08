@@ -3,59 +3,63 @@
 declare(strict_types=1);
 use Pest\Mutate\Mutators\Arithmetic\PlusToMinus;
 use Pest\Mutate\Mutators\Equality\GreaterToGreaterOrEqual;
-use Pest\Mutate\Profile;
-use Pest\Mutate\Profiles;
+use Pest\Mutate\Repositories\ConfigurationRepository;
+use Pest\Support\Container;
 use Tests\Fixtures\Classes\AgeHelper;
+
+beforeEach(function (): void {
+    $this->repository = Container::getInstance()->get(ConfigurationRepository::class);
+});
 
 it('forwards calls to the original test call', function (): never {
     throw new Exception('test exception');
-})->mutate(Profile::FAKE)
+})->mutate(ConfigurationRepository::FAKE)
     ->throws('test exception');
 
 it('sets the min MSI from test', function (): void {
-    $profile = Profiles::get(Profile::FAKE.'_1');
+    $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_1');
 
-    expect($profile->minMSI)
+    expect($configuration->toArray()['min_msi'])
         ->toEqual(2.0);
-})->mutate(Profile::FAKE.'_1')
+})->mutate(ConfigurationRepository::FAKE.'_1')
     ->min(2);
 
 it('sets the covered only from test', function (): void {
-    $profile = Profiles::get(Profile::FAKE.'_2');
+    $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_2');
 
-    expect($profile->coveredOnly)
+    expect($configuration->toArray()['covered_only'])
         ->toBeTrue();
-})->mutate(Profile::FAKE.'_2')
+})->mutate(ConfigurationRepository::FAKE.'_2')
     ->coveredOnly(true);
 
 it('sets the paths from test', function (): void {
-    $profile = Profiles::get(Profile::FAKE.'_3');
+    $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_3');
 
-    expect($profile->paths)
+    expect($configuration->toArray()['paths'])
         ->toBe(['src/folder-1', 'src/folder-2']);
-})->mutate(Profile::FAKE.'_3')
+})->mutate(ConfigurationRepository::FAKE.'_3')
     ->path('src/folder-1', 'src/folder-2');
 
 it('sets the mutators from test', function (): void {
-    $profile = Profiles::get(Profile::FAKE.'_4');
+    $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_4');
 
-    expect($profile->mutators)
+    expect($configuration->toArray()['mutators'])
         ->toBe([PlusToMinus::class, GreaterToGreaterOrEqual::class]);
-})->mutate(Profile::FAKE.'_4')
+})->mutate(ConfigurationRepository::FAKE.'_4')
     ->mutator(PlusToMinus::class, GreaterToGreaterOrEqual::class);
 
 it('sets the parallel option from test', function (): void {
-    $profile = Profiles::get(Profile::FAKE.'_5');
+    $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_5');
 
-    expect($profile->parallel)
+    expect($configuration->toArray()['parallel'])
         ->toBeTrue();
-})->mutate(Profile::FAKE.'_5')
+})->mutate(ConfigurationRepository::FAKE.'_5')
     ->parallel(true);
 
 it('sets the class option from test', function (): void {
-    $profile = Profiles::get(Profile::FAKE.'_6');
+    $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_6');
 
-    expect($profile->classes)
+    expect($configuration->toArray()['classes'])
         ->toBe([AgeHelper::class]);
-})->mutate(Profile::FAKE.'_6')
+})->mutate(ConfigurationRepository::FAKE.'_6')
     ->class(AgeHelper::class);
