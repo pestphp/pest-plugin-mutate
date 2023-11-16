@@ -19,7 +19,7 @@
 - [ ] Allow registering Custom Mutators
 - [ ] Disable mutations by annotation
 - [ ] Caching
-- [ ] Prioritize tests to execute (fast tests first, etc.)
+- [ ] Order mutations to execute
 - [ ] Verbose output
 - [ ] Text log
 - [ ] HTML report
@@ -27,22 +27,34 @@
 - [ ] Awesome docs
 
 # Backlog Prio 1
-- [ ] Improve test filtering. Some test names, may not work
-- [ ] Better loop detection. For example when mutate break to continue in a while true loop
-- [ ] Automatically create documentation from mutators
-- [ ] Create a sensible default set
+- [ ] Add return mutators
+- [ ] Add remove function call mutator
+- [ ] Add visibility mutator
+- [ ] Add null safe mutators
+- [ ] Add array declaration mutators: https://stryker-mutator.io/docs/mutation-testing-elements/supported-mutators/#array-declaration
+- [ ] Add empty block statement mutator?: https://stryker-mutator.io/docs/mutation-testing-elements/supported-mutators/#array-declaration
+- [ ] Add except()
+- [ ] Add uncommittedOnly()
+- [ ] Add changedOnly()
+- [ ] Add minimum threshold enforcement
+- [ ] Finish: Disable mutations by annotation
+- [ ] Run mutations in a resonable order: New, Survived, NotCovered, Skipped, Killed (Survived first, if --stop-on-survived or --bail; NotCovered first, if --stop-on-uncovered)
+- [ ] Log to file
+- [ ] Automatically skip "Arch" tests
 
 # Backlog Prio 2
-- [ ] Sort test runs to run quick tests first; and if available the test a mutation killed in a previous run
-- [ ] Beautify output / respect --compact option
-- [ ] Add more Laravel mutators
-- [ ] Allow to pass a custom cache instance mutate()->cache(MyRedisCache::getInstance())
+- [ ] Check if we have mutators which do the same mutation. For example: "true" to "false", and "return true" to "return false"
+- [ ] Make the output cristal clear that "survived" is bad and "killed" is good. Maybe change the wording to "missed" and "detected"? What do other libraries to work around the confusion? https://x.com/tfidry/status/1719293281568215499?s=46&t=DEd0fniSoLaUYk0rCiXljw
 - [ ] Dedicated help output (`vendor/bin/pest --mutate --help`)
 - [ ] Add help to show available mutators and sets
-- [ ] Make the output cristal clear that "survived" is bad and "killed" is good. Maybe change the wording to "missed" and "detected"? What do other libraries to work around the confusion? https://x.com/tfidry/status/1719293281568215499?s=46&t=DEd0fniSoLaUYk0rCiXljw
+- [ ] Add more Laravel mutators
+- [ ] Improve test filtering. Some test names, may not work
+- [ ] Better loop detection. For example when mutate break to continue in a while true loop
+- [ ] Beautify output / respect --compact option
+- [ ] HTML report
 
 # Backlog Future Release
-- [ ] 
+- [ ] Allow to pass a custom cache instance mutate()->cache(MyRedisCache::getInstance())
 
 # Notes
 ## Running Initial Test Suite in Parallel
