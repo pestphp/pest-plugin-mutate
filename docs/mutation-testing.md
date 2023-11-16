@@ -42,6 +42,9 @@ vendor/bin/pest --mutate --covered-only --group=unit
 
 ### `mutate()`
 
+> Attention: This requires a change to the Pest core, which is not merged yet. You need to install [this fork](https://github.com/gehrisandro/pest/tree/mutate) of Pest in order to use `->mutate()` in your test files.
+> All other features are not affected and do work with the official Pest 2.x version.
+
 You can use the `mutate()` function on test cases or describe blocks to run the mutations only for code covered by the given test or describe block.
 
 This function is intended to be used in your daily development workflow to establish a mutation testing practice right when you are implementing or modifying a feature.

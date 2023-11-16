@@ -50,6 +50,9 @@ vendor/bin/pest --mutate --covered-only --group=unit
 
 ### `mutate()`
 
+> Attention: This requires a change to the Pest core, which is not merged yet. You need to install [this fork](https://github.com/gehrisandro/pest/tree/mutate) of Pest in order to use `->mutate()` in your test files.
+> All other features are not affected and do work with the official Pest 2.x version.
+
 You can use the `mutate()` function on test cases or describe blocks to run the mutations only for code covered by the given test or describe block.
 
 This function is intended to be used in your daily development workflow to establish a mutation testing practice right when you are implementing or modifying a feature.
@@ -260,9 +263,9 @@ mutate()
 ```
 
 
-<a name="options-stop-on-notCovered"></a>
+<a name="options-stop-on-not-covered"></a>
 ### `stopOnNotCovered()`
-CLI: `--stop-on-notCovered`
+CLI: `--stop-on-not-covered`
 
 Stop execution upon first not covered mutant.
 
@@ -291,7 +294,8 @@ Therefore, Pest Muation Testing is optimized to limit the amount of mutations an
 - Limit the amount of possible mutations by having a carefully chosen set of mutators
 - Run only tests that covers the mutated code
 - It tries to reuse cached mutations
-- _Run tests in a decent order (fastet test first)_ - (not implemented yet)
+- Run mutations in a reasonable order
+- Provide options to stop on first survived or not covered mutation
 
 But there is much more you can do to improve performance. Especially if you have a larger code base and/or you are using mutations testing while developing locally.
 
@@ -348,6 +352,9 @@ vendor/bin/pest --mutate --covered-only
 
 ### Run tests in parallel
 
+> Attention: This may slow down your tests if you have a small test suite or only a small part of your test suite is run for a certain mutation.
+> Probably I am going to replace this in favor of running multiple mutations in parallel.
+
 ```bash
 vendor/bin/pest --mutate --parallel
 ```
@@ -374,6 +381,8 @@ Just like code coverage, mutation coverage can also be enforced. You can use the
 ```
 
 ## Custom Mutators
+
+> WIP: Custom mutators are not implemented yet!
 
 You may want to create your own custom mutators. You can do so by creating a class that implements the `Mutator` interface. \
 This example will remove `use` statements.
@@ -656,6 +665,19 @@ This set consists of various mutators from different sets. Mutators included are
 
 </div>
 
+### VisibilitySet
+
+<div class="collection-method-list" markdown="1">
+
+- [ConstantPublicToProtected](#constantpublictoprotected)
+- [ConstantProtectedToPrivate](#constantprotectedtoprivate)
+- [FunctionPublicToProtected](#functionpublictoprotected-) (*)
+- [FunctionProtectedToPrivate](#functionprotectedtoprivate)
+- [PropertyPublicToProtected](#propertypublictoprotected)
+- [PropertyProtectedToPrivate](#propertyprotectedtoprivate)
+
+</div>
+
 ### LaravelSet
 
 <div class="collection-method-list" markdown="1">
@@ -908,6 +930,28 @@ $a = 'Hello' . ' World';  // [tl! remove]
 $a = ' World' . 'Hello';  // [tl! add]
 ```
 
+<a name="constantprotectedtoprivate"></a>
+### ConstantProtectedToPrivate
+Set: Visibility
+
+Mutates a protected constant to a private constant
+
+```php
+protected const FOO = true;  // [tl! remove]
+private const FOO = true;  // [tl! add]
+```
+
+<a name="constantpublictoprotected"></a>
+### ConstantPublicToProtected
+Set: Visibility
+
+Mutates a public constant to a protected constant
+
+```php
+public const FOO = true;  // [tl! remove]
+protected const FOO = true;  // [tl! add]
+```
+
 <a name="continuetobreak"></a>
 ### ContinueToBreak (*)
 Set: ControlStructures
@@ -1090,6 +1134,34 @@ Replaces the iterable in a foreach loop with an empty array.
 foreach ($items as $item) {  // [tl! remove]
 foreach ([] as $item) {  // [tl! add]
     // ...
+}
+```
+
+<a name="functionprotectedtoprivate"></a>
+### FunctionProtectedToPrivate
+Set: Visibility
+
+Mutates a protected function to a private function
+
+```php
+protected function foo(): bool  // [tl! remove]
+private function foo(): bool  // [tl! add]
+{
+    return true;
+}
+```
+
+<a name="functionpublictoprotected"></a>
+### FunctionPublicToProtected (*)
+Set: Visibility
+
+Mutates a public function to a protected function
+
+```php
+public function foo(): bool  // [tl! remove]
+protected function foo(): bool  // [tl! add]
+{
+    return true;
 }
 ```
 
@@ -1552,6 +1624,28 @@ Replaces `++` with `--`.
 ```php
 $b = ++$a;  // [tl! remove]
 $b = --$a;  // [tl! add]
+```
+
+<a name="propertyprotectedtoprivate"></a>
+### PropertyProtectedToPrivate
+Set: Visibility
+
+Mutates a protected property to a private property
+
+```php
+protected bool $foo = true;  // [tl! remove]
+private bool $foo = true;  // [tl! add]
+```
+
+<a name="propertypublictoprotected"></a>
+### PropertyPublicToProtected
+Set: Visibility
+
+Mutates a public property to a protected property
+
+```php
+public bool $foo = true;  // [tl! remove]
+protected bool $foo = true;  // [tl! add]
 ```
 
 <a name="removearraycast"></a>
