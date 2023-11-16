@@ -55,4 +55,9 @@ class MutationTestCollection
     {
         return count(array_filter($this->tests, fn (MutationTest $test): bool => $test->result() === MutationTestResult::NotCovered));
     }
+
+    public function notRun(): int
+    {
+        return count(array_filter($this->tests, fn (MutationTest $test): bool => $test->result() === MutationTestResult::None));
+    }
 }

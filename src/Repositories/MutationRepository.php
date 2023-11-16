@@ -64,4 +64,9 @@ class MutationRepository
     {
         return array_sum(array_map(fn (MutationTestCollection $testCollection): int => $testCollection->notCovered(), $this->tests));
     }
+
+    public function notRun(): int
+    {
+        return array_sum(array_map(fn (MutationTestCollection $testCollection): int => $testCollection->notRun(), $this->tests));
+    }
 }

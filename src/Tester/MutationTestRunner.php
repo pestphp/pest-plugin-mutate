@@ -25,6 +25,8 @@ class MutationTestRunner implements MutationTestRunnerContract
 
     private bool $codeCoverageRequested = false;
 
+    private bool $stop = false;
+
     /**
      * @var array<int, string>
      */
@@ -37,6 +39,11 @@ class MutationTestRunner implements MutationTestRunnerContract
         Container::getInstance()->add(MutationTestRunnerContract::class, $fake);
 
         return $fake;
+    }
+
+    public function stopExecution(): void
+    {
+        $this->stop = true;
     }
 
     /**
@@ -123,6 +130,10 @@ class MutationTestRunner implements MutationTestRunnerContract
             Facade::instance()->emitter()->startTestCollection($testCollection);
 
             foreach ($testCollection->tests() as $test) {
+                if ($this->stop) {
+                    break 2;
+                }
+
                 $test->run($coveredLines, $this->getConfiguration(), $this->originalArguments);
             }
         }

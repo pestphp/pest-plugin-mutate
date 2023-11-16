@@ -13,7 +13,7 @@ use Symfony\Component\Process\Process;
 
 class MutationTest
 {
-    private MutationTestResult $result;
+    private MutationTestResult $result = MutationTestResult::None;
 
     public function __construct(public readonly Mutation $mutation)
     {

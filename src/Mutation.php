@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pest\Mutate;
 
+use Pest\Exceptions\ShouldNotHappen;
 use PhpParser\Node;
 use PhpParser\PrettyPrinter\Standard;
 use Symfony\Component\Finder\SplFileInfo;
@@ -18,8 +19,8 @@ class Mutation
     .DIRECTORY_SEPARATOR
     .'mutations';
 
-   /**
-     * @param  array<array-key, Node>  $modifiedAst
+    /**
+     * @param  array{original: string[], modified: string[]}  $diff
      */
     public function __construct(
         public readonly SplFileInfo $file,
@@ -40,10 +41,9 @@ class Mutation
         Node $originalNode,
         ?Node $modifiedNode,
         array $modifiedAst,
-    ): self
-    {
-         $modifiedSource = (new Standard())->prettyPrintFile($modifiedAst);
-         $modifiedSourcePath = self::TMP_FOLDER.DIRECTORY_SEPARATOR.hash('xxh3', $modifiedSource).'.php';
+    ): self {
+        $modifiedSource = (new Standard())->prettyPrintFile($modifiedAst);
+        $modifiedSourcePath = self::TMP_FOLDER.DIRECTORY_SEPARATOR.hash('xxh3', $modifiedSource).'.php';
         file_put_contents($modifiedSourcePath, $modifiedSource);
 
         return new self(
@@ -58,18 +58,24 @@ class Mutation
 
     public function modifiedSource(): string
     {
-        return file_get_contents($this->modifiedSourcePath);
+        $source = file_get_contents($this->modifiedSourcePath);
+
+        if ($source === false) {
+            throw ShouldNotHappen::fromMessage('Unable to read modified source file.');
+        }
+
+        return $source;
     }
 
     /**
      * @return array{original: string[], modified: string[]}
      */
-    private static function diff(Node $originalNode, Node $modifiedNode): array
+    private static function diff(Node $originalNode, ?Node $modifiedNode): array
     {
         $prettyPrinter = new Standard();
 
         $original = explode(PHP_EOL, htmlentities($prettyPrinter->prettyPrintFile([$originalNode])));
-        $modified = explode(PHP_EOL, htmlentities($prettyPrinter->prettyPrintFile([$modifiedNode]))); // @phpstan-ignore-line
+        $modified = explode(PHP_EOL, htmlentities($prettyPrinter->prettyPrintFile($modifiedNode instanceof Node ? [$modifiedNode] : [])));
 
         return [
             'original' => array_slice($original, 2),
@@ -78,7 +84,7 @@ class Mutation
     }
 
     /**
-     * @return array{file: (string | false), mutator: string, originalNode: Node, mutatedNode: (Node | null), modifiedAst: array<array-key, Node>}
+     * @return array{file: string, mutator: string, start_line: int, end_line: int, diff: array{original: string[], modified: string[]}, modified_source_path: string}
      */
     public function __serialize(): array
     {
@@ -93,7 +99,7 @@ class Mutation
     }
 
     /**
-     * @param  array{file: string, mutator: string, originalNode: Node, mutatedNode: (Node | null), modifiedAst: array<array-key, Node>}  $data
+     * @param  array{file: string, mutator: string, start_line: int, end_line: int, diff: array{original: string[], modified: string[]}, modified_source_path: string}  $data
      */
     public function __unserialize(array $data): void
     {

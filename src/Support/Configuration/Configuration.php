@@ -20,6 +20,8 @@ class Configuration
         public readonly array $classes,
         public readonly bool $parallel,
         public readonly float $minMSI,
+        public readonly bool $stopOnSurvival,
+        public readonly bool $stopOnUncovered,
     ) {
     }
 }

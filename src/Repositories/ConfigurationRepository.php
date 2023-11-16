@@ -26,6 +26,8 @@ class ConfigurationRepository
 
     public TestConfiguration $testConfiguration;
 
+    private ?Configuration $mergedConfiguration = null;
+
     /**
      * @var array<string, GlobalConfiguration>
      */
@@ -73,19 +75,25 @@ class ConfigurationRepository
 
     public function mergedConfiguration(): Configuration
     {
+        if ($this->mergedConfiguration instanceof Configuration) {
+            return $this->mergedConfiguration;
+        }
+
         $config = [
             ...$this->globalConfiguration()->toArray(),
             ...$this->testConfiguration->toArray(),
             ...$this->cliConfiguration->toArray(),
         ];
 
-        return new Configuration(
+        return $this->mergedConfiguration = new Configuration(
             coveredOnly: $config['covered_only'] ?? false,
             paths: $config['paths'] ?? $this->pathsFromPhpunitConfiguration(),
             mutators: $config['mutators'] ?? DefaultSet::mutators(),
             classes: $config['classes'] ?? [],
             parallel: $config['parallel'] ?? false,
             minMSI: $config['min_msi'] ?? 0.0,
+            stopOnSurvival: $config['stop_on_survival'] ?? false,
+            stopOnUncovered: $config['stop_on_uncovered'] ?? false,
         );
     }
 

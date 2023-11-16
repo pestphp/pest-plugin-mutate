@@ -6,6 +6,7 @@ namespace Pest\Mutate\Support;
 
 enum MutationTestResult
 {
+    case None;
     case NotCovered;
     case Killed;
     case Survived;
