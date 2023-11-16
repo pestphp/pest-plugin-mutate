@@ -82,7 +82,7 @@ class MutationGenerator
                         break;
                     }
 
-                    $newMutations[] = new Mutation(
+                    $newMutations[] = Mutation::create(
                         file: $file,
                         mutator: $mutator,
                         originalNode: $this->originalNode,
@@ -103,7 +103,7 @@ class MutationGenerator
         // filter out mutations that are ignored
         $mutations = array_filter($mutations, function (Mutation $mutation) use ($ignoreComments): bool {
             foreach ($ignoreComments as $comment) {
-                if ($comment['line'] === $mutation->originalNode->getStartLine()) {
+                if ($comment['line'] === $mutation->startLine) {
                     return false;
                 }
             }
@@ -112,7 +112,7 @@ class MutationGenerator
         });
 
         // sort mutations by line number
-        usort($mutations, fn (Mutation $a, Mutation $b): int => $a->originalNode->getStartLine() <=> $b->originalNode->getStartLine());
+        usort($mutations, fn (Mutation $a, Mutation $b): int => $a->startLine <=> $b->startLine);
 
         return $mutations;
     }

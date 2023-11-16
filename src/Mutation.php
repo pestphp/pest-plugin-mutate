@@ -10,35 +10,66 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class Mutation
 {
-    /**
+    private const TMP_FOLDER = __DIR__
+    .DIRECTORY_SEPARATOR
+    .'..'
+    .DIRECTORY_SEPARATOR
+    .'.temp'
+    .DIRECTORY_SEPARATOR
+    .'mutations';
+
+   /**
      * @param  array<array-key, Node>  $modifiedAst
      */
     public function __construct(
         public readonly SplFileInfo $file,
         public readonly string $mutator,
-        public readonly Node $originalNode,
-        public readonly ?Node $modifiedNode,
-        public readonly array $modifiedAst,
+        public readonly int $startLine,
+        public readonly int $endLine,
+        public readonly array $diff,
+        public readonly string $modifiedSourcePath,
     ) {
+    }
+
+    /**
+     * @param  array<array-key, Node>  $modifiedAst
+     */
+    public static function create(
+        SplFileInfo $file,
+        string $mutator,
+        Node $originalNode,
+        ?Node $modifiedNode,
+        array $modifiedAst,
+    ): self
+    {
+         $modifiedSource = (new Standard())->prettyPrintFile($modifiedAst);
+         $modifiedSourcePath = self::TMP_FOLDER.DIRECTORY_SEPARATOR.hash('xxh3', $modifiedSource).'.php';
+        file_put_contents($modifiedSourcePath, $modifiedSource);
+
+        return new self(
+            $file,
+            $mutator,
+            $originalNode->getStartLine(),
+            $originalNode->getEndLine(),
+            self::diff($originalNode, $modifiedNode),
+            $modifiedSourcePath,
+        );
     }
 
     public function modifiedSource(): string
     {
-        // TODO: resolve from container
-        $prettyPrinter = new Standard();
-
-        return $prettyPrinter->prettyPrintFile($this->modifiedAst);
+        return file_get_contents($this->modifiedSourcePath);
     }
 
     /**
      * @return array{original: string[], modified: string[]}
      */
-    public function diff(): array
+    private static function diff(Node $originalNode, Node $modifiedNode): array
     {
         $prettyPrinter = new Standard();
 
-        $original = explode(PHP_EOL, htmlentities($prettyPrinter->prettyPrintFile([$this->originalNode])));
-        $modified = explode(PHP_EOL, htmlentities($prettyPrinter->prettyPrintFile([$this->modifiedNode]))); // @phpstan-ignore-line
+        $original = explode(PHP_EOL, htmlentities($prettyPrinter->prettyPrintFile([$originalNode])));
+        $modified = explode(PHP_EOL, htmlentities($prettyPrinter->prettyPrintFile([$modifiedNode]))); // @phpstan-ignore-line
 
         return [
             'original' => array_slice($original, 2),
@@ -54,9 +85,10 @@ class Mutation
         return [
             'file' => $this->file->getRealPath(),
             'mutator' => $this->mutator,
-            'originalNode' => $this->originalNode,
-            'mutatedNode' => $this->modifiedNode,
-            'modifiedAst' => $this->modifiedAst,
+            'start_line' => $this->startLine,
+            'end_line' => $this->endLine,
+            'diff' => $this->diff,
+            'modified_source_path' => $this->modifiedSourcePath,
         ];
     }
 
@@ -67,8 +99,9 @@ class Mutation
     {
         $this->file = new SplFileInfo($data['file'], '', '');
         $this->mutator = $data['mutator'];
-        $this->originalNode = $data['originalNode'];
-        $this->modifiedNode = $data['mutatedNode'];
-        $this->modifiedAst = $data['modifiedAst'];
+        $this->startLine = $data['start_line'];
+        $this->endLine = $data['end_line'];
+        $this->diff = $data['diff'];
+        $this->modifiedSourcePath = $data['modified_source_path'];
     }
 }

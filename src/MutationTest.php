@@ -35,13 +35,9 @@ class MutationTest
      */
     public function run(array $coveredLines, Configuration $configuration, array $originalArguments): void
     {
-        /** @var string $tmpfname */
-        $tmpfname = tempnam('/tmp', 'pest_mutation_');
-        file_put_contents($tmpfname, $this->mutation->modifiedSource());
-
         // TODO: we should pass the tests to run in another way, maybe via cache, mutation or env variable
         $filters = [];
-        foreach (range($this->mutation->originalNode->getStartLine(), $this->mutation->originalNode->getEndLine()) as $lineNumber) {
+        foreach (range($this->mutation->startLine, $this->mutation->endLine) as $lineNumber) {
             foreach ($coveredLines[$this->mutation->file->getRealPath()][$lineNumber] ?? [] as $test) {
                 preg_match('/\\\\([a-zA-Z0-9]*)::__pest_evaluable_([^#]*)"?/', $test, $matches);
                 $filters[] = $matches[1].'::'.preg_replace(['/_([a-z])_/', '/([^_])_([^_])/', '/__/'], [' $1 ', '$1 $2', '_'], $matches[2]);
@@ -67,7 +63,7 @@ class MutationTest
             ],
             env: [
                 Mutate::ENV_MUTATION_TESTING => $this->mutation->file->getRealPath(),
-                Mutate::ENV_MUTATION_FILE => $tmpfname,
+                Mutate::ENV_MUTATION_FILE => $this->mutation->modifiedSourcePath,
             ],
             timeout: $this->calculateTimeout(),
         );

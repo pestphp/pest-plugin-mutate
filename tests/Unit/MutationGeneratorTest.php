@@ -27,17 +27,17 @@ it('generates mutations for the given file', function (): void {
         ->and($mutations[0])
         ->file->getRealPath()->toBe($file->getRealPath())
         ->mutator->toBe(GreaterOrEqualToGreater::class)
-        ->originalNode->getStartLine()->toBe(11)
+        ->startLine->toBe(11)
         ->modifiedSource()->toMatchSnapshot()
         ->and($mutations[1])
         ->file->getRealPath()->toBe($file->getRealPath())
         ->mutator->toBe(GreaterOrEqualToGreater::class)
-        ->originalNode->getStartLine()->toBe(16)
+        ->startLine->toBe(16)
         ->modifiedSource()->toMatchSnapshot()
         ->and($mutations[2])
         ->file->getRealPath()->toBe($file->getRealPath())
         ->mutator->toBe(SmallerToSmallerOrEqual::class)
-        ->originalNode->getStartLine()->toBe(21)
+        ->startLine->toBe(21)
         ->modifiedSource()->toMatchSnapshot();
 });
 

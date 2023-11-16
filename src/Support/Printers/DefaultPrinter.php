@@ -98,7 +98,7 @@ class DefaultPrinter implements Printer
 
     private function writeMutationTestLine(string $color, string $symbol, MutationTest $test): void
     {
-        $this->output->writeln('  <fg='.$color.';options=bold>'.$symbol.'</> <fg=gray>Line '.$test->mutation->originalNode->getStartLine().': '.$test->mutation->mutator::name().'</>'); // @pest-mutate-ignore
+        $this->output->writeln('  <fg='.$color.';options=bold>'.$symbol.'</> <fg=gray>Line '.$test->mutation->startLine.': '.$test->mutation->mutator::name().'</>'); // @pest-mutate-ignore
     }
 
     private function writeMutationSuiteSummary(MutationSuite $mutationSuite): void
@@ -136,13 +136,13 @@ class DefaultPrinter implements Printer
         }
 
         $this->output->writeln([
-            '  <fg=default;bg='.$color.';options=bold> '.$label.' </> <fg=default;options=bold>'.$path.' <fg=gray> > Line '.$test->mutation->originalNode->getStartLine().': '.$test->mutation->mutator::name().'</>', // @pest-mutate-ignore
+            '  <fg=default;bg='.$color.';options=bold> '.$label.' </> <fg=default;options=bold>'.$path.' <fg=gray> > Line '.$test->mutation->startLine.': '.$test->mutation->mutator::name().'</>', // @pest-mutate-ignore
             '  <fg=default;options=bold>'.$error.'</>',
         ]);
 
         $diff = <<<HTML
-                    <div class="text-green">+ {$test->mutation->diff()['modified'][0]}</div>
-                    <div class="text-red">- {$test->mutation->diff()['original'][0]}</div>
+                    <div class="text-green">+ {$test->mutation->diff['modified'][0]}</div>
+                    <div class="text-red">- {$test->mutation->diff['original'][0]}</div>
                     HTML;
 
         render(<<<HTML
