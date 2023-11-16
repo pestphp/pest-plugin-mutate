@@ -283,7 +283,8 @@ Therefore, Pest Muation Testing is optimized to limit the amount of mutations an
 - Limit the amount of possible mutations by having a carefully chosen set of mutators
 - Run only tests that covers the mutated code
 - It tries to reuse cached mutations
-- _Run tests in a decent order (fastet test first)_ - (not implemented yet)
+- Run mutations in a reasonable order
+- Provide options to stop on first survived or not covered mutation
 
 But there is much more you can do to improve performance. Especially if you have a larger code base and/or you are using mutations testing while developing locally.
 
@@ -340,6 +341,9 @@ vendor/bin/pest --mutate --covered-only
 
 ### Run tests in parallel
 
+> Attention: This may slow down your tests if you have a small test suite or only a small part of your test suite is run for a certain mutation.
+> Probably I am going to replace this in favor of running multiple mutations in parallel.
+
 ```bash
 vendor/bin/pest --mutate --parallel
 ```
@@ -366,6 +370,8 @@ Just like code coverage, mutation coverage can also be enforced. You can use the
 ```
 
 ## Custom Mutators
+
+> WIP: Custom mutators are not implemented yet!
 
 You may want to create your own custom mutators. You can do so by creating a class that implements the `Mutator` interface. \
 This example will remove `use` statements.
