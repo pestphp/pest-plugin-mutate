@@ -16,6 +16,7 @@ use Pest\Mutate\Mutators\Sets\LogicalSet;
 use Pest\Mutate\Mutators\Sets\MathSet;
 use Pest\Mutate\Mutators\Sets\NumberSet;
 use Pest\Mutate\Mutators\Sets\StringSet;
+use Pest\Mutate\Mutators\Sets\VisibilitySet;
 
 class MutatorMap
 {
@@ -45,6 +46,7 @@ class MutatorMap
             ...MathSet::mutators(),
             ...NumberSet::mutators(),
             ...StringSet::mutators(),
+            ...VisibilitySet::mutators(),
         ];
 
         $map = [];

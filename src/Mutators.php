@@ -138,6 +138,7 @@ use Pest\Mutate\Mutators\Sets\LogicalSet;
 use Pest\Mutate\Mutators\Sets\MathSet;
 use Pest\Mutate\Mutators\Sets\NumberSet;
 use Pest\Mutate\Mutators\Sets\StringSet;
+use Pest\Mutate\Mutators\Sets\VisibilitySet;
 use Pest\Mutate\Mutators\String\ConcatRemoveLeft;
 use Pest\Mutate\Mutators\String\ConcatRemoveRight;
 use Pest\Mutate\Mutators\String\ConcatSwitchSides;
@@ -170,6 +171,12 @@ use Pest\Mutate\Mutators\String\UnwrapTrim;
 use Pest\Mutate\Mutators\String\UnwrapUcfirst;
 use Pest\Mutate\Mutators\String\UnwrapUcwords;
 use Pest\Mutate\Mutators\String\UnwrapWordwrap;
+use Pest\Mutate\Mutators\Visibility\ConstantProtectedToPrivate;
+use Pest\Mutate\Mutators\Visibility\ConstantPublicToProtected;
+use Pest\Mutate\Mutators\Visibility\FunctionProtectedToPrivate;
+use Pest\Mutate\Mutators\Visibility\FunctionPublicToProtected;
+use Pest\Mutate\Mutators\Visibility\PropertyProtectedToPrivate;
+use Pest\Mutate\Mutators\Visibility\PropertyPublicToProtected;
 
 class Mutators
 {
@@ -195,6 +202,8 @@ class Mutators
     final public const SET_NUMBER = NumberSet::class;
 
     final public const SET_STRING = StringSet::class;
+
+    final public const SET_VISIBILITY = VisibilitySet::class;
 
     final public const SET_LARAVEL = LaravelSet::class;
 
@@ -521,6 +530,19 @@ class Mutators
     final public const STRING_UNWRAP_UCWORDS = UnwrapUcwords::class;
 
     final public const STRING_UNWRAP_WORDWRAP = UnwrapWordwrap::class;
+
+    /** Visibility */
+    final public const VISIBILITY_CONSTANT_PUBLIC_TO_PROTECTED = ConstantPublicToProtected::class;
+
+    final public const VISIBILITY_CONSTANT_PROTECTED_TO_PRIVATE = ConstantProtectedToPrivate::class;
+
+    final public const VISIBILITY_FUNCTION_PUBLIC_TO_PROTECTED = FunctionPublicToProtected::class;
+
+    final public const VISIBILITY_FUNCTION_PROTECTED_TO_PRIVATE = FunctionProtectedToPrivate::class;
+
+    final public const VISIBILITY_PROPERTY_PUBLIC_TO_PROTECTED = PropertyPublicToProtected::class;
+
+    final public const VISIBILITY_PROPERTY_PROTECTED_TO_PRIVATE = PropertyProtectedToPrivate::class;
 
     /** Laravel */
     final public const LARAVEL_UNWRAP_STR_UPPER = LaravelUnwrapStrUpper::class;

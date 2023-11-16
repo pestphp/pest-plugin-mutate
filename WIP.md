@@ -29,7 +29,6 @@
 # Backlog Prio 1
 - [ ] Add return mutators
 - [ ] Add remove function call mutator
-- [ ] Add visibility mutator
 - [ ] Add null safe mutators
 - [ ] Add array declaration mutators: https://stryker-mutator.io/docs/mutation-testing-elements/supported-mutators/#array-declaration
 - [ ] Add empty block statement mutator?: https://stryker-mutator.io/docs/mutation-testing-elements/supported-mutators/#array-declaration

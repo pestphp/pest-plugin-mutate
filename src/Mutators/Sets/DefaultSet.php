@@ -27,6 +27,7 @@ class DefaultSet implements MutatorSet
             ...MathSet::mutators(),
             ...NumberSet::mutators(),
             ...StringSet::mutators(),
+            ...VisibilitySet::defaultMutators(),
         ];
     }
 }

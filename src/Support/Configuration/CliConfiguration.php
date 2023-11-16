@@ -12,8 +12,8 @@ use Pest\Mutate\Options\MutateOption;
 use Pest\Mutate\Options\MutatorsOption;
 use Pest\Mutate\Options\ParallelOption;
 use Pest\Mutate\Options\PathsOption;
-use Pest\Mutate\Options\StopOnSurvivedOption;
 use Pest\Mutate\Options\StopOnNotCoveredOption;
+use Pest\Mutate\Options\StopOnSurvivedOption;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputDefinition;
 
