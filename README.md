@@ -10,7 +10,7 @@ To stay up to date, follow me on social media (**[Twitter/X](https://twitter.com
 
 > Note: Before you can start using mutation testing, you need to have a successfully running test suite.
 
-**Source code**: [github.com/pestphp/pest-plugin-mutate](Pest Plugin Mutate)
+**Source code**: [Pest Plugin Mutate](https://github.com/pestphp/pest-plugin-mutate)
 
 To start using Pest's Mutation plugin, you need to require the plugin via Composer.
 
