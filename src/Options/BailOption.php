@@ -6,13 +6,13 @@ namespace Pest\Mutate\Options;
 
 use Symfony\Component\Console\Input\InputOption;
 
-class ParallelOption
+class BailOption
 {
-    final public const ARGUMENT = 'parallel';
+    final public const ARGUMENT = 'bail';
 
     public static function remove(): bool
     {
-        return true;
+        return false;
     }
 
     public static function match(string $argument): bool

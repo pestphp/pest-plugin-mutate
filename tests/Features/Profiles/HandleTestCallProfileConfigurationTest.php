@@ -63,3 +63,28 @@ it('sets the class option from test', function (): void {
         ->toBe([AgeHelper::class]);
 })->mutate(ConfigurationRepository::FAKE.'_6')
     ->class(AgeHelper::class);
+
+it('sets the stop on survival option from test', function (): void {
+    $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_7');
+
+    expect($configuration->toArray()['stop_on_survival'])
+        ->toBeTrue();
+})->mutate(ConfigurationRepository::FAKE.'_7')
+    ->stopOnSurvival();
+
+it('sets the stop on uncovered option from test', function (): void {
+    $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_8');
+
+    expect($configuration->toArray()['stop_on_uncovered'])
+        ->toBeTrue();
+})->mutate(ConfigurationRepository::FAKE.'_8')
+    ->stopOnUncovered();
+
+it('sets the stop on survival and stop on uncovered option from test', function (): void {
+    $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_9');
+
+    expect($configuration->toArray())
+        ->stop_on_survival->toBeTrue()
+        ->stop_on_uncovered->toBeTrue();
+})->mutate(ConfigurationRepository::FAKE.'_9')
+    ->bail();

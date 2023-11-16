@@ -22,6 +22,6 @@ class MinMsiOption
 
     public static function inputOption(): InputOption
     {
-        return new InputOption('--min', null, InputOption::VALUE_REQUIRED, '', 0);
+        return new InputOption(sprintf('--%s', self::ARGUMENT), null, InputOption::VALUE_REQUIRED, '', 0);
     }
 }

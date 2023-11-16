@@ -89,3 +89,35 @@ it('sets the class if --class argument is passed', function (): void {
     expect($this->configuration->toArray()['classes'])
         ->toEqual([AgeHelper::class, SizeHelper::class]);
 });
+
+it('enables stop on survival option if --stop-on-survival argument is passed', function (): void {
+    $this->configuration->fromArguments(['--mutate='.ConfigurationRepository::FAKE]);
+    expect($this->configuration->toArray())
+        ->stop_on_survival->toBeNull();
+
+    $this->configuration->fromArguments(['--stop-on-survival']);
+    expect($this->configuration->toArray())
+        ->stop_on_survival->toBeTrue();
+});
+
+it('enables stop on uncovered option if --stop-on-uncovered argument is passed', function (): void {
+    $this->configuration->fromArguments(['--mutate='.ConfigurationRepository::FAKE]);
+    expect($this->configuration->toArray())
+        ->stop_on_uncovered->toBeNull();
+
+    $this->configuration->fromArguments(['--stop-on-uncovered']);
+    expect($this->configuration->toArray())
+        ->stop_on_uncovered->toBeTrue();
+});
+
+it('enables stop on survival and stop on uncovered option if --bail argument is passed', function (): void {
+    $this->configuration->fromArguments(['--mutate='.ConfigurationRepository::FAKE]);
+    expect($this->configuration->toArray())
+        ->stop_on_survival->toBeNull()
+        ->stop_on_uncovered->toBeNull();
+
+    $this->configuration->fromArguments(['--bail']);
+    expect($this->configuration->toArray())
+        ->stop_on_survival->toBeTrue()
+        ->stop_on_uncovered->toBeTrue();
+});

@@ -32,6 +32,10 @@ abstract class AbstractConfiguration implements ConfigurationContract
 
     private ?bool $parallel = null;
 
+    private ?bool $stopOnSurvival = null;
+
+    private ?bool $stopOnUncovered = null;
+
     /**
      * {@inheritDoc}
      */
@@ -97,6 +101,28 @@ abstract class AbstractConfiguration implements ConfigurationContract
         return $this;
     }
 
+    public function stopOnSurvival(bool $stopOnSurvival = true): self
+    {
+        $this->stopOnSurvival = $stopOnSurvival;
+
+        return $this;
+    }
+
+    public function stopOnUncovered(bool $stopOnUncovered = true): self
+    {
+        $this->stopOnUncovered = $stopOnUncovered;
+
+        return $this;
+    }
+
+    public function bail(): self
+    {
+        $this->stopOnSurvival = true;
+        $this->stopOnUncovered = true;
+
+        return $this;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -119,6 +145,8 @@ abstract class AbstractConfiguration implements ConfigurationContract
             'parallel' => $this->parallel,
             'min_msi' => $this->minMSI,
             'covered_only' => $this->coveredOnly,
+            'stop_on_survival' => $this->stopOnSurvival,
+            'stop_on_uncovered' => $this->stopOnUncovered,
         ], fn (mixed $value): bool => ! is_null($value));
     }
 }

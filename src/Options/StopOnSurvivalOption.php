@@ -6,9 +6,9 @@ namespace Pest\Mutate\Options;
 
 use Symfony\Component\Console\Input\InputOption;
 
-class ParallelOption
+class StopOnSurvivalOption
 {
-    final public const ARGUMENT = 'parallel';
+    final public const ARGUMENT = 'stop-on-survival';
 
     public static function remove(): bool
     {
@@ -22,6 +22,6 @@ class ParallelOption
 
     public static function inputOption(): InputOption
     {
-        return new InputOption(sprintf('--%s', self::ARGUMENT), null, InputOption::VALUE_NONE, '');
+        return new InputOption(sprintf('--%s', self::ARGUMENT), null, InputOption::VALUE_OPTIONAL, '');
     }
 }

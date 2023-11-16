@@ -10,7 +10,8 @@ use Pest\Support\Container;
 use Tests\Fixtures\Classes\AgeHelper;
 
 beforeEach(function (): void {
-    $this->configuration = Container::getInstance()->get(ConfigurationRepository::class)->globalConfiguration(ConfigurationRepository::FAKE);
+    $this->configuration = Container::getInstance()->get(ConfigurationRepository::class)
+        ->globalConfiguration(ConfigurationRepository::FAKE);
 });
 
 test('configure profile globally', function (): void {
@@ -97,4 +98,29 @@ test('globally configure class option', function (): void {
 
     expect($this->configuration->toArray()['classes'])
         ->toBe([AgeHelper::class]);
+});
+
+test('globally configure stop on survival', function (): void {
+    mutate(ConfigurationRepository::FAKE)
+        ->stopOnSurvival();
+
+    expect($this->configuration->toArray()['stop_on_survival'])
+        ->toBeTrue();
+});
+
+test('globally configure stop on uncovered', function (): void {
+    mutate(ConfigurationRepository::FAKE)
+        ->stopOnUncovered();
+
+    expect($this->configuration->toArray()['stop_on_uncovered'])
+        ->toBeTrue();
+});
+
+test('globally configure bail', function (): void {
+    mutate(ConfigurationRepository::FAKE)
+        ->bail();
+
+    expect($this->configuration->toArray())
+        ->stop_on_survival->toBeTrue()
+        ->stop_on_uncovered->toBeTrue();
 });

@@ -22,6 +22,12 @@ interface Configuration
 
     public function parallel(bool $parallel = true): self;
 
+    public function stopOnSurvival(bool $stopOnSurvival = true): self;
+
+    public function stopOnUncovered(bool $stopOnUncovered = true): self;
+
+    public function bail(): self;
+
     /**
      * @param  array<int, class-string>|class-string  ...$classes
      */

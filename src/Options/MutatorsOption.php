@@ -22,6 +22,6 @@ class MutatorsOption
 
     public static function inputOption(): InputOption
     {
-        return new InputOption('--mutator', null, InputOption::VALUE_REQUIRED, '');
+        return new InputOption(sprintf('--%s', self::ARGUMENT), null, InputOption::VALUE_REQUIRED, '');
     }
 }
