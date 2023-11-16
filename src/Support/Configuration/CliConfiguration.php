@@ -12,8 +12,8 @@ use Pest\Mutate\Options\MutateOption;
 use Pest\Mutate\Options\MutatorsOption;
 use Pest\Mutate\Options\ParallelOption;
 use Pest\Mutate\Options\PathsOption;
-use Pest\Mutate\Options\StopOnSurvivalOption;
-use Pest\Mutate\Options\StopOnUncoveredOption;
+use Pest\Mutate\Options\StopOnSurvivedOption;
+use Pest\Mutate\Options\StopOnNotCoveredOption;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputDefinition;
 
@@ -27,8 +27,8 @@ class CliConfiguration extends AbstractConfiguration
         MutatorsOption::class,
         PathsOption::class,
         ParallelOption::class,
-        StopOnSurvivalOption::class,
-        StopOnUncoveredOption::class,
+        StopOnSurvivedOption::class,
+        StopOnNotCoveredOption::class,
         BailOption::class,
     ];
 
@@ -87,17 +87,17 @@ class CliConfiguration extends AbstractConfiguration
             $this->class(explode(',', (string) $input->getOption(ClassOption::ARGUMENT))); // @phpstan-ignore-line
         }
 
-        if ($input->hasOption(StopOnSurvivalOption::ARGUMENT)) {
-            $this->stopOnSurvival($input->getOption(StopOnSurvivalOption::ARGUMENT) !== 'false');
+        if ($input->hasOption(StopOnSurvivedOption::ARGUMENT)) {
+            $this->stopOnSurvived($input->getOption(StopOnSurvivedOption::ARGUMENT) !== 'false');
         }
 
-        if ($input->hasOption(StopOnUncoveredOption::ARGUMENT)) {
-            $this->stopOnUncovered($input->getOption(StopOnUncoveredOption::ARGUMENT) !== 'false');
+        if ($input->hasOption(StopOnNotCoveredOption::ARGUMENT)) {
+            $this->stopOnNotCovered($input->getOption(StopOnNotCoveredOption::ARGUMENT) !== 'false');
         }
 
         if ($input->hasOption(BailOption::ARGUMENT)) {
-            $this->stopOnSurvival();
-            $this->stopOnUncovered();
+            $this->stopOnSurvived();
+            $this->stopOnNotCovered();
         }
 
         return $arguments;

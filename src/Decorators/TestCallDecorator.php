@@ -109,16 +109,16 @@ class TestCallDecorator implements Configuration
         return $this;
     }
 
-    public function stopOnSurvival(bool $stopOnSurvival = true): self
+    public function stopOnSurvived(bool $stopOnSurvived = true): self
     {
-        $this->configuration->stopOnSurvival($stopOnSurvival);
+        $this->configuration->stopOnSurvived($stopOnSurvived);
 
         return $this;
     }
 
-    public function stopOnUncovered(bool $stopOnUncovered = true): self
+    public function stopOnNotCovered(bool $stopOnNotCovered = true): self
     {
-        $this->configuration->stopOnUncovered($stopOnUncovered);
+        $this->configuration->stopOnNotCovered($stopOnNotCovered);
 
         return $this;
     }

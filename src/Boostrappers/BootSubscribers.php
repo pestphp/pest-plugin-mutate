@@ -8,7 +8,7 @@ use Pest\Contracts\Bootstrapper;
 use Pest\Mutate\Contracts\Subscriber;
 use Pest\Mutate\Event\Facade;
 use Pest\Mutate\Subscribers\StopOnSurvivedMutation;
-use Pest\Mutate\Subscribers\StopOnUncoveredMutation;
+use Pest\Mutate\Subscribers\StopOnNotCoveredMutation;
 use Pest\Mutate\Subscribers\TrackMutationSuiteFinish;
 use Pest\Mutate\Subscribers\TrackMutationSuiteStart;
 use Pest\Support\Container;
@@ -26,7 +26,7 @@ final class BootSubscribers implements Bootstrapper
     private const SUBSCRIBERS = [
         TrackMutationSuiteStart::class,
         TrackMutationSuiteFinish::class,
-        StopOnUncoveredMutation::class,
+        StopOnNotCoveredMutation::class,
         StopOnSurvivedMutation::class,
     ];
 

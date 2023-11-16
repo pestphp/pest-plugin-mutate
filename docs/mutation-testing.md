@@ -123,8 +123,8 @@ The following options are available.
 - [`coveredOnly()`](#coveredOnly)
 - [`uncommittedOnly()`](#uncommittedOnly)
 - [`changedOnly()`](#changedOnly)
-- [`stopOnSurvival()`](#stopOnSurvival)
-- [`stopOnUncovered()`](#stopOnUncovered)
+- [`stopOnSurvived()`](#stopOnSurvived)
+- [`stopOnNotCovered()`](#stopOnNotCovered)
 - [`bail()`](#bail)
 
 </div>
@@ -240,27 +240,27 @@ mutate()
 ```
 
 
-<a name="options-stop-on-survival"></a>
-### `stopOnSurvival()`
-CLI: `--stop-on-survival`
+<a name="options-stop-on-survived"></a>
+### `stopOnSurvived()`
+CLI: `--stop-on-survived`
 
 Stop execution upon first survived mutant.
 
 ```php
 mutate()
-    ->stopOnSurvival();
+    ->stopOnSurvived();
 ```
 
 
-<a name="options-stop-on-uncovered"></a>
-### `stopOnUncovered()`
-CLI: `--stop-on-uncovered`
+<a name="options-stop-on-not-covered"></a>
+### `stopOnNotCovered()`
+CLI: `--stop-on-not-covered`
 
-Stop execution upon first uncovered mutant.
+Stop execution upon first not covered mutant.
 
 ```php
 mutate()
-    ->stopOnUncovered();
+    ->stopOnNotCovered();
 ```
 
 
@@ -268,7 +268,7 @@ mutate()
 ### `bail()`
 CLI: `--bail`
 
-Stop execution upon first uncovered or survived mutant.
+Stop execution upon first not covered or survived mutant.
 
 ```php
 mutate()

@@ -19,7 +19,7 @@ final class StopOnSurvivedMutation implements SurvivedSubscriber
     {
         if (! Container::getInstance()->get(ConfigurationRepository::class) // @phpstan-ignore-line
             ->mergedConfiguration()
-            ->stopOnSurvival) {
+            ->stopOnSurvived) {
             return;
         }
 

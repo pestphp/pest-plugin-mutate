@@ -22,9 +22,9 @@ interface Configuration
 
     public function parallel(bool $parallel = true): self;
 
-    public function stopOnSurvival(bool $stopOnSurvival = true): self;
+    public function stopOnSurvived(bool $stopOnSurvived = true): self;
 
-    public function stopOnUncovered(bool $stopOnUncovered = true): self;
+    public function stopOnNotCovered(bool $stopOnNotCovered = true): self;
 
     public function bail(): self;
 

@@ -3,7 +3,8 @@
 - [x] Override profile configuration in CLI
 - [x] Run mutation tests in CLI
 - [x] Configure and run mutation tests by appending "->mutate()" to a test or describe block
-- [ ] Support xdebug and pcov
+- [ ] Support xdebug (not tested yet, but should already work)
+- [x] Support pcov
 - [x] Comprehensive sets of mutators, reasonable default set
 - [x] paths()
 - [x] mutators()
@@ -11,10 +12,9 @@
 - [x] coveredOnly()
 - [ ] uncommittedOnly()
 - [ ] changedOnly()
-- [ ] bail()
-- [ ] stopOnSurvival()
-- [ ] stopOnUncovered()
-- [ ] Parallel support
+- [x] bail()
+- [x] stopOnSurvived()
+- [x] stopOnNotCovered()
 - [ ] Minimum Threshold Enforcement
 - [ ] Allow registering Custom Mutators
 - [ ] Disable mutations by annotation
@@ -26,12 +26,8 @@
 - [ ] Automatically skip "Arch" tests
 - [ ] Awesome docs
 
-# Current Tasks - required for first Alpha release
-- [ ] Implement stopOnSurvival(), stopOnUncovered(), bail()
-- [ ] Write Article about mutation testing
-
 # Backlog Prio 1
-- [ ] Improve test filtering. For ex. "a" in test name does not work
+- [ ] Improve test filtering. Some test names, may not work
 - [ ] Better loop detection. For example when mutate break to continue in a while true loop
 - [ ] Automatically create documentation from mutators
 - [ ] Create a sensible default set

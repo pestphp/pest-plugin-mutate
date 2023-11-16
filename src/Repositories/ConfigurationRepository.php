@@ -92,8 +92,8 @@ class ConfigurationRepository
             classes: $config['classes'] ?? [],
             parallel: $config['parallel'] ?? false,
             minMSI: $config['min_msi'] ?? 0.0,
-            stopOnSurvival: $config['stop_on_survival'] ?? false,
-            stopOnUncovered: $config['stop_on_uncovered'] ?? false,
+            stopOnSurvived: $config['stop_on_survived'] ?? false,
+            stopOnNotCovered: $config['stop_on_not_covered'] ?? false,
         );
     }
 

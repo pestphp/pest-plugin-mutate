@@ -32,9 +32,9 @@ abstract class AbstractConfiguration implements ConfigurationContract
 
     private ?bool $parallel = null;
 
-    private ?bool $stopOnSurvival = null;
+    private ?bool $stopOnSurvived = null;
 
-    private ?bool $stopOnUncovered = null;
+    private ?bool $stopOnNotCovered = null;
 
     /**
      * {@inheritDoc}
@@ -101,24 +101,24 @@ abstract class AbstractConfiguration implements ConfigurationContract
         return $this;
     }
 
-    public function stopOnSurvival(bool $stopOnSurvival = true): self
+    public function stopOnSurvived(bool $stopOnSurvived = true): self
     {
-        $this->stopOnSurvival = $stopOnSurvival;
+        $this->stopOnSurvived = $stopOnSurvived;
 
         return $this;
     }
 
-    public function stopOnUncovered(bool $stopOnUncovered = true): self
+    public function stopOnNotCovered(bool $stopOnNotCovered = true): self
     {
-        $this->stopOnUncovered = $stopOnUncovered;
+        $this->stopOnNotCovered = $stopOnNotCovered;
 
         return $this;
     }
 
     public function bail(): self
     {
-        $this->stopOnSurvival = true;
-        $this->stopOnUncovered = true;
+        $this->stopOnSurvived = true;
+        $this->stopOnNotCovered = true;
 
         return $this;
     }
@@ -134,7 +134,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
     }
 
     /**
-     * @return array{paths?: string[], mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, min_msi?: float, covered_only?: bool, stop_on_survival?: bool, stop_on_uncovered?: bool}
+     * @return array{paths?: string[], mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, min_msi?: float, covered_only?: bool, stop_on_survived?: bool, stop_on_uncovered?: bool}
      */
     public function toArray(): array
     {
@@ -145,8 +145,8 @@ abstract class AbstractConfiguration implements ConfigurationContract
             'parallel' => $this->parallel,
             'min_msi' => $this->minMSI,
             'covered_only' => $this->coveredOnly,
-            'stop_on_survival' => $this->stopOnSurvival,
-            'stop_on_uncovered' => $this->stopOnUncovered,
+            'stop_on_survived' => $this->stopOnSurvived,
+            'stop_on_not_covered' => $this->stopOnNotCovered,
         ], fn (mixed $value): bool => ! is_null($value));
     }
 }

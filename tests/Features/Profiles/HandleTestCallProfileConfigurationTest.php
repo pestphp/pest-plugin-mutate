@@ -64,27 +64,27 @@ it('sets the class option from test', function (): void {
 })->mutate(ConfigurationRepository::FAKE.'_6')
     ->class(AgeHelper::class);
 
-it('sets the stop on survival option from test', function (): void {
+it('sets the stop on survived option from test', function (): void {
     $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_7');
 
-    expect($configuration->toArray()['stop_on_survival'])
+    expect($configuration->toArray()['stop_on_survived'])
         ->toBeTrue();
 })->mutate(ConfigurationRepository::FAKE.'_7')
-    ->stopOnSurvival();
+    ->stopOnSurvived();
 
-it('sets the stop on uncovered option from test', function (): void {
+it('sets the stop on not covered option from test', function (): void {
     $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_8');
 
-    expect($configuration->toArray()['stop_on_uncovered'])
+    expect($configuration->toArray()['stop_on_not_covered'])
         ->toBeTrue();
 })->mutate(ConfigurationRepository::FAKE.'_8')
-    ->stopOnUncovered();
+    ->stopOnNotCovered();
 
-it('sets the stop on survival and stop on uncovered option from test', function (): void {
+it('sets the stop on survived and stop on not covered option from test', function (): void {
     $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_9');
 
     expect($configuration->toArray())
-        ->stop_on_survival->toBeTrue()
-        ->stop_on_uncovered->toBeTrue();
+        ->stop_on_survived->toBeTrue()
+        ->stop_on_not_covered->toBeTrue();
 })->mutate(ConfigurationRepository::FAKE.'_9')
     ->bail();

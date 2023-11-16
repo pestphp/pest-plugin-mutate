@@ -100,19 +100,19 @@ test('globally configure class option', function (): void {
         ->toBe([AgeHelper::class]);
 });
 
-test('globally configure stop on survival', function (): void {
+test('globally configure stop on survived', function (): void {
     mutate(ConfigurationRepository::FAKE)
-        ->stopOnSurvival();
+        ->stopOnSurvived();
 
-    expect($this->configuration->toArray()['stop_on_survival'])
+    expect($this->configuration->toArray()['stop_on_survived'])
         ->toBeTrue();
 });
 
-test('globally configure stop on uncovered', function (): void {
+test('globally configure stop on not covered', function (): void {
     mutate(ConfigurationRepository::FAKE)
-        ->stopOnUncovered();
+        ->stopOnNotCovered();
 
-    expect($this->configuration->toArray()['stop_on_uncovered'])
+    expect($this->configuration->toArray()['stop_on_not_covered'])
         ->toBeTrue();
 });
 
@@ -121,6 +121,6 @@ test('globally configure bail', function (): void {
         ->bail();
 
     expect($this->configuration->toArray())
-        ->stop_on_survival->toBeTrue()
-        ->stop_on_uncovered->toBeTrue();
+        ->stop_on_survived->toBeTrue()
+        ->stop_on_not_covered->toBeTrue();
 });

@@ -13,13 +13,13 @@ use Pest\Support\Container;
 /**
  * @internal
  */
-final class StopOnUncoveredMutation implements NotCoveredSubscriber
+final class StopOnNotCoveredMutation implements NotCoveredSubscriber
 {
     public function notify(NotCovered $event): void
     {
         if (! Container::getInstance()->get(ConfigurationRepository::class) // @phpstan-ignore-line
             ->mergedConfiguration()
-            ->stopOnUncovered) {
+            ->stopOnNotCovered) {
             return;
         }
 
