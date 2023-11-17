@@ -56,6 +56,28 @@ test('globally configure mutators', function (): void {
         ->toEqual([PlusToMinus::class, MinusToPlus::class]);
 });
 
+test('globally configure mutators exclude', function (): void {
+    mutate(ConfigurationRepository::FAKE)
+        ->mutator(Mutators::SET_ARITHMETIC);
+
+    expect($this->configuration->toArray()['mutators'])
+        ->toEqual(ArithmeticSet::mutators());
+
+    mutate(ConfigurationRepository::FAKE)
+        ->mutator(Mutators::SET_ARITHMETIC)
+        ->except(Mutators::ARITHMETIC_PLUS_TO_MINUS);
+
+    expect($this->configuration->toArray()['mutators'])
+        ->toHaveCount(count(ArithmeticSet::mutators()) - 1);
+
+    mutate(ConfigurationRepository::FAKE)
+        ->mutator(Mutators::SET_ARITHMETIC)
+        ->except(Mutators::ARITHMETIC_PLUS_TO_MINUS, Mutators::ARITHMETIC_MINUS_TO_PLUS);
+
+    expect($this->configuration->toArray()['mutators'])
+        ->toHaveCount(count(ArithmeticSet::mutators()) - 2);
+});
+
 test('globally configure min MSI threshold', function (): void {
     mutate(ConfigurationRepository::FAKE)
         ->min(10.0);

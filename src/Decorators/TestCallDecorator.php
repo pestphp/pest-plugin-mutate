@@ -92,6 +92,16 @@ class TestCallDecorator implements Configuration
         return $this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function except(string|array ...$mutators): self
+    {
+        $this->configuration->except(...$mutators);
+
+        return $this;
+    }
+
     public function parallel(bool $parallel = true): self
     {
         $this->configuration->parallel($parallel);

@@ -1,8 +1,11 @@
 <?php
 
 declare(strict_types=1);
+
+use Pest\Mutate\Mutators\Arithmetic\MinusToPlus;
 use Pest\Mutate\Mutators\Arithmetic\PlusToMinus;
 use Pest\Mutate\Mutators\Equality\GreaterToGreaterOrEqual;
+use Pest\Mutate\Mutators\Sets\ArithmeticSet;
 use Pest\Mutate\Repositories\ConfigurationRepository;
 use Pest\Support\Container;
 use Tests\Fixtures\Classes\AgeHelper;
@@ -47,6 +50,15 @@ it('sets the mutators from test', function (): void {
         ->toBe([PlusToMinus::class, GreaterToGreaterOrEqual::class]);
 })->mutate(ConfigurationRepository::FAKE.'_4')
     ->mutator(PlusToMinus::class, GreaterToGreaterOrEqual::class);
+
+it('excludes some mutators from test', function (): void {
+    $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_10');
+
+    expect($configuration->toArray()['mutators'])
+        ->toHaveCount(count(ArithmeticSet::mutators()) - 2);
+})->mutate(ConfigurationRepository::FAKE.'_10')
+    ->mutator(ArithmeticSet::class)
+    ->except(PlusToMinus::class, MinusToPlus::class);
 
 it('sets the parallel option from test', function (): void {
     $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_5');

@@ -7,6 +7,7 @@ namespace Pest\Mutate\Support\Configuration;
 use Pest\Mutate\Options\BailOption;
 use Pest\Mutate\Options\ClassOption;
 use Pest\Mutate\Options\CoveredOnlyOption;
+use Pest\Mutate\Options\ExceptOption;
 use Pest\Mutate\Options\MinMsiOption;
 use Pest\Mutate\Options\MutateOption;
 use Pest\Mutate\Options\MutatorsOption;
@@ -25,6 +26,7 @@ class CliConfiguration extends AbstractConfiguration
         CoveredOnlyOption::class,
         MinMsiOption::class,
         MutatorsOption::class,
+        ExceptOption::class,
         PathsOption::class,
         ParallelOption::class,
         StopOnSurvivedOption::class,
@@ -65,6 +67,10 @@ class CliConfiguration extends AbstractConfiguration
 
         if ($input->hasOption(MutatorsOption::ARGUMENT)) {
             $this->mutator(explode(',', (string) $input->getOption(MutatorsOption::ARGUMENT))); // @phpstan-ignore-line
+        }
+
+        if ($input->hasOption(ExceptOption::ARGUMENT)) {
+            $this->except(explode(',', (string) $input->getOption(ExceptOption::ARGUMENT))); // @phpstan-ignore-line
         }
 
         if ($input->hasOption(MinMsiOption::ARGUMENT)) {

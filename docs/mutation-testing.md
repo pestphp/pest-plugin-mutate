@@ -190,8 +190,6 @@ vendor/bin/pest --mutate --mutator=ArithmeticPlusToMinus,ArithmeticMinusToPlus
 ### `except()`
 CLI: `--except`
 
-> WIP: The `except()` option is not implemented yet!
-
 Exclude specific mutators from being used. Especially useful if you want to use a set of mutators but want to exclude some of them.
 
 ```php

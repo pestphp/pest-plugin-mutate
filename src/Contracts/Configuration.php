@@ -16,6 +16,11 @@ interface Configuration
      */
     public function mutator(array|string ...$mutators): self;
 
+    /**
+     * @param  array<int, class-string<Mutator|MutatorSet>>|class-string<Mutator|MutatorSet>  ...$mutators
+     */
+    public function except(array|string ...$mutators): self;
+
     public function min(float $minMSI): self;
 
     public function coveredOnly(bool $coveredOnly = true): self;

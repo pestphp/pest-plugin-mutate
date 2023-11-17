@@ -22,6 +22,11 @@ abstract class AbstractConfiguration implements ConfigurationContract
     private ?array $mutators = null;
 
     /**
+     * @var class-string<Mutator>[]|null
+     */
+    private ?array $excludedMutators = null;
+
+    /**
      * @var string[]|null
      */
     private ?array $classes = null;
@@ -51,31 +56,17 @@ abstract class AbstractConfiguration implements ConfigurationContract
      */
     public function mutator(array|string ...$mutators): self
     {
-        $mutators = array_map(fn (string|array $mutator): array => is_string($mutator) ? [$mutator] : $mutator, $mutators);
+        $this->mutators = $this->buildMutatorsList(...$mutators);
 
-        $mutators = array_merge(...$mutators);
+        return $this;
+    }
 
-        $mutators = array_map(
-            function (string $mutator): string {
-                $constant = strtoupper((string) preg_replace('/(?<!^)[A-Z]/', '_$0', $mutator));
-
-                return (string) (defined('Pest\\Mutate\\Mutators::'.$constant) ? constant('Pest\\Mutate\\Mutators::'.$constant) : $mutator); // @phpstan-ignore-line
-            },
-            $mutators
-        );
-
-        $mutators = array_merge(...array_map(
-            fn (string $mutator): array => is_a($mutator, MutatorSet::class, true) ? $mutator::mutators() : [$mutator],
-            $mutators
-        ));
-
-        foreach ($mutators as $mutator) {
-            if (! is_a($mutator, Mutator::class, true)) {
-                throw new InvalidMutatorException("{$mutator} is not a valid mutator");
-            }
-        }
-
-        $this->mutators = $mutators; // @phpstan-ignore-line
+    /**
+     * {@inheritDoc}
+     */
+    public function except(array|string ...$mutators): self
+    {
+        $this->excludedMutators = $this->buildMutatorsList(...$mutators);
 
         return $this;
     }
@@ -134,13 +125,14 @@ abstract class AbstractConfiguration implements ConfigurationContract
     }
 
     /**
-     * @return array{paths?: string[], mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, min_msi?: float, covered_only?: bool, stop_on_survived?: bool, stop_on_not_covered?: bool}
+     * @return array{paths?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, min_msi?: float, covered_only?: bool, stop_on_survived?: bool, stop_on_not_covered?: bool}
      */
     public function toArray(): array
     {
         return array_filter([
             'paths' => $this->paths,
-            'mutators' => $this->mutators,
+            'mutators' => $this->mutators !== null ? array_values(array_diff($this->mutators, $this->excludedMutators ?? [])) : null,
+            'excluded_mutators' => $this->excludedMutators,
             'classes' => $this->classes,
             'parallel' => $this->parallel,
             'min_msi' => $this->minMSI,
@@ -148,5 +140,38 @@ abstract class AbstractConfiguration implements ConfigurationContract
             'stop_on_survived' => $this->stopOnSurvived,
             'stop_on_not_covered' => $this->stopOnNotCovered,
         ], fn (mixed $value): bool => ! is_null($value));
+    }
+
+    /**
+     * @param  array<int, class-string<Mutator|MutatorSet>>|class-string<Mutator|MutatorSet>  ...$mutators
+     * @return array<int, class-string<Mutator>>
+     */
+    private function buildMutatorsList(array|string ...$mutators): array
+    {
+        $mutators = array_map(fn (string|array $mutator): array => is_string($mutator) ? [$mutator] : $mutator, $mutators);
+
+        $mutators = array_merge(...$mutators);
+
+        $mutators = array_map(
+            function (string $mutator): string {
+                $constant = strtoupper((string) preg_replace('/(?<!^)[A-Z]/', '_$0', $mutator));
+
+                return (string) (defined('Pest\\Mutate\\Mutators::'.$constant) ? constant('Pest\\Mutate\\Mutators::'.$constant) : $mutator); // @phpstan-ignore-line
+            },
+            $mutators
+        );
+
+        $mutators = array_merge(...array_map(
+            fn (string $mutator): array => is_a($mutator, MutatorSet::class, true) ? $mutator::mutators() : [$mutator],
+            $mutators
+        ));
+
+        foreach ($mutators as $mutator) {
+            if (! is_a($mutator, Mutator::class, true)) {
+                throw new InvalidMutatorException("{$mutator} is not a valid mutator");
+            }
+        }
+
+        return $mutators; // @phpstan-ignore-line
     }
 }

@@ -38,6 +38,16 @@ it('sets the mutators if --mutators argument is passed', function (): void {
         ->mutators->toEqual([PlusToMinus::class, MinusToPlus::class]);
 });
 
+it('excludes mutators if --except argument is passed', function (): void {
+    $this->configuration->fromArguments(['--mutator=SetArithmetic', '--except=ArithmeticPlusToMinus']);
+    expect($this->configuration->toArray())
+        ->mutators->toHaveCount(count(ArithmeticSet::mutators()) - 1);
+
+    $this->configuration->fromArguments(['--mutator=SetArithmetic', '--except=ArithmeticPlusToMinus,ArithmeticMinusToPlus']);
+    expect($this->configuration->toArray())
+        ->mutators->toHaveCount(count(ArithmeticSet::mutators()) - 2);
+});
+
 it('sets MSI threshold if --min argument is passed', function (): void {
     $this->configuration->fromArguments(['--mutate='.ConfigurationRepository::FAKE]);
     expect($this->configuration->toArray())

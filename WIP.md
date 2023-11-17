@@ -8,7 +8,7 @@
 - [x] Comprehensive sets of mutators, reasonable default set
 - [x] paths()
 - [x] mutators()
-- [ ] except()
+- [x] except()
 - [x] coveredOnly()
 - [ ] uncommittedOnly()
 - [ ] changedOnly()
@@ -27,7 +27,6 @@
 - [ ] Awesome docs
 
 # Backlog Prio 1
-- [ ] Add except()
 - [ ] Add uncommittedOnly()
 - [ ] Add changedOnly()
 - [ ] Add minimum threshold enforcement
