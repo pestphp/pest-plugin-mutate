@@ -126,6 +126,8 @@ use Pest\Mutate\Mutators\Number\DecrementFloat;
 use Pest\Mutate\Mutators\Number\DecrementInteger;
 use Pest\Mutate\Mutators\Number\IncrementFloat;
 use Pest\Mutate\Mutators\Number\IncrementInteger;
+use Pest\Mutate\Mutators\Removal\RemoveFunctionCall;
+use Pest\Mutate\Mutators\Removal\RemoveMethodCall;
 use Pest\Mutate\Mutators\Return\AlwaysReturnEmptyArray;
 use Pest\Mutate\Mutators\Return\AlwaysReturnNull;
 use Pest\Mutate\Mutators\Sets\ArithmeticSet;
@@ -139,6 +141,7 @@ use Pest\Mutate\Mutators\Sets\LaravelSet;
 use Pest\Mutate\Mutators\Sets\LogicalSet;
 use Pest\Mutate\Mutators\Sets\MathSet;
 use Pest\Mutate\Mutators\Sets\NumberSet;
+use Pest\Mutate\Mutators\Sets\RemovalSet;
 use Pest\Mutate\Mutators\Sets\ReturnSet;
 use Pest\Mutate\Mutators\Sets\StringSet;
 use Pest\Mutate\Mutators\Sets\VisibilitySet;
@@ -203,6 +206,8 @@ class Mutators
     final public const SET_MATH = MathSet::class;
 
     final public const SET_NUMBER = NumberSet::class;
+
+    final public const SET_REMOVAL = RemovalSet::class;
 
     final public const SET_RETURN = ReturnSet::class;
 
@@ -470,6 +475,11 @@ class Mutators
     final public const NUMBER_DECREMENT_INTEGER = DecrementInteger::class;
 
     final public const NUMBER_INCREMENT_INTEGER = IncrementInteger::class;
+
+    /** Removal */
+    final public const REMOVAL_REMOVE_FUNCTION_CALL = RemoveFunctionCall::class;
+
+    final public const REMOVAL_REMOVE_METHOD_CALL = RemoveMethodCall::class;
 
     /** Return */
     final public const RETURN_ALWAYS_RETURN_EMPTY_ARRAY = AlwaysReturnEmptyArray::class;
