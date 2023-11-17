@@ -8,8 +8,12 @@ use Pest\Mutate\Mutators\Abstract\AbstractMutator;
 use PhpParser\Node;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Identifier;
+use PhpParser\Node\IntersectionType;
+use PhpParser\Node\Name;
+use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\Return_;
+use PhpParser\Node\UnionType;
 
 class AlwaysReturnEmptyArray extends AbstractMutator
 {
@@ -35,7 +39,7 @@ class AlwaysReturnEmptyArray extends AbstractMutator
 
         $parent = $node->getAttribute('parent');
 
-        if (! $parent instanceof Function_) {
+        if (! $parent instanceof Function_ && ! $parent instanceof ClassMethod) {
             return false;
         }
 
@@ -44,13 +48,24 @@ class AlwaysReturnEmptyArray extends AbstractMutator
         }
 
         return $parent->returnType instanceof Identifier &&
-            $parent->returnType->name === 'array';
+            $parent->returnType->name === 'array' ||
+            (
+                $parent->returnType instanceof UnionType &&
+                in_array(
+                    needle: 'array',
+                    haystack: array_map(
+                        callback: fn (Identifier|Name|IntersectionType $type): string => $type instanceof Identifier ? $type->name : '',
+                        array: $parent->returnType->types
+                    ),
+                    strict: true
+                )
+            );
     }
 
     public static function mutate(Node $node): Node
     {
         /** @var Return_ $node */
-        $node->expr->items = []; // @phpstan-ignore-line
+        $node->expr = new Array_([], ['kind' => Array_::KIND_SHORT]);
 
         return $node;
     }

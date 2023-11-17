@@ -140,10 +140,13 @@ class DefaultPrinter implements Printer
             '  <fg=default;options=bold>'.$error.'</>',
         ]);
 
-        $diff = <<<HTML
-                    <div class="text-green">+ {$test->mutation->diff['modified'][0]}</div>
-                    <div class="text-red">- {$test->mutation->diff['original'][0]}</div>
-                    HTML;
+        $diff = '';
+        foreach ($test->mutation->diff['modified'] as $line) {
+            $diff .= "<div class='text-green'>+ {$line}</div>";
+        }
+        foreach ($test->mutation->diff['original'] as $line) {
+            $diff .= "<div class='text-red'>- {$line}</div>";
+        }
 
         render(<<<HTML
                         <div class="mx-2 flex">
