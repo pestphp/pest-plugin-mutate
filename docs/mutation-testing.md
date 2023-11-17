@@ -42,7 +42,7 @@ vendor/bin/pest --mutate --covered-only --group=unit
 
 ### `mutate()`
 
-> Attention: This requires a change to the Pest core, which is not merged yet. You need to install [this fork](https://github.com/gehrisandro/pest/tree/mutate) of Pest in order to use `->mutate()` in your test files.
+> Attention: This requires a change to the Pest core, which is not merged yet. You need to install [this fork](https://github.com/gehrisandro/pest/tree/mutate) of Pest in order to use `->mutate()` directly on your test cases or describe blocks.
 > All other features are not affected and do work with the official Pest 2.x version.
 
 You can use the `mutate()` function on test cases or describe blocks to run the mutations only for code covered by the given test or describe block.
@@ -140,6 +140,10 @@ The following options are available.
 CLI: `--path`
 
 Limit the directories or files to mutate by providing one or more paths to a directory or file to test.
+
+If no paths are provided, it defaults to the source directories configured in your `phpunit.xml` file.
+
+```php
 
 You can also use patterns.
 
