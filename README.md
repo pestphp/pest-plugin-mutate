@@ -595,8 +595,6 @@ This set consists of various mutators from different sets. Mutators included are
 - [InstanceOfToTrue](#instanceoftotrue-) (*)
 - [InstanceOfToFalse](#instanceoftofalse-) (*)
 - [RemoveNot](#removenot-) (*)
-- [NullSafeMethodCallToMethodCall](#nullsafemethodcalltomethodcall-) (*)
-- [NullSafePropertyCallToPropertyCall](#nullsafepropertycalltopropertycall-) (*)
 
 </div>
 
@@ -623,6 +621,15 @@ This set consists of various mutators from different sets. Mutators included are
 - [IncrementFloat](#incrementfloat-) (*)
 - [DecrementInteger](#decrementinteger-) (*)
 - [IncrementInteger](#incrementinteger-) (*)
+
+</div>
+
+### RemovalSet
+
+<div class="collection-method-list" markdown="1">
+
+- [RemoveFunctionCall](#removefunctioncall-) (*)
+- [RemoveMethodCall](#removemethodcall-) (*)
 
 </div>
 
@@ -1547,28 +1554,6 @@ if ($a != $b) {  // [tl! add]
 }
 ```
 
-<a name="nullsafemethodcalltomethodcall"></a>
-### NullSafeMethodCallToMethodCall (*)
-Set: Logical
-
-Converts nullsafe method calls to method calls.
-
-```php
-$a?->b();  // [tl! remove]
-$a->b();  // [tl! add]
-```
-
-<a name="nullsafepropertycalltopropertycall"></a>
-### NullSafePropertyCallToPropertyCall (*)
-Set: Logical
-
-Converts nullsafe property call to property call.
-
-```php
-$a?->b;  // [tl! remove]
-$a->b;  // [tl! add]
-```
-
 <a name="plusequaltominusequal"></a>
 ### PlusEqualToMinusEqual (*)
 Set: Assignment
@@ -1712,6 +1697,16 @@ $a = (double) $b;  // [tl! remove]
 $a = $b;           // [tl! add]
 ```
 
+<a name="removefunctioncall"></a>
+### RemoveFunctionCall (*)
+Set: Removal
+
+Removes a function call
+
+```php
+foo();  // [tl! remove]
+```
+
 <a name="removeintegercast"></a>
 ### RemoveIntegerCast (*)
 Set: Casting
@@ -1721,6 +1716,16 @@ Removes integer cast.
 ```php
 $a = (int) $b;  // [tl! remove]
 $a = $b;        // [tl! add]
+```
+
+<a name="removemethodcall"></a>
+### RemoveMethodCall (*)
+Set: Removal
+
+Removes a method call
+
+```php
+$this->foo();  // [tl! remove]
 ```
 
 <a name="removenot"></a>
@@ -1734,6 +1739,17 @@ if (!$a) {  // [tl! remove]
 if ($a) {  // [tl! add]
     // ...
 }
+```
+
+<a name="removenullsafeoperator"></a>
+### RemoveNullSafeOperator
+Set: Removal
+
+Converts nullsafe method and property calls to regular calls.
+
+```php
+$a?->b();  // [tl! remove]
+$a->b();  // [tl! add]
 ```
 
 <a name="removeobjectcast"></a>

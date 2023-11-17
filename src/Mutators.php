@@ -110,8 +110,6 @@ use Pest\Mutate\Mutators\Logical\InstanceOfToTrue;
 use Pest\Mutate\Mutators\Logical\LogicalAndToLogicalOr;
 use Pest\Mutate\Mutators\Logical\LogicalOrToLogicalAnd;
 use Pest\Mutate\Mutators\Logical\LogicalXorToLogicalAnd;
-use Pest\Mutate\Mutators\Logical\NullSafeMethodCallToMethodCall;
-use Pest\Mutate\Mutators\Logical\NullSafePropertyCallToPropertyCall;
 use Pest\Mutate\Mutators\Logical\RemoveNot;
 use Pest\Mutate\Mutators\Logical\TrueToFalse;
 use Pest\Mutate\Mutators\Math\CeilToFloor;
@@ -128,6 +126,7 @@ use Pest\Mutate\Mutators\Number\IncrementFloat;
 use Pest\Mutate\Mutators\Number\IncrementInteger;
 use Pest\Mutate\Mutators\Removal\RemoveFunctionCall;
 use Pest\Mutate\Mutators\Removal\RemoveMethodCall;
+use Pest\Mutate\Mutators\Removal\RemoveNullSafeOperator;
 use Pest\Mutate\Mutators\Return\AlwaysReturnEmptyArray;
 use Pest\Mutate\Mutators\Return\AlwaysReturnNull;
 use Pest\Mutate\Mutators\Sets\ArithmeticSet;
@@ -446,10 +445,6 @@ class Mutators
 
     final public const LOGICAL_REMOVE_NOT = RemoveNot::class;
 
-    final public const LOGICAL_NULL_SAFE_METHOD_CALL_TO_METHOD_CALL = NullSafeMethodCallToMethodCall::class;
-
-    final public const LOGICAL_NULL_SAFE_PROPERTY_CALL_TO_PROPERTY_CALL = NullSafePropertyCallToPropertyCall::class;
-
     /** Math */
     final public const MATH_MIN_TO_MAX = MinToMax::class;
 
@@ -480,6 +475,8 @@ class Mutators
     final public const REMOVAL_REMOVE_FUNCTION_CALL = RemoveFunctionCall::class;
 
     final public const REMOVAL_REMOVE_METHOD_CALL = RemoveMethodCall::class;
+
+    final public const REMOVAL_REMOVE_NULL_SAFE_OPERATOR = RemoveNullSafeOperator::class;
 
     /** Return */
     final public const RETURN_ALWAYS_RETURN_EMPTY_ARRAY = AlwaysReturnEmptyArray::class;
