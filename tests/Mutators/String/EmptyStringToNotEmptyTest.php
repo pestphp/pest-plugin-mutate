@@ -17,28 +17,20 @@ it('mutates an empty string to a not empty string', function (): void {
 });
 
 it('does not mutate a not empty string', function (): void {
-    expect(mutateCode(EmptyStringToNotEmpty::class, <<<'CODE'
+    mutateCode(EmptyStringToNotEmpty::class, <<<'CODE'
         <?php
 
         $a = 'foo';
-        CODE))->toBe(<<<'CODE'
-        <?php
-        
-        $a = 'foo';
         CODE);
-});
+})->expectExceptionMessage('No mutation performed');
 
 it('does not mutate a not string element', function (): void {
-    expect(mutateCode(EmptyStringToNotEmpty::class, <<<'CODE'
+    mutateCode(EmptyStringToNotEmpty::class, <<<'CODE'
         <?php
 
         $a = 1;
-        CODE))->toBe(<<<'CODE'
-        <?php
-        
-        $a = 1;
         CODE);
-});
+})->expectExceptionMessage('No mutation performed');
 
 it('can not mutate non string nodes', function (): void {
     expect(EmptyStringToNotEmpty::can(new InlineHTML('')))

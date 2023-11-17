@@ -126,6 +126,8 @@ use Pest\Mutate\Mutators\Number\DecrementFloat;
 use Pest\Mutate\Mutators\Number\DecrementInteger;
 use Pest\Mutate\Mutators\Number\IncrementFloat;
 use Pest\Mutate\Mutators\Number\IncrementInteger;
+use Pest\Mutate\Mutators\Return\AlwaysReturnEmptyArray;
+use Pest\Mutate\Mutators\Return\AlwaysReturnNull;
 use Pest\Mutate\Mutators\Sets\ArithmeticSet;
 use Pest\Mutate\Mutators\Sets\ArraySet;
 use Pest\Mutate\Mutators\Sets\AssignmentSet;
@@ -137,6 +139,7 @@ use Pest\Mutate\Mutators\Sets\LaravelSet;
 use Pest\Mutate\Mutators\Sets\LogicalSet;
 use Pest\Mutate\Mutators\Sets\MathSet;
 use Pest\Mutate\Mutators\Sets\NumberSet;
+use Pest\Mutate\Mutators\Sets\ReturnSet;
 use Pest\Mutate\Mutators\Sets\StringSet;
 use Pest\Mutate\Mutators\Sets\VisibilitySet;
 use Pest\Mutate\Mutators\String\ConcatRemoveLeft;
@@ -200,6 +203,8 @@ class Mutators
     final public const SET_MATH = MathSet::class;
 
     final public const SET_NUMBER = NumberSet::class;
+
+    final public const SET_RETURN = ReturnSet::class;
 
     final public const SET_STRING = StringSet::class;
 
@@ -465,6 +470,11 @@ class Mutators
     final public const NUMBER_DECREMENT_INTEGER = DecrementInteger::class;
 
     final public const NUMBER_INCREMENT_INTEGER = IncrementInteger::class;
+
+    /** Return */
+    final public const RETURN_ALWAYS_RETURN_EMPTY_ARRAY = AlwaysReturnEmptyArray::class;
+
+    final public const RETURN_ALWAYS_RETURN_NULL = AlwaysReturnNull::class;
 
     /** String */
     final public const STRING_CONCAT_REMOVE_LEFT = ConcatRemoveLeft::class;

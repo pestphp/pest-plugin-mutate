@@ -56,13 +56,9 @@ it('removes the Str::of()->upper() function', function (): void {
 });
 
 it('does not mutate if the str method is called without a parameter', function (): void {
-    expect(mutateCode(LaravelRemoveStringableUpper::class, <<<'CODE'
-        <?php
-        
-        $a = str()->upper();
-        CODE))->toBe(<<<'CODE'
+    mutateCode(LaravelRemoveStringableUpper::class, <<<'CODE'
         <?php
         
         $a = str()->upper();
         CODE);
-});
+})->expectExceptionMessage('No mutation performed');

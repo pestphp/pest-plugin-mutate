@@ -21,17 +21,11 @@ it('mutates a for statement to be always false', function (): void {
 });
 
 it('does not mutate other statements', function (): void {
-    expect(mutateCode(ForAlwaysFalse::class, <<<'CODE'
-        <?php
-
-        if ($a > $b) {
-            $b++;
-        }
-        CODE))->toBe(<<<'CODE'
+    mutateCode(ForAlwaysFalse::class, <<<'CODE'
         <?php
 
         if ($a > $b) {
             $b++;
         }
         CODE);
-});
+})->expectExceptionMessage('No mutation performed');

@@ -21,17 +21,11 @@ it('mutates a while condition to always false', function (): void {
 });
 
 it('does not mutate other statements', function (): void {
-    expect(mutateCode(WhileAlwaysFalse::class, <<<'CODE'
-        <?php
-
-        if ($a > $b) {
-            $b++;
-        }
-        CODE))->toBe(<<<'CODE'
+    mutateCode(WhileAlwaysFalse::class, <<<'CODE'
         <?php
 
         if ($a > $b) {
             $b++;
         }
         CODE);
-});
+})->expectExceptionMessage('No mutation performed');

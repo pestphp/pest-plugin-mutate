@@ -21,17 +21,11 @@ it('mutates a foreach statement to be empty', function (): void {
 });
 
 it('does not mutate other statements', function (): void {
-    expect(mutateCode(ForeachEmptyIterable::class, <<<'CODE'
-        <?php
-
-        if ($a > $b) {
-            $b++;
-        }
-        CODE))->toBe(<<<'CODE'
+    mutateCode(ForeachEmptyIterable::class, <<<'CODE'
         <?php
 
         if ($a > $b) {
             $b++;
         }
         CODE);
-});
+})->expectExceptionMessage('No mutation performed');

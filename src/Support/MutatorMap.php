@@ -15,6 +15,7 @@ use Pest\Mutate\Mutators\Sets\LaravelSet;
 use Pest\Mutate\Mutators\Sets\LogicalSet;
 use Pest\Mutate\Mutators\Sets\MathSet;
 use Pest\Mutate\Mutators\Sets\NumberSet;
+use Pest\Mutate\Mutators\Sets\ReturnSet;
 use Pest\Mutate\Mutators\Sets\StringSet;
 use Pest\Mutate\Mutators\Sets\VisibilitySet;
 
@@ -45,6 +46,7 @@ class MutatorMap
             ...LaravelSet::mutators(),
             ...MathSet::mutators(),
             ...NumberSet::mutators(),
+            ...ReturnSet::mutators(),
             ...StringSet::mutators(),
             ...VisibilitySet::mutators(),
         ];

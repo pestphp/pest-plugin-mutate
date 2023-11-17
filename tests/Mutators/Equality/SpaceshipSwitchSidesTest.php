@@ -16,13 +16,9 @@ it('mutates a spaceship comparison by switching the parameters', function (): vo
 });
 
 it('does not mutate other operators', function (): void {
-    expect(mutateCode(SpaceshipSwitchSides::class, <<<'CODE'
+    mutateCode(SpaceshipSwitchSides::class, <<<'CODE'
         <?php
 
         return $a + $b;
-        CODE))->toBe(<<<'CODE'
-        <?php
-        
-        return $a + $b;
         CODE);
-});
+})->expectExceptionMessage('No mutation performed');

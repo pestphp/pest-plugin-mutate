@@ -29,40 +29,28 @@ it('mutates a true to a false in a function call', function (): void {
 });
 
 it('does not mutate anything else', function (): void {
-    expect(mutateCode(TrueToFalse::class, <<<'CODE'
+    mutateCode(TrueToFalse::class, <<<'CODE'
         <?php
 
         return foo(bar);
-        CODE))->toBe(<<<'CODE'
-        <?php
-        
-        return foo(bar);
         CODE);
-});
+})->expectExceptionMessage('No mutation performed');
 
 it('does not mutate if true is the third parameter of in_array', function (): void {
-    expect(mutateCode(TrueToFalse::class, <<<'CODE'
+    mutateCode(TrueToFalse::class, <<<'CODE'
         <?php
 
         return in_array(1, [1, 2, 3], true);
-        CODE))->toBe(<<<'CODE'
-        <?php
-        
-        return in_array(1, [1, 2, 3], true);
         CODE);
-});
+})->expectExceptionMessage('No mutation performed');
 
 it('does not mutate if true is the third parameter of array_search', function (): void {
-    expect(mutateCode(TrueToFalse::class, <<<'CODE'
+    mutateCode(TrueToFalse::class, <<<'CODE'
         <?php
 
         return array_search(1, [1, 2, 3], true);
-        CODE))->toBe(<<<'CODE'
-        <?php
-        
-        return array_search(1, [1, 2, 3], true);
         CODE);
-});
+})->expectExceptionMessage('No mutation performed');
 
 it('mutates on expression function calls', function (): void {
     expect(mutateCode(TrueToFalse::class, <<<'CODE'

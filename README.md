@@ -626,6 +626,15 @@ This set consists of various mutators from different sets. Mutators included are
 
 </div>
 
+### ReturnSet
+
+<div class="collection-method-list" markdown="1">
+
+- [AlwaysReturnNull](#alwaysreturnnull-) (*)
+- [AlwaysReturnEmptyArray](#alwaysreturnemptyarray-) (*)
+
+</div>
+
 ### StringSet
 
 <div class="collection-method-list" markdown="1">
@@ -690,6 +699,28 @@ This set consists of various mutators from different sets. Mutators included are
 ## Mutators
 
 An alphabetical list of all mutators.
+
+<a name="alwaysreturnemptyarray"></a>
+### AlwaysReturnEmptyArray (*)
+Set: Return
+
+Mutates a return statement to an empty array
+
+```php
+return [1];  // [tl! remove]
+return [];  // [tl! add]
+```
+
+<a name="alwaysreturnnull"></a>
+### AlwaysReturnNull (*)
+Set: Return
+
+Mutates a return statement to null if it is not null
+
+```php
+return $a;  // [tl! remove]
+return null;  // [tl! add]
+```
 
 <a name="arraykeyfirsttoarraykeylast"></a>
 ### ArrayKeyFirstToArrayKeyLast (*)

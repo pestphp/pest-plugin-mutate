@@ -17,13 +17,9 @@ it('mutates a coalesce operation by switching the parameters', function (): void
 });
 
 it('does not mutate other operators', function (): void {
-    expect(mutateCode(ConcatSwitchSides::class, <<<'CODE'
+    mutateCode(ConcatSwitchSides::class, <<<'CODE'
         <?php
 
         return $a + $b;
-        CODE))->toBe(<<<'CODE'
-        <?php
-        
-        return $a + $b;
         CODE);
-});
+})->expectExceptionMessage('No mutation performed');
