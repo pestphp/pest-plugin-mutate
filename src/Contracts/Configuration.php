@@ -39,4 +39,6 @@ interface Configuration
     public function class(array|string ...$classes): self;
 
     public function uncommittedOnly(bool $uncommittedOnly = true): self;
+
+    public function changedOnly(?string $branch = 'main'): self;
 }

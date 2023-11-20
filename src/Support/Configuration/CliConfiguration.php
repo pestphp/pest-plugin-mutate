@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pest\Mutate\Support\Configuration;
 
 use Pest\Mutate\Options\BailOption;
+use Pest\Mutate\Options\ChangedOnlyOption;
 use Pest\Mutate\Options\ClassOption;
 use Pest\Mutate\Options\CoveredOnlyOption;
 use Pest\Mutate\Options\ExceptOption;
@@ -34,6 +35,7 @@ class CliConfiguration extends AbstractConfiguration
         StopOnNotCoveredOption::class,
         BailOption::class,
         UncommittedOnlyOption::class,
+        ChangedOnlyOption::class,
     ];
 
     /**
@@ -110,6 +112,10 @@ class CliConfiguration extends AbstractConfiguration
 
         if ($input->hasOption(UncommittedOnlyOption::ARGUMENT)) {
             $this->uncommittedOnly($input->getOption(UncommittedOnlyOption::ARGUMENT) !== 'false');
+        }
+
+        if ($input->hasOption(ChangedOnlyOption::ARGUMENT)) {
+            $this->changedOnly($input->getOption(ChangedOnlyOption::ARGUMENT) !== null ? (string) $input->getOption(ChangedOnlyOption::ARGUMENT) : 'main'); // @phpstan-ignore-line
         }
 
         return $arguments;

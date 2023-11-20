@@ -95,6 +95,7 @@ class ConfigurationRepository
             stopOnSurvived: $config['stop_on_survived'] ?? false,
             stopOnNotCovered: $config['stop_on_not_covered'] ?? false,
             uncommittedOnly: $config['uncommitted_only'] ?? false,
+            changedOnly: $config['changed_only'] ?? false,
         );
     }
 

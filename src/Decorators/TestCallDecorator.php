@@ -146,5 +146,12 @@ class TestCallDecorator implements Configuration
 
         return $this;
     }
+
+    public function changedOnly(?string $branch = 'main'): Configuration
+    {
+        $this->configuration->changedOnly($branch);
+
+        return $this;
+    }
 }
 // @codeCoverageIgnoreEnd

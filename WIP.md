@@ -11,7 +11,7 @@
 - [x] except()
 - [x] coveredOnly()
 - [x] uncommittedOnly()
-- [ ] changedOnly()
+- [x] changedOnly()
 - [x] bail()
 - [x] stopOnSurvived()
 - [x] stopOnNotCovered()
@@ -27,7 +27,6 @@
 - [ ] Awesome docs
 
 # Backlog Prio 1
-- [ ] Add changedOnly()
 - [ ] Add minimum threshold enforcement
 - [ ] Finish: Disable mutations by annotation
 - [ ] Run mutations in a resonable order: New, Survived, NotCovered, Skipped, Killed (Survived first, if --stop-on-survived or --bail; NotCovered first, if --stop-on-uncovered)

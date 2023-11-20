@@ -141,3 +141,17 @@ it('enables uncommitted only option if --uncommitted-only argument is passed', f
     expect($this->configuration->toArray())
         ->uncommitted_only->toBeTrue();
 });
+
+it('enables changed only option if --changed-only argument is passed', function (): void {
+    $this->configuration->fromArguments(['--mutate='.ConfigurationRepository::FAKE]);
+    expect($this->configuration->toArray())
+        ->changed_only->toBeNull();
+
+    $this->configuration->fromArguments(['--changed-only']);
+    expect($this->configuration->toArray())
+        ->changed_only->toBe('main');
+
+    $this->configuration->fromArguments(['--changed-only=other-branch']);
+    expect($this->configuration->toArray())
+        ->changed_only->toBe('other-branch');
+});

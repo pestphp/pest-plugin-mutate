@@ -118,7 +118,21 @@ class MutationTestRunner implements MutationTestRunnerContract
             }
 
             if ($this->getConfiguration()->uncommittedOnly) {
-                $lines = GitDiff::getInstance()->modifiedLinesPerFile(substr($file->getRealPath(), strlen((string) getcwd())));
+                $lines = GitDiff::getInstance()
+                    ->uncommitted()
+                    ->modifiedLinesPerFile(substr($file->getRealPath(), strlen((string) getcwd())));
+
+                if ($lines === []) {
+                    continue;
+                }
+
+                $linesToMutate = $linesToMutate === [] ? $lines : array_intersect($linesToMutate, $lines);
+            }
+
+            if ($this->getConfiguration()->changedOnly !== false) {
+                $lines = GitDiff::getInstance()
+                    ->branch($this->getConfiguration()->changedOnly)
+                    ->modifiedLinesPerFile(substr($file->getRealPath(), strlen((string) getcwd())));
 
                 if ($lines === []) {
                     continue;

@@ -101,10 +101,18 @@ it('sets the stop on survived and stop on not covered option from test', functio
 })->mutate(ConfigurationRepository::FAKE.'_9')
     ->bail();
 
-it('sets the uncommitted only optim from test', function (): void {
+it('sets the uncommitted only option from test', function (): void {
     $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_11');
 
     expect($configuration->toArray()['uncommitted_only'])
         ->toBeTrue();
 })->mutate(ConfigurationRepository::FAKE.'_11')
     ->uncommittedOnly(true);
+
+it('sets the changed only option from test', function (): void {
+    $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_12');
+
+    expect($configuration->toArray()['changed_only'])
+        ->toBe('other-branch');
+})->mutate(ConfigurationRepository::FAKE.'_12')
+    ->changedOnly('other-branch');

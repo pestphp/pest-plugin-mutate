@@ -23,6 +23,7 @@ class Configuration
         public readonly bool $stopOnSurvived,
         public readonly bool $stopOnNotCovered,
         public readonly bool $uncommittedOnly,
+        public readonly string|false $changedOnly,
     ) {
     }
 }

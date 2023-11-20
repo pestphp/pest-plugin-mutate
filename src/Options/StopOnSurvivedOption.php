@@ -17,7 +17,8 @@ class StopOnSurvivedOption
 
     public static function match(string $argument): bool
     {
-        return $argument === sprintf('--%s', self::ARGUMENT);
+        return $argument === sprintf('--%s', self::ARGUMENT) ||
+            str_starts_with($argument, sprintf('--%s=', self::ARGUMENT));
     }
 
     public static function inputOption(): InputOption

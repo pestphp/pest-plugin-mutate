@@ -233,13 +233,11 @@ mutate()
 ### `changedOnly()`
 CLI: `--changed-only`
 
-> WIP: The `changedOnly()` option is not implemented yet!
-
 Limit mutations to code that has changed relative to a common ancestor of the given branch (defaults to `main`).
 
 ```php
 mutate()
-    ->changedOnly(); // or ->changedOnly('master');
+    ->changedOnly(); // or ->changedOnly('add-xyz');
 ```
 
 

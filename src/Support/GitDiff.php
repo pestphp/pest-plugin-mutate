@@ -17,6 +17,8 @@ class GitDiff
      */
     private ?array $diff = null;
 
+    private ?string $branch = null;
+
     public static function getInstance(): self
     {
         if (! self::$instance instanceof \Pest\Mutate\Support\GitDiff) {
@@ -24,6 +26,32 @@ class GitDiff
         }
 
         return self::$instance;
+    }
+
+    public function branch(string $branch): self
+    {
+        if ($this->branch === $branch) {
+            return $this;
+        }
+
+        $this->branch = $branch;
+
+        $this->diff = null;
+
+        return $this;
+    }
+
+    public function uncommitted(): self
+    {
+        if ($this->branch === null) {
+            return $this;
+        }
+
+        $this->branch = null;
+
+        $this->diff = null;
+
+        return $this;
     }
 
     /**
@@ -67,7 +95,9 @@ class GitDiff
             return $this->diff;
         }
 
-        $process = new Process(['git', 'diff', 'HEAD']);
+        $command = $this->branch !== null ? ['git', 'diff', '--merge-base', $this->branch] : ['git', 'diff', 'HEAD'];
+
+        $process = new Process($command);
 
         $output = $process->mustRun()
             ->getOutput();

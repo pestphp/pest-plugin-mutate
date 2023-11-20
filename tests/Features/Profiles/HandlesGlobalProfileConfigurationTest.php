@@ -154,3 +154,17 @@ test('globally configure only uncommitted', function (): void {
     expect($this->configuration->toArray()['uncommitted_only'])
         ->toBeTrue();
 });
+
+test('globally configure only changed', function (): void {
+    mutate(ConfigurationRepository::FAKE)
+        ->changedOnly();
+
+    expect($this->configuration->toArray()['changed_only'])
+        ->toBe('main');
+
+    mutate(ConfigurationRepository::FAKE)
+        ->changedOnly('other-branch');
+
+    expect($this->configuration->toArray()['changed_only'])
+        ->toBe('other-branch');
+});
