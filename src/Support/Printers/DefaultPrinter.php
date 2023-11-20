@@ -142,11 +142,11 @@ class DefaultPrinter implements Printer
 
         $diff = '';
         foreach ($test->mutation->diff['modified'] as $line) {
-            $line = htmlentities($line); // TODO: this is not good, but currently required other printer breaks on `$this->foo()` because of the >
+            $line = htmlentities((string) $line); // TODO: this is not good, but currently required, otherwise printer breaks on `$this->foo()` because of the >
             $diff .= "<div class='text-green'>+ {$line}</div>";
         }
         foreach ($test->mutation->diff['original'] as $line) {
-            $line = htmlentities($line); // TODO: this is not good, but currently required other printer breaks on `$this->foo()` because of the >
+            $line = htmlentities($line); // TODO: this is not good, but currently required, otherwise printer breaks on `$this->foo()` because of the >
             $diff .= "<div class='text-red'>- {$line}</div>";
         }
 

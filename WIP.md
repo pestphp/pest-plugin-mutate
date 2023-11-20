@@ -29,7 +29,7 @@
 # Backlog Prio 1
 - [ ] Add minimum threshold enforcement
 - [ ] Finish: Disable mutations by annotation
-- [ ] Run mutations in a resonable order: New, Survived, NotCovered, Skipped, Killed (Survived first, if --stop-on-survived or --bail; NotCovered first, if --stop-on-uncovered)
+- [ ] Run mutations in a reasonable order: New, Survived, NotCovered, Skipped, Killed (Survived first, if --stop-on-survived or --bail; NotCovered first, if --stop-on-uncovered)
 - [ ] Log to file
 - [ ] Automatically skip "Arch" tests
 

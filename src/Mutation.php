@@ -20,7 +20,7 @@ class Mutation
     .'mutations';
 
     /**
-     * @param  array{original: string[], modified: string[]}  $diff
+     * @param  array{original: string[], modified: array<int, ?string>}  $diff
      */
     public function __construct(
         public readonly SplFileInfo $file,
@@ -68,7 +68,7 @@ class Mutation
     }
 
     /**
-     * @return array{original: string[], modified: string[]}
+     * @return array{original: string[], modified: array<int, ?string>}
      */
     private static function diff(Node $originalNode, ?Node $modifiedNode): array
     {
@@ -84,7 +84,7 @@ class Mutation
     }
 
     /**
-     * @return array{file: string, mutator: string, start_line: int, end_line: int, diff: array{original: string[], modified: string[]}, modified_source_path: string}
+     * @return array{file: string, mutator: string, start_line: int, end_line: int, diff: array{original: string[], modified: array<int, ?string>}, modified_source_path: string}
      */
     public function __serialize(): array
     {
@@ -99,7 +99,7 @@ class Mutation
     }
 
     /**
-     * @param  array{file: string, mutator: string, start_line: int, end_line: int, diff: array{original: string[], modified: string[]}, modified_source_path: string}  $data
+     * @param  array{file: string, mutator: string, start_line: int, end_line: int, diff: array{original: string[], modified: array<int, ?string>}, modified_source_path: string}  $data
      */
     public function __unserialize(array $data): void
     {
