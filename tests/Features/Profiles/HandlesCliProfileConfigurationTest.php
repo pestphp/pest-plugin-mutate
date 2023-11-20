@@ -48,18 +48,18 @@ it('excludes mutators if --except argument is passed', function (): void {
         ->mutators->toHaveCount(count(ArithmeticSet::mutators()) - 2);
 });
 
-it('sets MSI threshold if --min argument is passed', function (): void {
+it('sets min score threshold if --min argument is passed', function (): void {
     $this->configuration->fromArguments(['--mutate='.ConfigurationRepository::FAKE]);
     expect($this->configuration->toArray())
-        ->min_msi->toEqual(0.0);
+        ->min_score->toEqual(0.0);
 
     $this->configuration->fromArguments(['--min=2']);
     expect($this->configuration->toArray())
-        ->min_msi->toEqual(2.0);
+        ->min_score->toEqual(2.0);
 
     $this->configuration->fromArguments(['--min=2.4']);
     expect($this->configuration->toArray())
-        ->min_msi->toEqual(2.4);
+        ->min_score->toEqual(2.4);
 });
 
 it('enables covered only option if --covered-only argument is passed', function (): void {

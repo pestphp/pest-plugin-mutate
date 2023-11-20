@@ -31,7 +31,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
      */
     private ?array $classes = null;
 
-    private ?float $minMSI = null;
+    private ?float $minScore = null;
 
     private ?bool $coveredOnly = null;
 
@@ -75,9 +75,9 @@ abstract class AbstractConfiguration implements ConfigurationContract
         return $this;
     }
 
-    public function min(float $minMSI): self
+    public function min(float $minScore): self
     {
-        $this->minMSI = $minMSI;
+        $this->minScore = $minScore;
 
         return $this;
     }
@@ -143,7 +143,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
     }
 
     /**
-     * @return array{paths?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, min_msi?: float, covered_only?: bool, stop_on_survived?: bool, stop_on_not_covered?: bool, uncommitted_only?: bool, changed_only?: string}
+     * @return array{paths?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, min_score?: float, covered_only?: bool, stop_on_survived?: bool, stop_on_not_covered?: bool, uncommitted_only?: bool, changed_only?: string}
      */
     public function toArray(): array
     {
@@ -153,7 +153,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
             'excluded_mutators' => $this->excludedMutators,
             'classes' => $this->classes,
             'parallel' => $this->parallel,
-            'min_msi' => $this->minMSI,
+            'min_score' => $this->minScore,
             'covered_only' => $this->coveredOnly,
             'stop_on_survived' => $this->stopOnSurvived,
             'stop_on_not_covered' => $this->stopOnNotCovered,

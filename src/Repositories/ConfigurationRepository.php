@@ -91,7 +91,7 @@ class ConfigurationRepository
             mutators: array_diff($config['mutators'] ?? DefaultSet::mutators(), $config['excluded_mutators'] ?? []),
             classes: $config['classes'] ?? [],
             parallel: $config['parallel'] ?? false,
-            minMSI: $config['min_msi'] ?? 0.0,
+            minScore: $config['min_score'] ?? null,
             stopOnSurvived: $config['stop_on_survived'] ?? false,
             stopOnNotCovered: $config['stop_on_not_covered'] ?? false,
             uncommittedOnly: $config['uncommitted_only'] ?? false,

@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Pest\Mutate;
 
+use Pest\Mutate\Repositories\ConfigurationRepository;
 use Pest\Mutate\Repositories\MutationRepository;
+use Pest\Mutate\Support\Configuration\Configuration;
+use Pest\Support\Container;
 
 class MutationSuite
 {
@@ -43,5 +46,22 @@ class MutationSuite
     public function trackFinish(): void
     {
         $this->finish = microtime(true);
+    }
+
+    public function score(): float
+    {
+        return $this->repository->score();
+    }
+
+    public function minScoreReached(): bool
+    {
+        /** @var Configuration $configuration */
+        $configuration = Container::getInstance()->get(ConfigurationRepository::class)->mergedConfiguration(); // @phpstan-ignore-line
+
+        if ($configuration->minScore === null) {
+            return true;
+        }
+
+        return $configuration->minScore <= $this->score();
     }
 }

@@ -55,7 +55,16 @@ class DefaultPrinter implements Printer
     {
         $this->output->writeln([
             '',
-            '  <fg=default;bg=red;options=bold> ERROR </> '.$message.'</>',
+            '  <fg=default;bg=red;options=bold> ERROR </> <fg=default>'.$message.'</>',
+            '',
+        ]);
+    }
+
+    public function reportScoreNotReached(float $scoreReached, float $scoreRequired): void
+    {
+        $this->output->writeln([
+            '',
+            '  <fg=white;bg=red;options=bold> FAIL </> Code coverage below expected:<fg=red;options=bold> '.number_format($scoreReached, 1).' %</>. Minimum:<fg=white;options=bold> '.number_format($scoreRequired, 1).' %</>.',
             '',
         ]);
     }
@@ -87,8 +96,11 @@ class DefaultPrinter implements Printer
         $this->output->writeln([
             '',
             '',
-            '  <fg=gray>Mutations:</> <fg=default><fg=red;options=bold>'.($mutationSuite->repository->survived() !== 0 ? $mutationSuite->repository->survived().' survived</><fg=gray>,</> ' : '').'<fg=yellow;options=bold>'.($mutationSuite->repository->notCovered() !== 0 ? $mutationSuite->repository->notCovered().' not covered</><fg=gray>,</> ' : '').'<fg=yellow;options=bold>'.($mutationSuite->repository->notRun() !== 0 ? $mutationSuite->repository->notRun().' pending</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.($mutationSuite->repository->timedOut() !== 0 ? $mutationSuite->repository->timedOut().' timeout</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.$mutationSuite->repository->killed().' killed</>',
+            '  <fg=gray>Mutations:</> <fg=default>'.($mutationSuite->repository->survived() !== 0 ? '<fg=red;options=bold>'.$mutationSuite->repository->survived().' survived</><fg=gray>,</> ' : '').($mutationSuite->repository->notCovered() !== 0 ? '<fg=yellow;options=bold>'.$mutationSuite->repository->notCovered().' not covered</><fg=gray>,</> ' : '').($mutationSuite->repository->notRun() !== 0 ? '<fg=yellow;options=bold>'.$mutationSuite->repository->notRun().' pending</><fg=gray>,</> ' : '').($mutationSuite->repository->timedOut() !== 0 ? '<fg=green;options=bold>'.$mutationSuite->repository->timedOut().' timeout</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.$mutationSuite->repository->killed().' killed</>',
         ]);
+
+        $score = number_format($mutationSuite->score(), 2);
+        $this->output->writeln('  <fg=gray>Score:</>     <fg='.($mutationSuite->minScoreReached() ? 'default' : 'red').'>'.$score.'%</>');
 
         $duration = number_format($mutationSuite->duration(), 2);
         $this->output->writeln('  <fg=gray>Duration:</>  <fg=default>'.$duration.'s</>');

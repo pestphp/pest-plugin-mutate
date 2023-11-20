@@ -20,6 +20,8 @@ interface Printer
 
     public function reportError(string $message): void;
 
+    public function reportScoreNotReached(float $scoreReached, float $scoreRequired): void;
+
     public function printFilename(MutationTestCollection $testCollection): void;
 
     public function reportMutationGenerationStarted(MutationSuite $mutationSuite): void;

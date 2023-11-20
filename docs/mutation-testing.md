@@ -360,11 +360,9 @@ Sometimes, you may want to ignore a specific mutation or line of code. To do so,
 }
 ```
 
-## Minimum Threshold Enforcement
+## Minimum Score Threshold Enforcement
 
-> WIP: The `min()` option is not implemented yet!
-
-Just like code coverage, mutation coverage can also be enforced. You can use the `--mutate` and `--min` options to define the minimum threshold values for the mutation score index. If the specified thresholds are not met, Pest will report a failure.
+Just like code coverage, mutation coverage can also be enforced. You can use the `--mutate` and `--min` options to define the minimum threshold value for the mutation score. If the specified threshold is not met, Pest will report a failure.
 
 ```bash
 ./vendor/bin/pest --mutate --min=100

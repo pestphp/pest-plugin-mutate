@@ -9,7 +9,7 @@ use Pest\Mutate\Options\ChangedOnlyOption;
 use Pest\Mutate\Options\ClassOption;
 use Pest\Mutate\Options\CoveredOnlyOption;
 use Pest\Mutate\Options\ExceptOption;
-use Pest\Mutate\Options\MinMsiOption;
+use Pest\Mutate\Options\MinScoreOption;
 use Pest\Mutate\Options\MutateOption;
 use Pest\Mutate\Options\MutatorsOption;
 use Pest\Mutate\Options\ParallelOption;
@@ -26,7 +26,7 @@ class CliConfiguration extends AbstractConfiguration
         MutateOption::class,
         ClassOption::class,
         CoveredOnlyOption::class,
-        MinMsiOption::class,
+        MinScoreOption::class,
         MutatorsOption::class,
         ExceptOption::class,
         PathsOption::class,
@@ -77,8 +77,8 @@ class CliConfiguration extends AbstractConfiguration
             $this->except(explode(',', (string) $input->getOption(ExceptOption::ARGUMENT))); // @phpstan-ignore-line
         }
 
-        if ($input->hasOption(MinMsiOption::ARGUMENT)) {
-            $this->min((float) $input->getOption(MinMsiOption::ARGUMENT)); // @phpstan-ignore-line
+        if ($input->hasOption(MinScoreOption::ARGUMENT)) {
+            $this->min((float) $input->getOption(MinScoreOption::ARGUMENT)); // @phpstan-ignore-line
         }
 
         if ($input->hasOption(CoveredOnlyOption::ARGUMENT)) {

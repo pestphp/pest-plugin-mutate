@@ -19,10 +19,10 @@ it('forwards calls to the original test call', function (): never {
 })->mutate(ConfigurationRepository::FAKE)
     ->throws('test exception');
 
-it('sets the min MSI from test', function (): void {
+it('sets the min score threshold from test', function (): void {
     $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_1');
 
-    expect($configuration->toArray()['min_msi'])
+    expect($configuration->toArray()['min_score'])
         ->toEqual(2.0);
 })->mutate(ConfigurationRepository::FAKE.'_1')
     ->min(2);

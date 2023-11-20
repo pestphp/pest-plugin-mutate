@@ -65,9 +65,9 @@ class TestCallDecorator implements Configuration
         return $this;
     }
 
-    public function min(float $minMSI): self
+    public function min(float $minScore): self
     {
-        $this->configuration->min($minMSI);
+        $this->configuration->min($minScore);
 
         return $this;
     }

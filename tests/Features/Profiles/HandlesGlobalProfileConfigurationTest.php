@@ -18,7 +18,7 @@ test('configure profile globally', function (): void {
     mutate(ConfigurationRepository::FAKE)
         ->min(20.0);
 
-    expect($this->configuration->toArray()['min_msi'])
+    expect($this->configuration->toArray()['min_score'])
         ->toEqual(20.0);
 });
 
@@ -78,11 +78,11 @@ test('globally configure mutators exclude', function (): void {
         ->toHaveCount(count(ArithmeticSet::mutators()) - 2);
 });
 
-test('globally configure min MSI threshold', function (): void {
+test('globally configure min score threshold', function (): void {
     mutate(ConfigurationRepository::FAKE)
         ->min(10.0);
 
-    expect($this->configuration->toArray()['min_msi'])
+    expect($this->configuration->toArray()['min_score'])
         ->toEqual(10.0);
 });
 

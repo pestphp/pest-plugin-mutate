@@ -170,6 +170,8 @@ class MutationTestRunner implements MutationTestRunnerContract
 
         Facade::instance()->emitter()->finishMutationSuite($mutationSuite);
 
+        $this->ensureMinScoreIsReached($mutationSuite);
+
         exit(0); // TODO: exit with error on failure
     }
 
@@ -203,5 +205,26 @@ class MutationTestRunner implements MutationTestRunnerContract
     private function getConfiguration(): Configuration
     {
         return Container::getInstance()->get(ConfigurationRepository::class)->mergedConfiguration(); // @phpstan-ignore-line
+    }
+
+    private function ensureMinScoreIsReached(MutationSuite $mutationSuite): void
+    {
+        $minScore = Container::getInstance()->get(ConfigurationRepository::class) // @phpstan-ignore-line
+            ->mergedConfiguration()
+            ->minScore;
+
+        if ($minScore === null) {
+            return;
+        }
+
+        $score = $mutationSuite->score();
+        if ($score >= $minScore) {
+            return;
+        }
+
+        Container::getInstance()->get(Printer::class) // @phpstan-ignore-line
+            ->reportScoreNotReached($score, $minScore);
+
+        exit(1);
     }
 }

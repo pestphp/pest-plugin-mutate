@@ -21,7 +21,7 @@ interface Configuration
      */
     public function except(array|string ...$mutators): self;
 
-    public function min(float $minMSI): self;
+    public function min(float $minScore): self;
 
     public function coveredOnly(bool $coveredOnly = true): self;
 

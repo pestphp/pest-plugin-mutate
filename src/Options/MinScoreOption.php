@@ -6,7 +6,7 @@ namespace Pest\Mutate\Options;
 
 use Symfony\Component\Console\Input\InputOption;
 
-class MinMsiOption
+class MinScoreOption
 {
     final public const ARGUMENT = 'min';
 

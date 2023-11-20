@@ -69,4 +69,9 @@ class MutationRepository
     {
         return array_sum(array_map(fn (MutationTestCollection $testCollection): int => $testCollection->notRun(), $this->tests));
     }
+
+    public function score(): float
+    {
+        return ($this->killed() + $this->timedOut()) / $this->total() * 100;
+    }
 }
