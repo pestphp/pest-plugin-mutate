@@ -15,10 +15,10 @@
 - [x] bail()
 - [x] stopOnSurvived()
 - [x] stopOnNotCovered()
-- [ ] Minimum Threshold Enforcement
+- [x] Minimum Threshold Enforcement
 - [ ] Allow registering Custom Mutators
 - [ ] Disable mutations by annotation
-- [ ] Caching
+- [x] Caching
 - [ ] Order mutations to execute
 - [ ] Verbose output
 - [ ] Text log
@@ -27,7 +27,6 @@
 - [ ] Awesome docs
 
 # Backlog Prio 1
-- [ ] Add minimum threshold enforcement
 - [ ] Finish: Disable mutations by annotation
 - [ ] Run mutations in a reasonable order: New, Survived, NotCovered, Skipped, Killed (Survived first, if --stop-on-survived or --bail; NotCovered first, if --stop-on-uncovered)
 - [ ] Log to file
