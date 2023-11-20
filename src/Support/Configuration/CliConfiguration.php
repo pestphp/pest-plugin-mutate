@@ -15,6 +15,7 @@ use Pest\Mutate\Options\ParallelOption;
 use Pest\Mutate\Options\PathsOption;
 use Pest\Mutate\Options\StopOnNotCoveredOption;
 use Pest\Mutate\Options\StopOnSurvivedOption;
+use Pest\Mutate\Options\UncommittedOnlyOption;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputDefinition;
 
@@ -32,6 +33,7 @@ class CliConfiguration extends AbstractConfiguration
         StopOnSurvivedOption::class,
         StopOnNotCoveredOption::class,
         BailOption::class,
+        UncommittedOnlyOption::class,
     ];
 
     /**
@@ -104,6 +106,10 @@ class CliConfiguration extends AbstractConfiguration
         if ($input->hasOption(BailOption::ARGUMENT)) {
             $this->stopOnSurvived();
             $this->stopOnNotCovered();
+        }
+
+        if ($input->hasOption(UncommittedOnlyOption::ARGUMENT)) {
+            $this->uncommittedOnly($input->getOption(UncommittedOnlyOption::ARGUMENT) !== 'false');
         }
 
         return $arguments;

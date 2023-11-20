@@ -12,6 +12,7 @@ use Pest\Mutate\MutationSuite;
 use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Repositories\ConfigurationRepository;
 use Pest\Mutate\Support\Configuration\Configuration;
+use Pest\Mutate\Support\GitDiff;
 use Pest\Mutate\Support\MutationGenerator;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
@@ -107,14 +108,29 @@ class MutationTestRunner implements MutationTestRunnerContract
         /** @var MutationGenerator $generator */
         $generator = Container::getInstance()->get(MutationGenerator::class);
         foreach ($files as $file) {
-            if ($this->getConfiguration()->coveredOnly && ! isset($coveredLines[$file->getRealPath()])) {
-                continue;
+            $linesToMutate = [];
+            if ($this->getConfiguration()->coveredOnly) {
+                if (! isset($coveredLines[$file->getRealPath()])) {
+                    continue;
+                }
+
+                $linesToMutate = array_keys($coveredLines[$file->getRealPath()]);
+            }
+
+            if ($this->getConfiguration()->uncommittedOnly) {
+                $lines = GitDiff::getInstance()->modifiedLinesPerFile(substr($file->getRealPath(), strlen((string) getcwd())));
+
+                if ($lines === []) {
+                    continue;
+                }
+
+                $linesToMutate = $linesToMutate === [] ? $lines : array_intersect($linesToMutate, $lines);
             }
 
             foreach ($generator->generate(
                 file: $file,
                 mutators: $this->getConfiguration()->mutators,
-                linesToMutate: $this->getConfiguration()->coveredOnly ? array_keys($coveredLines[$file->getRealPath()]) : [],
+                linesToMutate: $linesToMutate,
                 classesToMutate: $this->getConfiguration()->classes,
             ) as $mutation) {
                 $mutationSuite->repository->add($mutation);

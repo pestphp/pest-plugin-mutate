@@ -146,3 +146,11 @@ test('globally configure bail', function (): void {
         ->stop_on_survived->toBeTrue()
         ->stop_on_not_covered->toBeTrue();
 });
+
+test('globally configure only uncommitted', function (): void {
+    mutate(ConfigurationRepository::FAKE)
+        ->uncommittedOnly();
+
+    expect($this->configuration->toArray()['uncommitted_only'])
+        ->toBeTrue();
+});

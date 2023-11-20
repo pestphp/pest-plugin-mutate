@@ -229,8 +229,6 @@ mutate()
 ### `uncommittedOnly()`
 CLI: `--uncommitted-only`
 
-> WIP: The `uncommittedOnly()` option is not implemented yet!
-
 Limit mutations to code that has uncommitted changes.
 
 ```php

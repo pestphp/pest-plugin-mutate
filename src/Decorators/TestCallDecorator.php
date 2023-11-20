@@ -139,5 +139,12 @@ class TestCallDecorator implements Configuration
 
         return $this;
     }
+
+    public function uncommittedOnly(bool $uncommittedOnly = true): self
+    {
+        $this->configuration->uncommittedOnly($uncommittedOnly);
+
+        return $this;
+    }
 }
 // @codeCoverageIgnoreEnd

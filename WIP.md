@@ -10,7 +10,7 @@
 - [x] mutators()
 - [x] except()
 - [x] coveredOnly()
-- [ ] uncommittedOnly()
+- [x] uncommittedOnly()
 - [ ] changedOnly()
 - [x] bail()
 - [x] stopOnSurvived()
@@ -27,7 +27,6 @@
 - [ ] Awesome docs
 
 # Backlog Prio 1
-- [ ] Add uncommittedOnly()
 - [ ] Add changedOnly()
 - [ ] Add minimum threshold enforcement
 - [ ] Finish: Disable mutations by annotation

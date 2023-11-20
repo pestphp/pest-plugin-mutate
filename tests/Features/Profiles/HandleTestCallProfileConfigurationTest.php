@@ -100,3 +100,11 @@ it('sets the stop on survived and stop on not covered option from test', functio
         ->stop_on_not_covered->toBeTrue();
 })->mutate(ConfigurationRepository::FAKE.'_9')
     ->bail();
+
+it('sets the uncommitted only optim from test', function (): void {
+    $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_11');
+
+    expect($configuration->toArray()['uncommitted_only'])
+        ->toBeTrue();
+})->mutate(ConfigurationRepository::FAKE.'_11')
+    ->uncommittedOnly(true);

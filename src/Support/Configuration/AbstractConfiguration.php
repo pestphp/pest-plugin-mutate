@@ -41,6 +41,8 @@ abstract class AbstractConfiguration implements ConfigurationContract
 
     private ?bool $stopOnNotCovered = null;
 
+    private ?bool $uncommittedOnly = null;
+
     /**
      * {@inheritDoc}
      */
@@ -124,8 +126,15 @@ abstract class AbstractConfiguration implements ConfigurationContract
         return $this;
     }
 
+    public function uncommittedOnly(bool $uncommittedOnly = true): self
+    {
+        $this->uncommittedOnly = $uncommittedOnly;
+
+        return $this;
+    }
+
     /**
-     * @return array{paths?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, min_msi?: float, covered_only?: bool, stop_on_survived?: bool, stop_on_not_covered?: bool}
+     * @return array{paths?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, min_msi?: float, covered_only?: bool, stop_on_survived?: bool, stop_on_not_covered?: bool, uncommitted_only?: bool}
      */
     public function toArray(): array
     {
@@ -139,6 +148,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
             'covered_only' => $this->coveredOnly,
             'stop_on_survived' => $this->stopOnSurvived,
             'stop_on_not_covered' => $this->stopOnNotCovered,
+            'uncommitted_only' => $this->uncommittedOnly,
         ], fn (mixed $value): bool => ! is_null($value));
     }
 

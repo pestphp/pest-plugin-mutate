@@ -94,6 +94,7 @@ class ConfigurationRepository
             minMSI: $config['min_msi'] ?? 0.0,
             stopOnSurvived: $config['stop_on_survived'] ?? false,
             stopOnNotCovered: $config['stop_on_not_covered'] ?? false,
+            uncommittedOnly: $config['uncommitted_only'] ?? false,
         );
     }
 

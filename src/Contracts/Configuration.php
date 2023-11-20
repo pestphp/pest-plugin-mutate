@@ -37,4 +37,6 @@ interface Configuration
      * @param  array<int, class-string>|class-string  ...$classes
      */
     public function class(array|string ...$classes): self;
+
+    public function uncommittedOnly(bool $uncommittedOnly = true): self;
 }

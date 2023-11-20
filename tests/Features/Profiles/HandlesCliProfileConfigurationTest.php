@@ -131,3 +131,13 @@ it('enables stop on survived and stop on not covered option if --bail argument i
         ->stop_on_survived->toBeTrue()
         ->stop_on_not_covered->toBeTrue();
 });
+
+it('enables uncommitted only option if --uncommitted-only argument is passed', function (): void {
+    $this->configuration->fromArguments(['--mutate='.ConfigurationRepository::FAKE]);
+    expect($this->configuration->toArray())
+        ->uncommitted_only->toBeNull();
+
+    $this->configuration->fromArguments(['--uncommitted-only']);
+    expect($this->configuration->toArray())
+        ->uncommitted_only->toBeTrue();
+});
