@@ -15,6 +15,8 @@ class MutationTest
 {
     private MutationTestResult $result = MutationTestResult::None;
 
+    private Process $process;
+
     public function __construct(public readonly Mutation $mutation)
     {
     }
@@ -33,7 +35,7 @@ class MutationTest
      * @param  array<string, array<int, array<int, string>>>  $coveredLines
      * @param  array<int, string>  $originalArguments
      */
-    public function run(array $coveredLines, Configuration $configuration, array $originalArguments): void
+    public function start(array $coveredLines, Configuration $configuration, array $originalArguments): bool
     {
         // TODO: we should pass the tests to run in another way, maybe via cache, mutation or env variable
         $filters = [];
@@ -50,7 +52,7 @@ class MutationTest
 
             Facade::instance()->emitter()->mutationNotCovered($this);
 
-            return;
+            return false;
         }
 
         // TODO: filter arguments to remove unnecessary stuff (Teamcity, Coverage, etc.)
@@ -59,7 +61,6 @@ class MutationTest
                 ...$originalArguments,
                 '--bail',
                 '--filter="'.implode('|', $filters).'"',
-                $configuration->parallel ? '--parallel' : '',
             ],
             env: [
                 Mutate::ENV_MUTATION_TESTING => $this->mutation->file->getRealPath(),
@@ -68,32 +69,47 @@ class MutationTest
             timeout: $this->calculateTimeout(),
         );
 
-        try {
-            $process->run();
-        } catch (ProcessTimedOutException) {
-            $this->updateResult(MutationTestResult::Timeout);
+        $process->start();
 
-            Facade::instance()->emitter()->mutationTimedOut($this);
+        $this->process = $process;
 
-            return;
-        }
-
-        if ($process->isSuccessful()) {
-            $this->updateResult(MutationTestResult::Survived);
-
-            Facade::instance()->emitter()->mutationSurvived($this);
-
-            return;
-        }
-
-        $this->updateResult(MutationTestResult::Killed);
-
-        Facade::instance()->emitter()->mutationKilled($this);
+        return true;
     }
 
     private function calculateTimeout(): int
     {
         // TODO: calculate a reasonable timeout
         return 3;
+    }
+
+    public function hasFinished(): bool
+    {
+        try {
+            if ($this->process->isRunning()) {
+                $this->process->checkTimeout();
+
+                return false;
+            }
+        } catch (ProcessTimedOutException) {
+            $this->updateResult(MutationTestResult::Timeout);
+
+            Facade::instance()->emitter()->mutationTimedOut($this);
+
+            return true;
+        }
+
+        if ($this->process->isSuccessful()) {
+            $this->updateResult(MutationTestResult::Survived);
+
+            Facade::instance()->emitter()->mutationSurvived($this);
+
+            return true;
+        }
+
+        $this->updateResult(MutationTestResult::Killed);
+
+        Facade::instance()->emitter()->mutationKilled($this);
+
+        return true;
     }
 }

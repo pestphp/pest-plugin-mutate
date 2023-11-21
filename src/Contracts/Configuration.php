@@ -27,6 +27,8 @@ interface Configuration
 
     public function parallel(bool $parallel = true): self;
 
+    public function processes(int $processes = null): self;
+
     public function stopOnSurvived(bool $stopOnSurvived = true): self;
 
     public function stopOnNotCovered(bool $stopOnNotCovered = true): self;

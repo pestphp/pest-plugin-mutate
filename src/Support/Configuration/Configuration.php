@@ -19,6 +19,7 @@ class Configuration
         public readonly array $mutators,
         public readonly array $classes,
         public readonly bool $parallel,
+        public readonly int $processes,
         public readonly ?float $minScore,
         public readonly bool $stopOnSurvived,
         public readonly bool $stopOnNotCovered,

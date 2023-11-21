@@ -14,6 +14,7 @@ use Pest\Mutate\Options\MutateOption;
 use Pest\Mutate\Options\MutatorsOption;
 use Pest\Mutate\Options\ParallelOption;
 use Pest\Mutate\Options\PathsOption;
+use Pest\Mutate\Options\ProcessesOption;
 use Pest\Mutate\Options\StopOnNotCoveredOption;
 use Pest\Mutate\Options\StopOnSurvivedOption;
 use Pest\Mutate\Options\UncommittedOnlyOption;
@@ -31,6 +32,7 @@ class CliConfiguration extends AbstractConfiguration
         ExceptOption::class,
         PathsOption::class,
         ParallelOption::class,
+        ProcessesOption::class,
         StopOnSurvivedOption::class,
         StopOnNotCoveredOption::class,
         BailOption::class,
@@ -91,6 +93,10 @@ class CliConfiguration extends AbstractConfiguration
             if (($index = array_search('--parallel', $_SERVER['argv'], true)) !== false) {
                 unset($_SERVER['argv'][$index]);
             }
+        }
+
+        if ($input->hasOption(ProcessesOption::ARGUMENT)) {
+            $this->processes($input->getOption(ProcessesOption::ARGUMENT) !== null ? (int) $input->getOption(ProcessesOption::ARGUMENT) : null); // @phpstan-ignore-line
         }
 
         if ($input->hasOption(ClassOption::ARGUMENT)) {

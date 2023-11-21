@@ -37,6 +37,8 @@ abstract class AbstractConfiguration implements ConfigurationContract
 
     private ?bool $parallel = null;
 
+    private ?int $processes = null;
+
     private ?bool $stopOnSurvived = null;
 
     private ?bool $stopOnNotCovered = null;
@@ -96,6 +98,13 @@ abstract class AbstractConfiguration implements ConfigurationContract
         return $this;
     }
 
+    public function processes(int $processes = null): self
+    {
+        $this->processes = $processes;
+
+        return $this;
+    }
+
     public function stopOnSurvived(bool $stopOnSurvived = true): self
     {
         $this->stopOnSurvived = $stopOnSurvived;
@@ -143,7 +152,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
     }
 
     /**
-     * @return array{paths?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, min_score?: float, covered_only?: bool, stop_on_survived?: bool, stop_on_not_covered?: bool, uncommitted_only?: bool, changed_only?: string}
+     * @return array{paths?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, processes?: int, min_score?: float, covered_only?: bool, stop_on_survived?: bool, stop_on_not_covered?: bool, uncommitted_only?: bool, changed_only?: string}
      */
     public function toArray(): array
     {
@@ -153,6 +162,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
             'excluded_mutators' => $this->excludedMutators,
             'classes' => $this->classes,
             'parallel' => $this->parallel,
+            'processes' => $this->processes,
             'min_score' => $this->minScore,
             'covered_only' => $this->coveredOnly,
             'stop_on_survived' => $this->stopOnSurvived,

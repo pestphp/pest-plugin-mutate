@@ -109,6 +109,13 @@ class TestCallDecorator implements Configuration
         return $this;
     }
 
+    public function processes(int $processes = null): Configuration
+    {
+        $this->configuration->processes($processes);
+
+        return $this;
+    }
+
     /**
      * {@inheritDoc}
      */

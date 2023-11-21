@@ -114,6 +114,14 @@ test('globally configure parallel option', function (): void {
         ->toBeFalse();
 });
 
+test('globally configure processes option', function (): void {
+    mutate(ConfigurationRepository::FAKE)
+        ->processes(10);
+
+    expect($this->configuration->toArray()['processes'])
+        ->toBe(10);
+});
+
 test('globally configure class option', function (): void {
     mutate(ConfigurationRepository::FAKE)
         ->class(AgeHelper::class);

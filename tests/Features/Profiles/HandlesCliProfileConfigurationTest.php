@@ -90,6 +90,20 @@ it('enables parallel option if --parallel argument is passed', function (): void
         ->parallel->toBeTrue();
 });
 
+it('sets the processes option if --processes argument is passed', function (): void {
+    $this->configuration->fromArguments(['--mutate='.ConfigurationRepository::FAKE]);
+    expect($this->configuration->toArray())
+        ->processes->toBeNull();
+
+    $this->configuration->fromArguments(['--processes=10']);
+    expect($this->configuration->toArray())
+        ->processes->toBe(10);
+
+    $this->configuration->fromArguments(['--processes']);
+    expect($this->configuration->toArray())
+        ->processes->toBeNull();
+});
+
 it('sets the class if --class argument is passed', function (): void {
     $this->configuration->fromArguments(['--class='.AgeHelper::class]);
     expect($this->configuration->toArray()['classes'])

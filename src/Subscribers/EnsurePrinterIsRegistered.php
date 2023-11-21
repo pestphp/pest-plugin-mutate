@@ -25,7 +25,6 @@ use Pest\Mutate\Event\Events\TestSuite\StartMutationGenerationSubscriber;
 use Pest\Mutate\Event\Events\TestSuite\StartMutationSuite;
 use Pest\Mutate\Event\Events\TestSuite\StartMutationSuiteSubscriber;
 use Pest\Mutate\Event\Facade;
-use Pest\Mutate\Support\Printers\CompactPrinter;
 use Pest\Mutate\Support\Printers\DefaultPrinter;
 use Pest\Support\Container;
 use PHPUnit\Event\Application\Started;
@@ -46,10 +45,10 @@ class EnsurePrinterIsRegistered implements StartedSubscriber
             return;
         }
 
+        $printer = new DefaultPrinter(Container::getInstance()->get(OutputInterface::class)); // @phpstan-ignore-line
+
         if ($_SERVER['COLLISION_PRINTER_COMPACT'] ?? false) {
-            $printer = new CompactPrinter(Container::getInstance()->get(OutputInterface::class)); // @phpstan-ignore-line
-        } else {
-            $printer = new DefaultPrinter(Container::getInstance()->get(OutputInterface::class)); // @phpstan-ignore-line
+            $printer->compact();
         }
 
         Container::getInstance()->add(Printer::class, $printer);

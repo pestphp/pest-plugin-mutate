@@ -9,6 +9,7 @@ use Pest\Mutate\Contracts\Printer;
 use Pest\Mutate\Event\Facade;
 use Pest\Mutate\Mutation;
 use Pest\Mutate\MutationSuite;
+use Pest\Mutate\MutationTest;
 use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Repositories\ConfigurationRepository;
 use Pest\Mutate\Support\Configuration\Configuration;
@@ -32,6 +33,11 @@ class MutationTestRunner implements MutationTestRunnerContract
      * @var array<int, string>
      */
     private array $originalArguments;
+
+    /**
+     * @var array<int, MutationTest>
+     */
+    private array $runningTests;
 
     public static function fake(): MutationTestRunnerFake
     {
@@ -155,7 +161,22 @@ class MutationTestRunner implements MutationTestRunnerContract
 
         Facade::instance()->emitter()->startMutationSuite($mutationSuite);
 
+        if ($this->getConfiguration()->parallel) {
+            $this->runTestsInParallel(
+                mutationSuite: $mutationSuite,
+                coveredLines: $coveredLines,
+                processes: $this->getConfiguration()->processes,
+            );
+        } else {
+            $this->runTests(
+                mutationSuite: $mutationSuite,
+                coveredLines: $coveredLines,
+            );
+        }
+
         // run tests for each mutation
+        $runningTests = [];
+        $maxRunningTests = $this->getConfiguration()->processes;
         foreach ($mutationSuite->repository->all() as $testCollection) {
             Facade::instance()->emitter()->startTestCollection($testCollection);
 
@@ -164,7 +185,27 @@ class MutationTestRunner implements MutationTestRunnerContract
                     break 2;
                 }
 
-                $test->run($coveredLines, $this->getConfiguration(), $this->originalArguments);
+                while (count($runningTests) >= $maxRunningTests) {
+                    foreach ($runningTests as $index => $runningTest) {
+                        if ($runningTest->hasFinished()) {
+                            unset($runningTests[$index]);
+                            // break 2;
+                        }
+                    }
+                    //                     usleep(1000);
+                }
+
+                if ($test->start($coveredLines, $this->getConfiguration(), $this->originalArguments)) {
+                    $runningTests[] = $test;
+                }
+            }
+        }
+
+        while ($runningTests !== []) {
+            foreach ($runningTests as $index => $runningTest) {
+                if ($runningTest->hasFinished()) {
+                    unset($runningTests[$index]);
+                }
             }
         }
 
@@ -226,5 +267,76 @@ class MutationTestRunner implements MutationTestRunnerContract
             ->reportScoreNotReached($score, $minScore);
 
         exit(1);
+    }
+
+    /**
+     * @param  array<string, array<int, array<int, string>>>  $coveredLines
+     */
+    private function runTestsInParallel(MutationSuite $mutationSuite, array $coveredLines, int $processes): void
+    {
+        $tests = [];
+        foreach ($mutationSuite->repository->all() as $testCollection) {
+            foreach ($testCollection->tests() as $test) {
+                $tests[] = $test;
+            }
+        }
+
+        $this->runningTests = [];
+        foreach ($tests as $test) {
+            if ($this->stop) {
+                break;
+            }
+
+            while (count($this->runningTests) >= $processes) {
+                if ($this->checkRunningTestsHaveFinished()) {
+                    continue;
+                }
+
+                usleep(1000);
+            }
+
+            if ($test->start($coveredLines, $this->getConfiguration(), $this->originalArguments)) {
+                $this->runningTests[] = $test;
+            }
+        }
+
+        while ($this->runningTests !== []) {
+            $this->checkRunningTestsHaveFinished();
+        }
+    }
+
+    /**
+     * @param  array<string, array<int, array<int, string>>>  $coveredLines
+     */
+    private function runTests(MutationSuite $mutationSuite, array $coveredLines): void
+    {
+        foreach ($mutationSuite->repository->all() as $testCollection) {
+            Facade::instance()->emitter()->startTestCollection($testCollection);
+
+            foreach ($testCollection->tests() as $test) {
+                if ($this->stop) {
+                    break 2;
+                }
+
+                if ($test->start($coveredLines, $this->getConfiguration(), $this->originalArguments)) {
+                    while (! $test->hasFinished()) {
+                        usleep(1000);
+                    }
+                }
+            }
+        }
+    }
+
+    private function checkRunningTestsHaveFinished(): bool
+    {
+        foreach ($this->runningTests as $index => $runningTest) {
+            if ($runningTest->hasFinished()) {
+                unset($this->runningTests[$index]);
+
+                return true;
+            }
+        }
+
+        return false;
     }
 }

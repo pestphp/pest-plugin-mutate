@@ -8,29 +8,56 @@ use Pest\Mutate\Contracts\Printer;
 use Pest\Mutate\MutationSuite;
 use Pest\Mutate\MutationTest;
 use Pest\Mutate\MutationTestCollection;
+use Pest\Mutate\Repositories\ConfigurationRepository;
 use Pest\Mutate\Support\MutationTestResult;
+use Pest\Support\Container;
 use Symfony\Component\Console\Output\OutputInterface;
 
 use function Termwind\render;
 
 class DefaultPrinter implements Printer
 {
+    private bool $compact = false;
+
     public function __construct(protected readonly OutputInterface $output)
     {
     }
 
+    public function compact(): void
+    {
+        $this->compact = true;
+    }
+
     public function reportKilledMutation(MutationTest $test): void
     {
+        if ($this->compact) {
+            $this->output->write('<fg=gray;options=bold>.</>');
+
+            return;
+        }
+
         $this->writeMutationTestLine('green', '✓', $test);
     }
 
     public function reportSurvivedMutation(MutationTest $test): void
     {
+        if ($this->compact) {
+            $this->output->write('<fg=red;options=bold>x</>');
+
+            return;
+        }
+
         $this->writeMutationTestLine('red', '⨯', $test);
     }
 
     public function reportNotCoveredMutation(MutationTest $test): void
     {
+        if ($this->compact) {
+            $this->output->write('<fg=yellow;options=bold>-</>');
+
+            return;
+        }
+
         $this->writeMutationTestLine('yellow', '-', $test);
 
         //        $this->output->writeln('No tests found for mutation: '.$test->mutation->file->getRealPath().':'.$test->mutation->originalNode->getLine().' ('.$test->mutation->mutator::name().')');
@@ -38,13 +65,21 @@ class DefaultPrinter implements Printer
 
     public function reportTimedOutMutation(MutationTest $test): void
     {
-        $this->writeMutationTestLine('yellow', 't', $test);
+        if ($this->compact) {
+            $this->output->write('<fg=yellow;options=bold>t</>');
 
-        //        $this->output->writeln('Mutant for '.$test->mutation->file->getRealPath().':'.$test->mutation->originalNode->getLine().' timed out. ('.$test->mutation->mutator.')');
+            return;
+        }
+
+        $this->writeMutationTestLine('yellow', 't', $test);
     }
 
     public function printFilename(MutationTestCollection $testCollection): void
     {
+        if ($this->compact) {
+            return;
+        }
+
         $path = str_ireplace(getcwd().'/', '', $testCollection->file->getRealPath());
 
         $this->output->writeln('');
@@ -87,10 +122,19 @@ class DefaultPrinter implements Printer
         $this->output->writeln([
             '  Running mutation tests:',
         ]);
+
+        if ($this->compact) {
+            $this->output->writeln('');
+            $this->output->write('  ');  // ensure proper indentation before compact test output
+        }
     }
 
     public function reportMutationSuiteFinished(MutationSuite $mutationSuite): void
     {
+        if ($this->compact) {
+            $this->output->writeln(''); // add new line after compact test output
+        }
+
         $this->writeMutationSuiteSummary($mutationSuite);
 
         $this->output->writeln([
@@ -104,6 +148,11 @@ class DefaultPrinter implements Printer
 
         $duration = number_format($mutationSuite->duration(), 2);
         $this->output->writeln('  <fg=gray>Duration:</>  <fg=default>'.$duration.'s</>');
+
+        if (Container::getInstance()->get(ConfigurationRepository::class)->mergedConfiguration()->parallel) { // @phpstan-ignore-line
+            $processes = Container::getInstance()->get(ConfigurationRepository::class)->mergedConfiguration()->processes; // @phpstan-ignore-line
+            $this->output->writeln('  <fg=gray>Parallel:</>  <fg=default>'.$processes.' processes</>');
+        }
 
         $this->output->writeln('');
     }

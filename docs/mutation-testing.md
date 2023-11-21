@@ -342,8 +342,9 @@ vendor/bin/pest --mutate --covered-only
 
 ### Run tests in parallel
 
-> Attention: This may slow down your tests if you have a small test suite or only a small part of your test suite is run for a certain mutation.
-> Probably I am going to replace this in favor of running multiple mutations in parallel.
+Run tests against multiple mutations in parallel. This can significantly reduce the time it takes to run mutation tests.
+
+Against a single mutation the tests are not run in parallel, regardless of the parallel option.
 
 ```bash
 vendor/bin/pest --mutate --parallel

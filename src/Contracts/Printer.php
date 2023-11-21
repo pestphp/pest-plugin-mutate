@@ -10,6 +10,8 @@ use Pest\Mutate\MutationTestCollection;
 
 interface Printer
 {
+    public function compact(): void;
+
     public function reportKilledMutation(MutationTest $test): void;
 
     public function reportSurvivedMutation(MutationTest $test): void;

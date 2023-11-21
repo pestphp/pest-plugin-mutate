@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Repositories;
 
+use Fidry\CpuCoreCounter\CpuCoreCounter;
+use Pest\Mutate\Contracts\Printer;
 use Pest\Mutate\Mutators\Sets\DefaultSet;
 use Pest\Mutate\Support\Configuration\CliConfiguration;
 use Pest\Mutate\Support\Configuration\Configuration;
@@ -85,12 +87,19 @@ class ConfigurationRepository
             ...$this->cliConfiguration->toArray(),
         ];
 
+        $parallel = $config['parallel'] ?? false;
+
+        if ($parallel) {
+            Container::getInstance()->get(Printer::class)->compact(); // @phpstan-ignore-line
+        }
+
         return $this->mergedConfiguration = new Configuration(
             coveredOnly: $config['covered_only'] ?? false,
             paths: $config['paths'] ?? $this->pathsFromPhpunitConfiguration(),
             mutators: array_diff($config['mutators'] ?? DefaultSet::mutators(), $config['excluded_mutators'] ?? []),
             classes: $config['classes'] ?? [],
-            parallel: $config['parallel'] ?? false,
+            parallel: $parallel,
+            processes: $parallel ? ($config['processes'] ?? (new CpuCoreCounter())->getCount()) : 1,
             minScore: $config['min_score'] ?? null,
             stopOnSurvived: $config['stop_on_survived'] ?? false,
             stopOnNotCovered: $config['stop_on_not_covered'] ?? false,

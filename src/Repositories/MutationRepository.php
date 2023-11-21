@@ -72,6 +72,10 @@ class MutationRepository
 
     public function score(): float
     {
+        if ($this->total() === 0) {
+            return 0;
+        }
+
         return ($this->killed() + $this->timedOut()) / $this->total() * 100;
     }
 }

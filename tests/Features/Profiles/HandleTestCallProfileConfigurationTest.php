@@ -68,6 +68,14 @@ it('sets the parallel option from test', function (): void {
 })->mutate(ConfigurationRepository::FAKE.'_5')
     ->parallel(true);
 
+it('sets the processes option from test', function (): void {
+    $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_13');
+
+    expect($configuration->toArray()['processes'])
+        ->toBe(10);
+})->mutate(ConfigurationRepository::FAKE.'_13')
+    ->processes(10);
+
 it('sets the class option from test', function (): void {
     $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_6');
 
