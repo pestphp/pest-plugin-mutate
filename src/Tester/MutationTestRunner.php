@@ -7,7 +7,6 @@ namespace Pest\Mutate\Tester;
 use Pest\Mutate\Contracts\MutationTestRunner as MutationTestRunnerContract;
 use Pest\Mutate\Contracts\Printer;
 use Pest\Mutate\Event\Facade;
-use Pest\Mutate\Mutation;
 use Pest\Mutate\MutationSuite;
 use Pest\Mutate\MutationTest;
 use Pest\Mutate\Plugins\Mutate;
@@ -172,41 +171,6 @@ class MutationTestRunner implements MutationTestRunnerContract
                 mutationSuite: $mutationSuite,
                 coveredLines: $coveredLines,
             );
-        }
-
-        // run tests for each mutation
-        $runningTests = [];
-        $maxRunningTests = $this->getConfiguration()->processes;
-        foreach ($mutationSuite->repository->all() as $testCollection) {
-            Facade::instance()->emitter()->startTestCollection($testCollection);
-
-            foreach ($testCollection->tests() as $test) {
-                if ($this->stop) {
-                    break 2;
-                }
-
-                while (count($runningTests) >= $maxRunningTests) {
-                    foreach ($runningTests as $index => $runningTest) {
-                        if ($runningTest->hasFinished()) {
-                            unset($runningTests[$index]);
-                            // break 2;
-                        }
-                    }
-                    //                     usleep(1000);
-                }
-
-                if ($test->start($coveredLines, $this->getConfiguration(), $this->originalArguments)) {
-                    $runningTests[] = $test;
-                }
-            }
-        }
-
-        while ($runningTests !== []) {
-            foreach ($runningTests as $index => $runningTest) {
-                if ($runningTest->hasFinished()) {
-                    unset($runningTests[$index]);
-                }
-            }
         }
 
         Facade::instance()->emitter()->finishMutationSuite($mutationSuite);
