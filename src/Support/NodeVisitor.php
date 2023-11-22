@@ -47,7 +47,7 @@ class NodeVisitor extends NodeVisitorAbstract
             ($this->trackMutation)(
                 $this->nodeCount,
                 $originalNode,
-                $mutatedNode = $mutatedNode instanceof Node ? $mutatedNode : null,
+                $mutatedNode instanceof Node ? $mutatedNode : null,
             );
 
             return $mutatedNode;
