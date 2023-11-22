@@ -6,6 +6,7 @@ namespace Pest\Mutate\Mutators\String;
 
 use Pest\Mutate\Mutators\Abstract\AbstractMutator;
 use PhpParser\Node;
+use PhpParser\Node\Expr\ArrayDimFetch;
 use PhpParser\Node\Scalar\String_;
 
 class NotEmptyStringToEmpty extends AbstractMutator
@@ -27,7 +28,8 @@ class NotEmptyStringToEmpty extends AbstractMutator
     public static function can(Node $node): bool
     {
         return $node instanceof String_ &&
-            $node->value !== '';
+            $node->value !== '' &&
+            ! $node->getAttribute('parent') instanceof ArrayDimFetch;
     }
 
     public static function mutate(Node $node): Node

@@ -26,3 +26,11 @@ it('can not mutate non string nodes', function (): void {
     expect(NotEmptyStringToEmpty::can(new LNumber(1)))
         ->toBeFalse();
 });
+
+it('can not mutate strings used as array keys', function (): void {
+    mutateCode(NotEmptyStringToEmpty::class, <<<'CODE'
+        <?php
+
+        $a = $b['asdfc'];
+        CODE);
+})->expectExceptionMessage('No mutation performed');
