@@ -6,6 +6,7 @@ namespace Pest\Mutate\Mutators\ControlStructures;
 
 use Pest\Mutate\Mutators\Abstract\AbstractMutator;
 use PhpParser\Node;
+use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\BooleanNot;
 use PhpParser\Node\Expr\Ternary;
 
@@ -28,6 +29,10 @@ class TernaryNegated extends AbstractMutator
     public static function mutate(Node $node): Node
     {
         /** @var Ternary $node */
+        if (! $node->if instanceof Expr) {
+            $node->if = $node->cond;
+        }
+
         $node->cond = new BooleanNot($node->cond);
 
         return $node;
