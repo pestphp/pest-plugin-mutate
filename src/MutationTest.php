@@ -6,8 +6,10 @@ namespace Pest\Mutate;
 
 use Pest\Mutate\Event\Facade;
 use Pest\Mutate\Plugins\Mutate;
+use Pest\Mutate\Repositories\ConfigurationRepository;
 use Pest\Mutate\Support\Configuration\Configuration;
 use Pest\Mutate\Support\MutationTestResult;
+use Pest\Support\Container;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Symfony\Component\Process\Process;
 
@@ -79,7 +81,9 @@ class MutationTest
     private function calculateTimeout(): int
     {
         // TODO: calculate a reasonable timeout
-        return 3;
+        return Container::getInstance()->get(ConfigurationRepository::class)->mergedConfiguration()->parallel ? // @phpstan-ignore-line
+            10 :
+            3;
     }
 
     public function hasFinished(): bool
