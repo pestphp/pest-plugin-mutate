@@ -264,7 +264,7 @@ class MutationTestRunner implements MutationTestRunnerContract
             }
         }
 
-        while ($this->runningTests !== []) {
+        while (! $this->stop && $this->runningTests !== []) {
             $this->checkRunningTestsHaveFinished();
         }
     }
