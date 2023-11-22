@@ -6,8 +6,10 @@ namespace Pest\Mutate\Mutators\Sets;
 
 use Pest\Mutate\Contracts\MutatorSet;
 use Pest\Mutate\Mutators\Concerns\HasName;
+use Pest\Mutate\Mutators\Removal\RemoveArrayItem;
 use Pest\Mutate\Mutators\Removal\RemoveFunctionCall;
 use Pest\Mutate\Mutators\Removal\RemoveMethodCall;
+use Pest\Mutate\Mutators\Removal\RemoveNullSafeOperator;
 
 class RemovalSet implements MutatorSet
 {
@@ -19,8 +21,10 @@ class RemovalSet implements MutatorSet
     public static function mutators(): array
     {
         return [
+            RemoveArrayItem::class,
             RemoveFunctionCall::class,
             RemoveMethodCall::class,
+            RemoveNullSafeOperator::class,
         ];
     }
 }
