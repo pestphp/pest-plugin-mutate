@@ -41,10 +41,13 @@ class NodeVisitor extends NodeVisitorAbstract
         }
 
         if ($this->mutator::can($node)) {
+            $originalNode = clone $node;
+            $mutatedNode = $this->mutator::mutate($node);
+
             ($this->trackMutation)(
                 $this->nodeCount,
-                clone $node,
-                $mutatedNode = $this->mutator::mutate($node),
+                $originalNode,
+                $mutatedNode = $mutatedNode instanceof Node ? $mutatedNode : null,
             );
 
             return $mutatedNode;
