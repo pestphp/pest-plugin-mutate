@@ -6,6 +6,8 @@ namespace Pest\Mutate;
 
 use Pest\Exceptions\ShouldNotHappen;
 use PhpParser\Node;
+use PhpParser\Node\Param;
+use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\PrettyPrinter\Standard;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -46,11 +48,21 @@ class Mutation
         $modifiedSourcePath = self::TMP_FOLDER.DIRECTORY_SEPARATOR.hash('xxh3', $modifiedSource).'.php';
         file_put_contents($modifiedSourcePath, $modifiedSource);
 
+        $endLine = $originalNode->getEndLine();
+
+        if (
+            $originalNode->getAttribute('parent') instanceof Param &&
+            $originalNode->getAttribute('parent')->getAttribute('parent') instanceof ClassMethod
+        ) {
+            // use the end line of the method instead if a parameter is mutated, otherwise it is not considered as covered
+            $endLine = $originalNode->getAttribute('parent')->getAttribute('parent')->getEndLine();
+        }
+
         return new self(
             $file,
             $mutator,
             $originalNode->getStartLine(),
-            $originalNode->getEndLine(),
+            $endLine,
             self::diff($originalNode, $modifiedNode),
             $modifiedSourcePath,
         );
