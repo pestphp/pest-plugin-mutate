@@ -17,6 +17,18 @@ it('mutates a not empty string to an empty string', function (): void {
         CODE);
 });
 
+it('mutates only array values but not the keys', function (): void {
+    expect(mutateCode(NotEmptyStringToEmpty::class, <<<'CODE'
+        <?php
+
+        return ['foo' => 'bar'];
+        CODE))->toBe(<<<'CODE'
+        <?php
+        
+        return ['foo' => ''];
+        CODE);
+});
+
 it('can not mutate an empty string', function (): void {
     expect(NotEmptyStringToEmpty::can(new String_('')))
         ->toBeFalse();
