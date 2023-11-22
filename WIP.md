@@ -27,8 +27,12 @@
 - [ ] Awesome docs
 
 # Backlog Prio 1
+- [ ] Fix diffing output
+- [ ] Exclude paths or files
+- [ ] What should we do with interfaces? ignore them completely?
 - [ ] Finish: Disable mutations by annotation
 - [ ] Run mutations in a reasonable order: New, Survived, NotCovered, Skipped, Killed (Survived first, if --stop-on-survived or --bail; NotCovered first, if --stop-on-uncovered)
+- [ ] Run test that killed a mutation before first
 - [ ] Log to file
 - [ ] Automatically skip "Arch" tests
 
