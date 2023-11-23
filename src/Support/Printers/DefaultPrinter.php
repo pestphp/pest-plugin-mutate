@@ -201,21 +201,14 @@ class DefaultPrinter implements Printer
             '  <fg=default;options=bold>'.$error.'</>',
         ]);
 
-        $diff = '';
-        foreach ($test->mutation->diff['modified'] as $line) {
-            $line = htmlentities((string) $line); // TODO: this is not good, but currently required, otherwise printer breaks on `$this->foo()` because of the >
-            $diff .= "<div class='text-green'>+ {$line}</div>";
-        }
-        foreach ($test->mutation->diff['original'] as $line) {
-            $line = htmlentities($line); // TODO: this is not good, but currently required, otherwise printer breaks on `$this->foo()` because of the >
-            $diff .= "<div class='text-red'>- {$line}</div>";
-        }
+        $diff = $test->mutation->diff;
+        $this->output->writeln($diff);
 
-        render(<<<HTML
-                        <div class="mx-2 flex">
-                            {$diff}
-                        </div>
-                    HTML
-        );
+        //        render(<<<HTML
+        //                        <div class="mx-2 flex">
+        //                            {$diff}
+        //                        </div>
+        //                    HTML
+        //        );
     }
 }

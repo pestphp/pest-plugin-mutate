@@ -8,7 +8,10 @@ use Pest\Exceptions\ShouldNotHappen;
 use PhpParser\Node;
 use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
+use SebastianBergmann\Diff\Differ;
+use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
 use Symfony\Component\Finder\SplFileInfo;
 
 class Mutation
@@ -21,15 +24,14 @@ class Mutation
     .DIRECTORY_SEPARATOR
     .'mutations';
 
-    /**
-     * @param  array{original: string[], modified: array<int, ?string>}  $diff
-     */
+    private const DIFF_SEPARATOR = '--- Expected'.PHP_EOL.'+++ Actual'.PHP_EOL.'@@ @@'.PHP_EOL;
+
     public function __construct(
         public readonly SplFileInfo $file,
         public readonly string $mutator,
         public readonly int $startLine,
         public readonly int $endLine,
-        public readonly array $diff,
+        public readonly string $diff,
         public readonly string $modifiedSourcePath,
     ) {
     }
@@ -45,8 +47,11 @@ class Mutation
         array $modifiedAst,
     ): self {
         $modifiedSource = (new Standard())->prettyPrintFile($modifiedAst);
-        $modifiedSourcePath = self::TMP_FOLDER.DIRECTORY_SEPARATOR.hash('xxh3', $modifiedSource).'.php';
+        $modifiedSourcePath = self::TMP_FOLDER.DIRECTORY_SEPARATOR.hash('xxh3', $modifiedSource);
         file_put_contents($modifiedSourcePath, $modifiedSource);
+
+        $orignalAst = (new ParserFactory)->create(ParserFactory::PREFER_PHP7)->parse($file->getContents());
+        $newlyRenderedOriginalSource = (new Standard())->prettyPrintFile($orignalAst); // @phpstan-ignore-line
 
         $endLine = $originalNode->getEndLine();
 
@@ -63,7 +68,7 @@ class Mutation
             $mutator,
             $originalNode->getStartLine(),
             $endLine,
-            self::diff($originalNode, $modifiedNode),
+            self::diff($newlyRenderedOriginalSource, $modifiedSource),
             $modifiedSourcePath,
         );
     }
@@ -79,24 +84,30 @@ class Mutation
         return $source;
     }
 
-    /**
-     * @return array{original: string[], modified: array<int, ?string>}
-     */
-    private static function diff(Node $originalNode, ?Node $modifiedNode): array
+    private static function diff(string $originalSource, string $modifiedSource): string
     {
-        $prettyPrinter = new Standard();
+        $diff = (new Differ(new UnifiedDiffOutputBuilder("\n--- Expected\n+++ Actual\n")))
+            ->diff($originalSource, $modifiedSource);
 
-        $original = explode(PHP_EOL, htmlentities($prettyPrinter->prettyPrintFile([$originalNode])));
-        $modified = explode(PHP_EOL, htmlentities($prettyPrinter->prettyPrintFile($modifiedNode instanceof Node ? [$modifiedNode] : [])));
+        $tmp = '';
+        $lines = explode(PHP_EOL, explode(self::DIFF_SEPARATOR, $diff)[1]);
 
-        return [
-            'original' => array_slice($original, 2),
-            'modified' => array_slice($modified, 2),
-        ];
+        foreach ($lines as $line) {
+            $tmp .= self::colorizeLine($line, str_starts_with($line, '-') ? 'red' : (str_starts_with($line, '+') ? 'green' : 'gray')).PHP_EOL;
+        }
+
+        $diff = str_replace(explode(self::DIFF_SEPARATOR, $diff)[1], $tmp, $diff);
+
+        return str_replace(self::DIFF_SEPARATOR, '', $diff);
+    }
+
+    private static function colorizeLine(string $line, string $color): string
+    {
+        return sprintf('  <fg=%s>%s</>', $color, $line);
     }
 
     /**
-     * @return array{file: string, mutator: string, start_line: int, end_line: int, diff: array{original: string[], modified: array<int, ?string>}, modified_source_path: string}
+     * @return array{file: string, mutator: string, start_line: int, end_line: int, diff: string, modified_source_path: string}
      */
     public function __serialize(): array
     {
@@ -111,7 +122,7 @@ class Mutation
     }
 
     /**
-     * @param  array{file: string, mutator: string, start_line: int, end_line: int, diff: array{original: string[], modified: array<int, ?string>}, modified_source_path: string}  $data
+     * @param  array{file: string, mutator: string, start_line: int, end_line: int, diff: string, modified_source_path: string}  $data
      */
     public function __unserialize(array $data): void
     {

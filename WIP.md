@@ -27,7 +27,8 @@
 - [ ] Awesome docs
 
 # Backlog Prio 1
-- [ ] Fix diffing output
+- [ ] Fix PHPStorm indexing Issues. Maybe do not end cached files with .php?
+- [ ] Automatically empty cache when package version changes
 - [ ] Exclude paths or files
 - [ ] What should we do with interfaces? ignore them completely?
 - [ ] Finish: Disable mutations by annotation
