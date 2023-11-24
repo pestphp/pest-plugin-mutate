@@ -36,6 +36,20 @@ test('globally configure paths', function (): void {
         ->toEqual(['src/path-1', 'src/path-2', 'src/path-3']);
 });
 
+test('globally configure paths to ignore', function (): void {
+    mutate(ConfigurationRepository::FAKE)
+        ->ignore(['src/path-1']);
+
+    expect($this->configuration->toArray()['paths_to_ignore'])
+        ->toEqual(['src/path-1']);
+
+    mutate(ConfigurationRepository::FAKE)
+        ->ignore(['src/path-1', 'src/path-2'], 'src/path-3');
+
+    expect($this->configuration->toArray()['paths_to_ignore'])
+        ->toEqual(['src/path-1', 'src/path-2', 'src/path-3']);
+});
+
 test('globally configure mutators', function (): void {
     mutate(ConfigurationRepository::FAKE)
         ->mutator(Mutators::SET_ARITHMETIC);

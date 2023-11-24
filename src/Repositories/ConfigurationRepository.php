@@ -96,6 +96,7 @@ class ConfigurationRepository
         return $this->mergedConfiguration = new Configuration(
             coveredOnly: $config['covered_only'] ?? false,
             paths: $config['paths'] ?? $this->pathsFromPhpunitConfiguration(),
+            pathsToIgnore: $config['paths_to_ignore'] ?? [],
             mutators: array_diff($config['mutators'] ?? DefaultSet::mutators(), $config['excluded_mutators'] ?? []),
             classes: $config['classes'] ?? [],
             parallel: $parallel,

@@ -9,11 +9,12 @@ use Pest\Mutate\Options\ChangedOnlyOption;
 use Pest\Mutate\Options\ClassOption;
 use Pest\Mutate\Options\CoveredOnlyOption;
 use Pest\Mutate\Options\ExceptOption;
+use Pest\Mutate\Options\IgnoreOption;
 use Pest\Mutate\Options\MinScoreOption;
 use Pest\Mutate\Options\MutateOption;
 use Pest\Mutate\Options\MutatorsOption;
 use Pest\Mutate\Options\ParallelOption;
-use Pest\Mutate\Options\PathsOption;
+use Pest\Mutate\Options\PathOption;
 use Pest\Mutate\Options\ProcessesOption;
 use Pest\Mutate\Options\StopOnNotCoveredOption;
 use Pest\Mutate\Options\StopOnSurvivedOption;
@@ -30,7 +31,8 @@ class CliConfiguration extends AbstractConfiguration
         MinScoreOption::class,
         MutatorsOption::class,
         ExceptOption::class,
-        PathsOption::class,
+        PathOption::class,
+        IgnoreOption::class,
         ParallelOption::class,
         ProcessesOption::class,
         StopOnSurvivedOption::class,
@@ -67,8 +69,12 @@ class CliConfiguration extends AbstractConfiguration
             $this->coveredOnly($input->getOption(CoveredOnlyOption::ARGUMENT) !== 'false');
         }
 
-        if ($input->hasOption(PathsOption::ARGUMENT)) {
-            $this->path(explode(',', (string) $input->getOption(PathsOption::ARGUMENT))); // @phpstan-ignore-line
+        if ($input->hasOption(PathOption::ARGUMENT)) {
+            $this->path(explode(',', (string) $input->getOption(PathOption::ARGUMENT))); // @phpstan-ignore-line
+        }
+
+        if ($input->hasOption(IgnoreOption::ARGUMENT)) {
+            $this->ignore(explode(',', (string) $input->getOption(IgnoreOption::ARGUMENT))); // @phpstan-ignore-line
         }
 
         if ($input->hasOption(MutatorsOption::ARGUMENT)) {

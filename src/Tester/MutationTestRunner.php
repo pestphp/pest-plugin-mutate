@@ -108,7 +108,7 @@ class MutationTestRunner implements MutationTestRunnerContract
         $coveredLines = array_map(fn (array $lines): array => array_filter($lines, fn (array $tests): bool => $tests !== []), $codeCoverage->getData()->lineCoverage());
         $coveredLines = array_filter($coveredLines, fn (array $lines): bool => $lines !== []);
 
-        $files = $this->getFiles($this->getConfiguration()->paths);
+        $files = $this->getFiles($this->getConfiguration()->paths, $this->getConfiguration()->pathsToIgnore);
 
         /** @var MutationGenerator $generator */
         $generator = Container::getInstance()->get(MutationGenerator::class);
@@ -182,8 +182,9 @@ class MutationTestRunner implements MutationTestRunnerContract
 
     /**
      * @param  array<array-key, string>  $paths
+     * @param  array<array-key, string>  $pathsToIgnore
      */
-    private function getFiles(array $paths): Finder
+    private function getFiles(array $paths, array $pathsToIgnore): Finder
     {
         $dirs = [];
         $filePaths = [];
@@ -199,12 +200,14 @@ class MutationTestRunner implements MutationTestRunnerContract
             }
         }
 
+        $pathsToIgnore = array_map(fn (string $path): string => str_starts_with($path, DIRECTORY_SEPARATOR) ? $path : getcwd().DIRECTORY_SEPARATOR.ltrim($path, '/'), $pathsToIgnore);
+
         return Finder::create()
             ->in($dirs)
             ->name('*.php')
-//            ->notPath($options->ignoring)
             ->append($filePaths)
-            ->files();
+            ->files()
+            ->filter(fn (SplFileInfo $file): bool => array_filter($pathsToIgnore, fn (string $pathToIgnore): bool => str_starts_with($file->getRealPath(), $pathToIgnore)) === []);
     }
 
     private function getConfiguration(): Configuration

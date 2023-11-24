@@ -43,6 +43,14 @@ it('sets the paths from test', function (): void {
 })->mutate(ConfigurationRepository::FAKE.'_3')
     ->path('src/folder-1', 'src/folder-2');
 
+it('sets the paths to ignore from test', function (): void {
+    $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_14');
+
+    expect($configuration->toArray()['paths_to_ignore'])
+        ->toBe(['src/folder-1', 'src/folder-2']);
+})->mutate(ConfigurationRepository::FAKE.'_14')
+    ->ignore('src/folder-1', 'src/folder-2');
+
 it('sets the mutators from test', function (): void {
     $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_4');
 

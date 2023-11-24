@@ -83,6 +83,16 @@ class TestCallDecorator implements Configuration
     }
 
     /**
+     * @param  array<int, string>|string  ...$paths
+     */
+    public function ignore(array|string ...$paths): self
+    {
+        $this->configuration->ignore(...$paths);
+
+        return $this;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function mutator(string|array ...$mutators): self

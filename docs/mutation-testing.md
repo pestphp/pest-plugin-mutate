@@ -120,6 +120,7 @@ The following options are available.
 <div class="collection-method-list" markdown="1">
 
 - [`path()`](#path)
+- [`ignore()`](#ignore)
 - [`class()`](#class)
 - [`mutator()`](#mutator)
 - [`except()`](#except)
@@ -144,12 +145,20 @@ Limit the directories or files to mutate by providing one or more paths to a dir
 If no paths are provided, it defaults to the source directories configured in your `phpunit.xml` file.
 
 ```php
+mutate()
+    ->path('src');
+```
 
-You can also use patterns.
+
+<a name="options-ignore"></a>
+### `ignore()`
+CLI: `--ignore`
+
+Ignore one or more directory or file paths.
 
 ```php
 mutate()
-    ->path('src');
+    ->ignore('src/Contracts');
 ```
 
 

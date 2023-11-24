@@ -128,6 +128,7 @@ The following options are available.
 <div class="collection-method-list" markdown="1">
 
 - [`path()`](#path)
+- [`ignore()`](#ignore)
 - [`class()`](#class)
 - [`mutator()`](#mutator)
 - [`except()`](#except)
@@ -152,12 +153,20 @@ Limit the directories or files to mutate by providing one or more paths to a dir
 If no paths are provided, it defaults to the source directories configured in your `phpunit.xml` file.
 
 ```php
+mutate()
+    ->path('src');
+```
 
-You can also use patterns.
+
+<a name="options-ignore"></a>
+### `ignore()`
+CLI: `--ignore`
+
+Ignore one or more directory or file paths.
 
 ```php
 mutate()
-    ->path('src');
+    ->ignore('src/Contracts');
 ```
 
 
@@ -350,8 +359,9 @@ vendor/bin/pest --mutate --covered-only
 
 ### Run tests in parallel
 
-> Attention: This may slow down your tests if you have a small test suite or only a small part of your test suite is run for a certain mutation.
-> Probably I am going to replace this in favor of running multiple mutations in parallel.
+Run tests against multiple mutations in parallel. This can significantly reduce the time it takes to run mutation tests.
+
+Against a single mutation the tests are not run in parallel, regardless of the parallel option.
 
 ```bash
 vendor/bin/pest --mutate --parallel
@@ -624,8 +634,10 @@ This set consists of various mutators from different sets. Mutators included are
 
 <div class="collection-method-list" markdown="1">
 
+- [RemoveArrayItem](#removearrayitem-) (*)
 - [RemoveFunctionCall](#removefunctioncall-) (*)
 - [RemoveMethodCall](#removemethodcall-) (*)
+- [RemoveNullSafeOperator](#removenullsafeoperator-) (*)
 
 </div>
 
@@ -1671,6 +1683,19 @@ $a = (array) $b;  // [tl! remove]
 $a = $b;          // [tl! add]
 ```
 
+<a name="removearrayitem"></a>
+### RemoveArrayItem (*)
+Set: Removal
+
+Removes an item from an array
+
+```php
+return [
+    'foo' => 1,  // [tl! remove]
+    'bar' => 2,
+];
+```
+
 <a name="removebooleancast"></a>
 ### RemoveBooleanCast (*)
 Set: Casting
@@ -1738,7 +1763,7 @@ if ($a) {  // [tl! add]
 ```
 
 <a name="removenullsafeoperator"></a>
-### RemoveNullSafeOperator
+### RemoveNullSafeOperator (*)
 Set: Removal
 
 Converts nullsafe method and property calls to regular calls.

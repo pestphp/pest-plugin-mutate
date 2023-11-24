@@ -13,7 +13,7 @@ beforeEach(function (): void {
     $this->configuration = new CliConfiguration();
 });
 
-it('sets the paths if --paths argument is passed', function (): void {
+it('sets the paths if --path argument is passed', function (): void {
     $this->configuration->fromArguments(['--path=app']);
 
     expect($this->configuration->toArray())
@@ -22,6 +22,17 @@ it('sets the paths if --paths argument is passed', function (): void {
     $this->configuration->fromArguments(['--path=src/path-1,src/path-2']);
     expect($this->configuration->toArray())
         ->paths->toEqual(['src/path-1', 'src/path-2']);
+});
+
+it('sets the paths to ignore if --ignore argument is passed', function (): void {
+    $this->configuration->fromArguments(['--ignore=src/path-1']);
+
+    expect($this->configuration->toArray())
+        ->paths_to_ignore->toEqual(['src/path-1']);
+
+    $this->configuration->fromArguments(['--ignore=src/path-1,src/path-2']);
+    expect($this->configuration->toArray())
+        ->paths_to_ignore->toEqual(['src/path-1', 'src/path-2']);
 });
 
 it('sets the mutators if --mutators argument is passed', function (): void {

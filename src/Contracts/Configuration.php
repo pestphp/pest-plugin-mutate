@@ -12,6 +12,11 @@ interface Configuration
     public function path(array|string ...$paths): self;
 
     /**
+     * @param  array<int, string>|string  ...$paths
+     */
+    public function ignore(array|string ...$paths): self;
+
+    /**
      * @param  array<int, class-string<Mutator|MutatorSet>>|class-string<Mutator|MutatorSet>  ...$mutators
      */
     public function mutator(array|string ...$mutators): self;

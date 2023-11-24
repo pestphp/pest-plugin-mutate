@@ -17,6 +17,11 @@ abstract class AbstractConfiguration implements ConfigurationContract
     private ?array $paths = null;
 
     /**
+     * @var string[]|null
+     */
+    private ?array $pathsToIgnore = null;
+
+    /**
      * @var class-string<Mutator>[]|null
      */
     private ?array $mutators = null;
@@ -53,6 +58,16 @@ abstract class AbstractConfiguration implements ConfigurationContract
     public function path(array|string ...$paths): self
     {
         $this->paths = array_merge(...array_map(fn (string|array $path): array => is_string($path) ? [$path] : $path, $paths));
+
+        return $this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function ignore(array|string ...$paths): self
+    {
+        $this->pathsToIgnore = array_merge(...array_map(fn (string|array $path): array => is_string($path) ? [$path] : $path, $paths));
 
         return $this;
     }
@@ -152,12 +167,13 @@ abstract class AbstractConfiguration implements ConfigurationContract
     }
 
     /**
-     * @return array{paths?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, processes?: int, min_score?: float, covered_only?: bool, stop_on_survived?: bool, stop_on_not_covered?: bool, uncommitted_only?: bool, changed_only?: string}
+     * @return array{paths?: string[], paths_to_ignore?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, processes?: int, min_score?: float, covered_only?: bool, stop_on_survived?: bool, stop_on_not_covered?: bool, uncommitted_only?: bool, changed_only?: string}
      */
     public function toArray(): array
     {
         return array_filter([
             'paths' => $this->paths,
+            'paths_to_ignore' => $this->pathsToIgnore,
             'mutators' => $this->mutators !== null ? array_values(array_diff($this->mutators, $this->excludedMutators ?? [])) : null,
             'excluded_mutators' => $this->excludedMutators,
             'classes' => $this->classes,

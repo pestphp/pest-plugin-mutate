@@ -6,7 +6,7 @@ namespace Pest\Mutate\Options;
 
 use Symfony\Component\Console\Input\InputOption;
 
-class PathsOption
+class PathOption
 {
     final public const ARGUMENT = 'path';
 
