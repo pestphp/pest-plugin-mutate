@@ -139,19 +139,23 @@ class MutationGenerator
             return false;
         }
 
-        foreach ($classesToMutate as $class) {
-            $parts = explode('\\', $class);
+        foreach ($classesToMutate as $classOrNamespace) {
+            $parts = explode('\\', $classOrNamespace);
             $class = array_pop($parts);
             $namespace = preg_quote(implode('\\', $parts));
+            $classOrNamespace = preg_quote($classOrNamespace);
 
-            if (preg_match("/namespace\\s+$namespace/", $contents) !== 1) {
-                continue;
-            }
-            if (preg_match("/class\\s+$class/", $contents) !== 1) {
-                continue;
+            if (preg_match("/namespace\\s+$namespace/", $contents) === 1 && preg_match("/class\\s+$class.*/", $contents) === 1) {
+                return false;
             }
 
-            return false;
+            if (preg_match("/class\\s+$class\[{\\s*\]/", $contents) === 1) {
+                return false;
+            }
+
+            if (preg_match("/namespace\\s+$classOrNamespace/", $contents) === 1) {
+                return false;
+            }
         }
 
         return true;
