@@ -26,8 +26,11 @@
 - [ ] Automatically skip "Arch" tests
 - [ ] Awesome docs
 
-# Backlog Prio 1
+# Known Bugs
+- [ ] Make test filtering more stable. For example "for all .ch domains" does not work
 - [ ] Fix parallel for Laravel (set proper ENV variables)
+
+# Backlog Prio 1
 - [ ] Automatically empty cache when package version changes / Maybe there is another approach: Use the same cache key per php file, but store a hash of the file content and the package version in the cache. If the hash changes, the cache is invalid.
 - [ ] What should we do with interfaces? ignore them completely?
 - [ ] Finish: Disable mutations by annotation
