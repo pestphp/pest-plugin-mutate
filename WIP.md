@@ -28,7 +28,7 @@
 
 # Backlog Prio 1
 - [ ] Fix PHPStorm indexing Issues. Maybe do not end cached files with .php?
-- [ ] Automatically empty cache when package version changes
+- [ ] Automatically empty cache when package version changes / Maybe there is another approach: Use the same cache key per php file, but store a hash of the file content and the package version in the cache. If the hash changes, the cache is invalid.
 - [ ] What should we do with interfaces? ignore them completely?
 - [ ] Finish: Disable mutations by annotation
 - [ ] Run mutations in a reasonable order: New, Survived, NotCovered, Skipped, Killed (Survived first, if --stop-on-survived or --bail; NotCovered first, if --stop-on-uncovered)

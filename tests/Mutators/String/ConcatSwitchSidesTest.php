@@ -23,3 +23,27 @@ it('does not mutate other operators', function (): void {
         return $a + $b;
         CODE);
 })->expectExceptionMessage('No mutation performed');
+
+it('does not mutate if both sides are equal strings', function (): void {
+    mutateCode(ConcatSwitchSides::class, <<<'CODE'
+        <?php
+
+        return 'a' . 'a';
+        CODE);
+})->expectExceptionMessage('No mutation performed');
+
+it('does not mutate if both sides are equal const fetches', function (): void {
+    mutateCode(ConcatSwitchSides::class, <<<'CODE'
+        <?php
+
+        return PHP_EOL . PHP_EOL;
+        CODE);
+})->expectExceptionMessage('No mutation performed');
+
+it('does not mutate if both sides are equal variables', function (): void {
+    mutateCode(ConcatSwitchSides::class, <<<'CODE'
+        <?php
+
+        return $a . $a;
+        CODE);
+})->expectExceptionMessage('No mutation performed');

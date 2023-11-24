@@ -12,6 +12,7 @@ use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
+use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Finder\SplFileInfo;
 
 class Mutation
@@ -89,11 +90,15 @@ class Mutation
         $diff = (new Differ(new UnifiedDiffOutputBuilder("\n--- Expected\n+++ Actual\n")))
             ->diff($originalSource, $modifiedSource);
 
+        if (! str_contains($diff, self::DIFF_SEPARATOR)) {
+            return '';
+        }
+
         $tmp = '';
         $lines = explode(PHP_EOL, explode(self::DIFF_SEPARATOR, $diff)[1]);
 
         foreach ($lines as $line) {
-            $tmp .= self::colorizeLine($line, str_starts_with($line, '-') ? 'red' : (str_starts_with($line, '+') ? 'green' : 'gray')).PHP_EOL;
+            $tmp .= self::colorizeLine(OutputFormatter::escape($line), str_starts_with($line, '-') ? 'red' : (str_starts_with($line, '+') ? 'green' : 'gray')).PHP_EOL;
         }
 
         $diff = str_replace(explode(self::DIFF_SEPARATOR, $diff)[1], $tmp, $diff);
