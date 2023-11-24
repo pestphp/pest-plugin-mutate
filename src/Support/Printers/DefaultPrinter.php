@@ -99,7 +99,7 @@ class DefaultPrinter implements Printer
     {
         $this->output->writeln([
             '',
-            '  <fg=white;bg=red;options=bold> FAIL </> Code coverage below expected:<fg=red;options=bold> '.number_format($scoreReached, 1).' %</>. Minimum:<fg=white;options=bold> '.number_format($scoreRequired, 1).' %</>.',
+            '  <fg=white;bg=red;options=bold> FAIL </> Code coverage below expected:<fg=red;options=bold> '.number_format($scoreReached, 1).' %</>. Minimum:<fg=gray;options=bold> '.number_format($scoreRequired, 1).' %</>.',
             '',
         ]);
     }
