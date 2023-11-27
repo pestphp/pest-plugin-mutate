@@ -27,7 +27,6 @@
 - [ ] Awesome docs
 
 # Known Bugs
-- [ ] Test filtering may not work with underlying PHPUnit tests?
 - [ ] Make test filtering more stable. For example "for all .ch domains" does not work
 - [ ] Fix parallel for Laravel (set proper ENV variables)
 
@@ -59,6 +58,7 @@
 
 # Backlog Future Release
 - [ ] Allow to pass a custom cache instance mutate()->cache(MyRedisCache::getInstance())
+- [ ] Automatically convert Infection configuration to Pest configuration
 
 # Notes
 ## Running Initial Test Suite in Parallel
