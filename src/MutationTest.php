@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pest\Mutate;
 
+use ParaTest\Options;
 use Pest\Mutate\Event\Facade;
 use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Repositories\ConfigurationRepository;
@@ -37,7 +38,7 @@ class MutationTest
      * @param  array<string, array<int, array<int, string>>>  $coveredLines
      * @param  array<int, string>  $originalArguments
      */
-    public function start(array $coveredLines, Configuration $configuration, array $originalArguments): bool
+    public function start(array $coveredLines, Configuration $configuration, array $originalArguments, int $processId = null): bool
     {
         // TODO: we should pass the tests to run in another way, maybe via cache, mutation or env variable
         $filters = [];
@@ -61,6 +62,18 @@ class MutationTest
             return false;
         }
 
+        $envs = [
+            Mutate::ENV_MUTATION_TESTING => $this->mutation->file->getRealPath(),
+            Mutate::ENV_MUTATION_FILE => $this->mutation->modifiedSourcePath,
+        ];
+
+        if ($processId !== null) {
+            $envs['PARATEST'] = '1';
+            $envs[Options::ENV_KEY_TOKEN] = $processId;
+            $envs[Options::ENV_KEY_UNIQUE_TOKEN] = uniqid($processId.'_');
+            $envs['LARAVEL_PARALLEL_TESTING'] = 1;
+        }
+
         // TODO: filter arguments to remove unnecessary stuff (Teamcity, Coverage, etc.)
         $process = new Process(
             command: [
@@ -68,10 +81,7 @@ class MutationTest
                 '--bail',
                 '--filter="'.implode('|', $filters).'"',
             ],
-            env: [
-                Mutate::ENV_MUTATION_TESTING => $this->mutation->file->getRealPath(),
-                Mutate::ENV_MUTATION_FILE => $this->mutation->modifiedSourcePath,
-            ],
+            env: $envs,
             timeout: $this->calculateTimeout(),
         );
 

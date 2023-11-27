@@ -34,7 +34,7 @@ class MutationTestRunner implements MutationTestRunnerContract
     private array $originalArguments;
 
     /**
-     * @var array<int, MutationTest>
+     * @var array<int, ?MutationTest>
      */
     private array $runningTests;
 
@@ -248,13 +248,14 @@ class MutationTestRunner implements MutationTestRunnerContract
             }
         }
 
-        $this->runningTests = [];
+        $this->runningTests = array_fill(1, $processes, null);
+
         foreach ($tests as $test) {
             if ($this->stop) {
                 break;
             }
 
-            while (count($this->runningTests) >= $processes) {
+            while (count(array_filter($this->runningTests, fn (?MutationTest $process): bool => $process instanceof MutationTest)) >= $processes) {
                 if ($this->checkRunningTestsHaveFinished()) {
                     continue;
                 }
@@ -262,12 +263,13 @@ class MutationTestRunner implements MutationTestRunnerContract
                 usleep(1000);
             }
 
-            if ($test->start($coveredLines, $this->getConfiguration(), $this->originalArguments)) {
-                $this->runningTests[] = $test;
+            $processId = (int) array_key_first(array_filter($this->runningTests, fn (?MutationTest $process): bool => ! $process instanceof MutationTest));
+            if ($test->start($coveredLines, $this->getConfiguration(), $this->originalArguments, $processId)) {
+                $this->runningTests[$processId] = $test;
             }
         }
 
-        while (! $this->stop && $this->runningTests !== []) {
+        while (! $this->stop && array_filter($this->runningTests, fn (?MutationTest $process): bool => $process instanceof MutationTest) !== []) {
             $this->checkRunningTestsHaveFinished();
         }
     }
@@ -297,8 +299,12 @@ class MutationTestRunner implements MutationTestRunnerContract
     private function checkRunningTestsHaveFinished(): bool
     {
         foreach ($this->runningTests as $index => $runningTest) {
+            if (! $runningTest instanceof MutationTest) {
+                continue;
+            }
+
             if ($runningTest->hasFinished()) {
-                unset($this->runningTests[$index]);
+                $this->runningTests[$index] = null;
 
                 return true;
             }

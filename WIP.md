@@ -27,8 +27,6 @@
 - [ ] Awesome docs
 
 # Known Bugs
-- [ ] Make test filtering more stable. For example "for all .ch domains" does not work
-- [ ] Fix parallel for Laravel (set proper ENV variables)
 
 # Backlog Prio 1
 - [ ] Properly support xdebug
