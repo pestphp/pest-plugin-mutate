@@ -65,9 +65,19 @@ class TestCallDecorator implements Configuration
         return $this;
     }
 
-    public function min(float $minScore): self
+    public function min(float $minScore, bool $failOnZeroMutations = null): self
     {
         $this->configuration->min($minScore);
+        if ($failOnZeroMutations !== null) {
+            $this->configuration->ignoreMinScoreOnZeroMutations($failOnZeroMutations);
+        }
+
+        return $this;
+    }
+
+    public function ignoreMinScoreOnZeroMutations(bool $ignore = true): self
+    {
+        $this->configuration->ignoreMinScoreOnZeroMutations($ignore);
 
         return $this;
     }

@@ -99,7 +99,7 @@ class DefaultPrinter implements Printer
     {
         $this->output->writeln([
             '',
-            '  <fg=white;bg=red;options=bold> FAIL </> Code coverage below expected:<fg=red;options=bold> '.number_format($scoreReached, 1).' %</>. Minimum:<fg=gray;options=bold> '.number_format($scoreRequired, 1).' %</>.',
+            '  <fg=white;bg=red;options=bold> FAIL </> Mutation score below expected:<fg=red;options=bold> '.number_format($scoreReached, 1).' %</>. Minimum:<fg=gray;options=bold> '.number_format($scoreRequired, 1).' %</>.',
             '',
         ]);
     }
@@ -152,6 +152,16 @@ class DefaultPrinter implements Printer
         if (Container::getInstance()->get(ConfigurationRepository::class)->mergedConfiguration()->parallel) { // @phpstan-ignore-line
             $processes = Container::getInstance()->get(ConfigurationRepository::class)->mergedConfiguration()->processes; // @phpstan-ignore-line
             $this->output->writeln('  <fg=gray>Parallel:</>  <fg=default>'.$processes.' processes</>');
+        }
+
+        if ($mutationSuite->repository->count() === 0) {
+            $this->output->writeln([
+                '',
+                '  <fg=white;options=bold;bg=blue> INFO </> No mutations created.',
+                '',
+            ]);
+
+            return;
         }
 
         $this->output->writeln('');

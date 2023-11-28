@@ -27,6 +27,22 @@ it('sets the min score threshold from test', function (): void {
 })->mutate(ConfigurationRepository::FAKE.'_1')
     ->min(2);
 
+it('sets the min score threshold and ignores zero mutations from test', function (): void {
+    $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_15');
+
+    expect($configuration->toArray())
+        ->min_score->toEqual(2.0);
+})->mutate(ConfigurationRepository::FAKE.'_15')
+    ->min(2, failOnZeroMutations: false);
+
+it('sets the  from test', function (): void {
+    $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_16');
+
+    expect($configuration->toArray())
+        ->ignore_min_score_on_zero_mutations->toBeTrue();
+})->mutate(ConfigurationRepository::FAKE.'_16')
+    ->ignoreMinScoreOnZeroMutations();
+
 it('sets the covered only from test', function (): void {
     $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_2');
 

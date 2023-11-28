@@ -30,8 +30,6 @@
 
 # Backlog Prio 1
 - [ ] Properly support xdebug
-- [ ] Add option to pass min score with zero mutations. Maybe ->minScore(100, failOnZeroMutations: false)
-- [ ] When having the min score to 100, the job fails when no mutant is generated because the score is considered to be 0. Infection “suffers” from the same problem. However, it tackles this with this option : https://infection.github.io/guide/command-line-options.html#ignore-msi-with-no-mutati ons. Would be cool to have the same thing!
 - [ ] Automatically empty cache when package version changes / Maybe there is another approach: Use the same cache key per php file, but store a hash of the file content and the package version in the cache. If the hash changes, the cache is invalid.
 - [ ] What should we do with interfaces? ignore them completely?
 - [ ] Finish: Disable mutations by annotation

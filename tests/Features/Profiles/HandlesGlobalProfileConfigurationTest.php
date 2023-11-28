@@ -96,8 +96,24 @@ test('globally configure min score threshold', function (): void {
     mutate(ConfigurationRepository::FAKE)
         ->min(10.0);
 
-    expect($this->configuration->toArray()['min_score'])
-        ->toEqual(10.0);
+    expect($this->configuration->toArray())
+        ->min_score->toEqual(10.0)
+        ->ignore_min_score_on_zero_mutations->toBeNull();
+
+    mutate(ConfigurationRepository::FAKE)
+        ->min(20.5, failOnZeroMutations: false);
+
+    expect($this->configuration->toArray())
+        ->min_score->toEqual(20.5)
+        ->ignore_min_score_on_zero_mutations->toBeFalse();
+
+    mutate(ConfigurationRepository::FAKE)
+        ->min(30.0)
+        ->ignoreMinScoreOnZeroMutations();
+
+    expect($this->configuration->toArray())
+        ->min_score->toEqual(30)
+        ->ignore_min_score_on_zero_mutations->toBeTrue();
 });
 
 test('globally configure covered only option', function (): void {

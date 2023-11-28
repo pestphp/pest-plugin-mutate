@@ -140,6 +140,8 @@ The following options are available.
 - [`stopOnSurvived()`](#stopOnSurvived)
 - [`stopOnNotCovered()`](#stopOnNotCovered)
 - [`bail()`](#bail)
+- [`min()`](#min)
+- [`ignoreMinScoreOnZeroMutations()`](#ignoreMinScoreOnZeroMutations)
 
 </div>
 
@@ -295,6 +297,38 @@ mutate()
     ->bail();
 ```
 
+
+<a name="options-min"></a>
+### `min()`
+CLI: `--min`
+
+Enforce a minimum mutation score threshold. For more information see [Minimum Score Threshold Enforcement](#minimum-score-threshold-enforcement).
+
+```php
+mutate()
+    ->min(100);
+```
+
+You can pass an optional second parameter to ignore the minimum score threshold if zero mutations are generated. In this case Pest will exit with code 0.
+
+```php
+mutate()
+    ->min(100, failOnZeroMutations: false);
+```
+
+
+<a name="options-ignore-min-score-on-zero-mutations"></a>
+### `ignoreMinScoreOnZeroMutations()`
+CLI: `--ignore-min-score-on-zero-mutations`
+
+Ignores the minimum score threshold if zero mutations are generated. In this case Pest will exit with code 0.
+
+```php
+mutate()
+    ->ignoreMinScoreOnZeroMutations();
+```
+
+
 ## Performance
 
 Mutation testing is potentially very time-consuming and resource intensive because of the sheer amount of possible mutations and tests to run them against.
@@ -386,6 +420,12 @@ Just like code coverage, mutation coverage can also be enforced. You can use the
 
 ```bash
 ./vendor/bin/pest --mutate --min=100
+```
+
+If zero mutations are generated, the score is considered to be 0 and Pest will report a failure. You can use the `--ignore-min-score-on-zero-mutations` option to ignore the minimum score threshold if zero mutations are generated. In this case Pest will exit with code 0.
+
+```bash
+./vendor/bin/pest --mutate --min=100 --ignore-min-score-on-zero-mutations
 ```
 
 ## Custom Mutators

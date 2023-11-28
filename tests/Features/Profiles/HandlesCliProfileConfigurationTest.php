@@ -73,6 +73,24 @@ it('sets min score threshold if --min argument is passed', function (): void {
         ->min_score->toEqual(2.4);
 });
 
+it('enables ignore min score on zero mutations option if --ignore-min-score-on-zero-mutations argument is passed', function (): void {
+    $this->configuration->fromArguments(['--mutate='.ConfigurationRepository::FAKE]);
+    expect($this->configuration->toArray())
+        ->ignore_min_score_on_zero_mutations->toBeNull();
+
+    $this->configuration->fromArguments(['--ignore-min-score-on-zero-mutations']);
+    expect($this->configuration->toArray())
+        ->ignore_min_score_on_zero_mutations->toBeTrue();
+
+    $this->configuration->fromArguments(['--ignore-min-score-on-zero-mutations=true']);
+    expect($this->configuration->toArray())
+        ->ignore_min_score_on_zero_mutations->toBeTrue();
+
+    $this->configuration->fromArguments(['--ignore-min-score-on-zero-mutations=false']);
+    expect($this->configuration->toArray())
+        ->ignore_min_score_on_zero_mutations->toBeFalse();
+});
+
 it('enables covered only option if --covered-only argument is passed', function (): void {
     $this->configuration->fromArguments(['--mutate='.ConfigurationRepository::FAKE]);
     expect($this->configuration->toArray())

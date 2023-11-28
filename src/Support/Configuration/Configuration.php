@@ -23,6 +23,7 @@ class Configuration
         public readonly bool $parallel,
         public readonly int $processes,
         public readonly ?float $minScore,
+        public readonly bool $ignoreMinScoreOnZeroMutations,
         public readonly bool $stopOnSurvived,
         public readonly bool $stopOnNotCovered,
         public readonly bool $uncommittedOnly,

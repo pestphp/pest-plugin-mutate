@@ -26,7 +26,9 @@ interface Configuration
      */
     public function except(array|string ...$mutators): self;
 
-    public function min(float $minScore): self;
+    public function min(float $minScore, bool $failOnZeroMutations = null): self;
+
+    public function ignoreMinScoreOnZeroMutations(bool $ignore = true): self;
 
     public function coveredOnly(bool $coveredOnly = true): self;
 

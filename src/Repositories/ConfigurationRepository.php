@@ -102,6 +102,7 @@ class ConfigurationRepository
             parallel: $parallel,
             processes: $parallel ? ($config['processes'] ?? (new CpuCoreCounter())->getCount()) : 1,
             minScore: $config['min_score'] ?? null,
+            ignoreMinScoreOnZeroMutations: $config['ignore_min_score_on_zero_mutations'] ?? false,
             stopOnSurvived: $config['stop_on_survived'] ?? false,
             stopOnNotCovered: $config['stop_on_not_covered'] ?? false,
             uncommittedOnly: $config['uncommitted_only'] ?? false,

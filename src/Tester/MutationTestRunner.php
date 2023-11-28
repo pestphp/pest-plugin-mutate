@@ -238,11 +238,17 @@ class MutationTestRunner implements MutationTestRunnerContract
 
     private function ensureMinScoreIsReached(MutationSuite $mutationSuite): void
     {
-        $minScore = Container::getInstance()->get(ConfigurationRepository::class) // @phpstan-ignore-line
-            ->mergedConfiguration()
-            ->minScore;
+        /** @var Configuration $configuration */
+        $configuration = Container::getInstance()->get(ConfigurationRepository::class) // @phpstan-ignore-line
+            ->mergedConfiguration();
+
+        $minScore = $configuration->minScore;
 
         if ($minScore === null) {
+            return;
+        }
+
+        if ($mutationSuite->repository->count() === 0 && $configuration->ignoreMinScoreOnZeroMutations) {
             return;
         }
 

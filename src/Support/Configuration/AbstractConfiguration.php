@@ -38,6 +38,8 @@ abstract class AbstractConfiguration implements ConfigurationContract
 
     private ?float $minScore = null;
 
+    private ?bool $ignoreMinScoreOnZeroMutations = null;
+
     private ?bool $coveredOnly = null;
 
     private ?bool $parallel = null;
@@ -92,9 +94,20 @@ abstract class AbstractConfiguration implements ConfigurationContract
         return $this;
     }
 
-    public function min(float $minScore): self
+    public function min(float $minScore, bool $failOnZeroMutations = null): self
     {
         $this->minScore = $minScore;
+
+        if ($failOnZeroMutations !== null) {
+            $this->ignoreMinScoreOnZeroMutations = $failOnZeroMutations;
+        }
+
+        return $this;
+    }
+
+    public function ignoreMinScoreOnZeroMutations(bool $ignore = true): self
+    {
+        $this->ignoreMinScoreOnZeroMutations = $ignore;
 
         return $this;
     }
@@ -167,7 +180,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
     }
 
     /**
-     * @return array{paths?: string[], paths_to_ignore?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, processes?: int, min_score?: float, covered_only?: bool, stop_on_survived?: bool, stop_on_not_covered?: bool, uncommitted_only?: bool, changed_only?: string}
+     * @return array{paths?: string[], paths_to_ignore?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, processes?: int, min_score?: float, ignore_min_score_on_zero_mutations?: bool, covered_only?: bool, stop_on_survived?: bool, stop_on_not_covered?: bool, uncommitted_only?: bool, changed_only?: string}
      */
     public function toArray(): array
     {
@@ -180,6 +193,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
             'parallel' => $this->parallel,
             'processes' => $this->processes,
             'min_score' => $this->minScore,
+            'ignore_min_score_on_zero_mutations' => $this->ignoreMinScoreOnZeroMutations,
             'covered_only' => $this->coveredOnly,
             'stop_on_survived' => $this->stopOnSurvived,
             'stop_on_not_covered' => $this->stopOnNotCovered,

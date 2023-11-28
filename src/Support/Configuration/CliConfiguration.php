@@ -9,6 +9,7 @@ use Pest\Mutate\Options\ChangedOnlyOption;
 use Pest\Mutate\Options\ClassOption;
 use Pest\Mutate\Options\CoveredOnlyOption;
 use Pest\Mutate\Options\ExceptOption;
+use Pest\Mutate\Options\IgnoreMinScoreOnZeroMutationsOption;
 use Pest\Mutate\Options\IgnoreOption;
 use Pest\Mutate\Options\MinScoreOption;
 use Pest\Mutate\Options\MutateOption;
@@ -29,6 +30,7 @@ class CliConfiguration extends AbstractConfiguration
         ClassOption::class,
         CoveredOnlyOption::class,
         MinScoreOption::class,
+        IgnoreMinScoreOnZeroMutationsOption::class,
         MutatorsOption::class,
         ExceptOption::class,
         PathOption::class,
@@ -87,6 +89,10 @@ class CliConfiguration extends AbstractConfiguration
 
         if ($input->hasOption(MinScoreOption::ARGUMENT)) {
             $this->min((float) $input->getOption(MinScoreOption::ARGUMENT)); // @phpstan-ignore-line
+        }
+
+        if ($input->hasOption(IgnoreMinScoreOnZeroMutationsOption::ARGUMENT)) {
+            $this->ignoreMinScoreOnZeroMutations($input->getOption(IgnoreMinScoreOnZeroMutationsOption::ARGUMENT) !== 'false');
         }
 
         if ($input->hasOption(CoveredOnlyOption::ARGUMENT)) {
