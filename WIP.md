@@ -48,7 +48,7 @@
 - [ ] Add more Laravel mutators
 - [ ] Improve test filtering. Some test names, may not work
 - [ ] Better loop detection. For example when mutate break to continue in a while true loop
-- [ ] Beautify output / respect --compact option
+- [ ] Beautify output
 - [ ] HTML report
 
 # Backlog Future Release
