@@ -36,7 +36,7 @@
 - [ ] Run mutations in a reasonable order: New, Survived, NotCovered, Skipped, Killed (Survived first, if --stop-on-survived or --bail; NotCovered first, if --stop-on-uncovered)
 - [ ] Run test that killed a mutation before first
 - [ ] Log to file
-- [ ] Automatically skip "Arch" tests
+- [ ] Automatically skip "Arch" and "Stressless" tests - wait for arch() and stress() aliases for test()
 
 # Backlog Prio 2
 - [ ] Add array declaration mutators: https://stryker-mutator.io/docs/mutation-testing-elements/supported-mutators/#array-declaration
