@@ -12,13 +12,12 @@ use Pest\Mutate\MutationTest;
 use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Repositories\ConfigurationRepository;
 use Pest\Mutate\Support\Configuration\Configuration;
+use Pest\Mutate\Support\FileFinder;
 use Pest\Mutate\Support\GitDiff;
 use Pest\Mutate\Support\MutationGenerator;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 
 class MutationTestRunner implements MutationTestRunnerContract
 {
@@ -108,7 +107,7 @@ class MutationTestRunner implements MutationTestRunnerContract
         $coveredLines = array_map(fn (array $lines): array => array_filter($lines, fn (array $tests): bool => $tests !== []), $codeCoverage->getData()->lineCoverage());
         $coveredLines = array_filter($coveredLines, fn (array $lines): bool => $lines !== []);
 
-        $files = $this->getFiles($this->getConfiguration()->paths, $this->getConfiguration()->pathsToIgnore);
+        $files = FileFinder::files($this->getConfiguration()->paths, $this->getConfiguration()->pathsToIgnore);
 
         /** @var MutationGenerator $generator */
         $generator = Container::getInstance()->get(MutationGenerator::class);
@@ -178,57 +177,6 @@ class MutationTestRunner implements MutationTestRunnerContract
         $this->ensureMinScoreIsReached($mutationSuite);
 
         exit(0); // TODO: exit with error on failure
-    }
-
-    /**
-     * @param  array<array-key, string>  $paths
-     * @param  array<array-key, string>  $pathsToIgnore
-     */
-    private function getFiles(array $paths, array $pathsToIgnore): Finder
-    {
-        $dirs = [];
-        $filePaths = [];
-        foreach ($paths as $path) {
-            if (! str_starts_with($path, DIRECTORY_SEPARATOR)) {
-                $path = getcwd().DIRECTORY_SEPARATOR.$path;
-            }
-            if (is_dir($path)) {
-                $dirs[] = $path;
-            } elseif (is_file($path)) {
-                $file = new \SplFileInfo($path);
-                $filePaths[] = new SplFileInfo($file->getPathname(), '', $file->getFilename());
-            }
-        }
-
-        $allPathsToIgnore = [];
-        foreach ($pathsToIgnore as $pathToIgnore) {
-            if (str_starts_with($pathToIgnore, DIRECTORY_SEPARATOR)) {
-                if (file_exists($pathToIgnore)) {
-                    $allPathsToIgnore[] = $pathToIgnore;
-                }
-
-                continue;
-            }
-
-            foreach ($dirs as $dir) {
-                $dirPathToIgnore = $dir.DIRECTORY_SEPARATOR.$pathToIgnore;
-                if (file_exists($dirPathToIgnore)) {
-                    $allPathsToIgnore[] = $dirPathToIgnore;
-                }
-            }
-
-            $pathToIgnore = getcwd().DIRECTORY_SEPARATOR.$pathToIgnore;
-            if (file_exists($pathToIgnore)) {
-                $allPathsToIgnore[] = $pathToIgnore;
-            }
-        }
-
-        return Finder::create()
-            ->in($dirs)
-            ->name('*.php')
-            ->append($filePaths)
-            ->files()
-            ->filter(fn (SplFileInfo $file): bool => array_filter($allPathsToIgnore, fn (string $pathToIgnore): bool => str_starts_with($file->getRealPath(), $pathToIgnore)) === []);
     }
 
     private function getConfiguration(): Configuration
