@@ -25,6 +25,12 @@ final class EnsureInitialTestRunWasSuccessful implements FinishedSubscriber
             return;
         }
 
+        if (! Facade::result()->hasTests()) {
+            Container::getInstance()->get(Printer::class)->reportError('Initial test run has no tests, aborting mutation testing.'); // @phpstan-ignore-line
+
+            exit(1);
+        }
+
         if (Facade::result()->wasSuccessful()) {
             return;
         }
