@@ -200,14 +200,35 @@ class MutationTestRunner implements MutationTestRunnerContract
             }
         }
 
-        $pathsToIgnore = array_map(fn (string $path): string => str_starts_with($path, DIRECTORY_SEPARATOR) ? $path : getcwd().DIRECTORY_SEPARATOR.ltrim($path, '/'), $pathsToIgnore);
+        $allPathsToIgnore = [];
+        foreach ($pathsToIgnore as $pathToIgnore) {
+            if (str_starts_with($pathToIgnore, DIRECTORY_SEPARATOR)) {
+                if (file_exists($pathToIgnore)) {
+                    $allPathsToIgnore[] = $pathToIgnore;
+                }
+
+                continue;
+            }
+
+            foreach ($dirs as $dir) {
+                $dirPathToIgnore = $dir.DIRECTORY_SEPARATOR.$pathToIgnore;
+                if (file_exists($dirPathToIgnore)) {
+                    $allPathsToIgnore[] = $dirPathToIgnore;
+                }
+            }
+
+            $pathToIgnore = getcwd().DIRECTORY_SEPARATOR.$pathToIgnore;
+            if (file_exists($pathToIgnore)) {
+                $allPathsToIgnore[] = $pathToIgnore;
+            }
+        }
 
         return Finder::create()
             ->in($dirs)
             ->name('*.php')
             ->append($filePaths)
             ->files()
-            ->filter(fn (SplFileInfo $file): bool => array_filter($pathsToIgnore, fn (string $pathToIgnore): bool => str_starts_with($file->getRealPath(), $pathToIgnore)) === []);
+            ->filter(fn (SplFileInfo $file): bool => array_filter($allPathsToIgnore, fn (string $pathToIgnore): bool => str_starts_with($file->getRealPath(), $pathToIgnore)) === []);
     }
 
     private function getConfiguration(): Configuration
