@@ -29,16 +29,16 @@
 # Known Bugs
 
 # Backlog Prio 1
-- [ ] Properly support xdebug
-- [ ] Automatically empty cache when package version changes / Maybe there is another approach: Use the same cache key per php file, but store a hash of the file content and the package version in the cache. If the hash changes, the cache is invalid.
-- [ ] What should we do with interfaces? ignore them completely?
-- [ ] Finish: Disable mutations by annotation
-- [ ] Run mutations in a reasonable order: New, Survived, NotCovered, Skipped, Killed (Survived first, if --stop-on-survived or --bail; NotCovered first, if --stop-on-uncovered)
 - [ ] Run test that killed a mutation before first
-- [ ] Log to file
+- [ ] Run mutations in a reasonable order: New, Survived, NotCovered, Skipped, Killed (Survived first, if --stop-on-survived or --bail; NotCovered first, if --stop-on-uncovered)
+- [ ] Automatically empty cache when package version changes / Maybe there is another approach: Use the same cache key per php file, but store a hash of the file content and the package version in the cache. If the hash changes, the cache is invalid.
 - [ ] Automatically skip "Arch" and "Stressless" tests - wait for arch() and stress() aliases for test()
+- [ ] Properly support xdebug
+- [ ] What should we do with interfaces? ignore them completely?
+- [ ] Log to file
 
 # Backlog Prio 2
+- [ ] Add mutator to unwrap idn_to_ascii() and idn_to_utf8()
 - [ ] Add array declaration mutators: https://stryker-mutator.io/docs/mutation-testing-elements/supported-mutators/#array-declaration
 - [ ] Add empty block statement mutator?: https://stryker-mutator.io/docs/mutation-testing-elements/supported-mutators/#array-declaration
 - [ ] Check if we have mutators which do the same mutation. For example: "true" to "false", and "return true" to "return false"

@@ -405,12 +405,55 @@ vendor/bin/pest --mutate --parallel
 
 ## Ignoring Mutations
 
-Sometimes, you may want to ignore a specific mutation or line of code. To do so, you may use the `@pest-ignore-mutation` annotation:
+### Ignore for a single line
+
+Sometimes, you may want to prevent a line from being mutated. To do so, you may use the `@pest-mutate-ignore` annotation:
 
 ```php
-    if($age >= 18) // @pest-ignore-mutation
-        // ...
-    ];
+if($age >= 18) // @pest-mutate-ignore
+    // ...
+];
+```
+
+If you want to ignore only a specific mutator, you can add a comma separated list of mutator names:
+
+```php
+if($age >= 18) // @pest-mutate-ignore: GreaterOrEqualToGreater
+    // ...
+];
+```
+
+### Ignore for multiple lines
+
+To ignore mutations on large parts of the code you can add the annotation to a class, method or statement to ignore all mutations within the elements scope.
+
+To ignore only specific mutators, you can add a comma separated list of mutator names: `@pest-mutate-ignore: GreaterOrEqualToGreater,IfNegated`
+
+#### Class level
+```php
+/**
+ * @pest-mutate-ignore
+ */
+class Test {
+    // ...
+}
+```
+
+#### Method or function level
+```php
+/**
+ * @pest-mutate-ignore
+ */
+public function test() {
+    // ...
+}
+```
+
+#### Statement level
+```php
+/** @pest-mutate-ignore */
+for($i = 0; $i < 10; $i++) {
+    // ...
 }
 ```
 

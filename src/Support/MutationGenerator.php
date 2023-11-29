@@ -7,6 +7,7 @@ namespace Pest\Mutate\Support;
 use Pest\Mutate\Contracts\Mutator;
 use Pest\Mutate\Factories\NodeTraverserFactory;
 use Pest\Mutate\Mutation;
+use Pest\Support\Str;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
@@ -44,10 +45,14 @@ class MutationGenerator
             return $mutations;
         }
 
-        $ignoreComments = [];
+        $mutatorsToIgnoreByLine = [];
         foreach (explode(PHP_EOL, $contents) as $lineNumber => $line) {
-            if (str_contains($line, '// @pest-mutate-ignore')) {
-                $ignoreComments[] = ['line' => $lineNumber + 1, 'comment' => '// @pest-mutate-ignore'];
+            if (str_contains($line, '@pest-mutate-ignore')) {
+                if (Str::after($line, '@pest-mutate-ignore:') !== $line) {
+                    $mutatorsToIgnore = explode(',', Str::after($line, '@pest-mutate-ignore:'));
+                    $mutatorsToIgnore = array_map(fn (string $mutator): string => trim($mutator), $mutatorsToIgnore);
+                }
+                $mutatorsToIgnoreByLine[$lineNumber + 1] = $mutatorsToIgnore ?? ['all'];
             }
         }
 
@@ -72,6 +77,7 @@ class MutationGenerator
                         mutator: $mutator,
                         linesToMutate: $linesToMutate,
                         offset: $this->offset,
+                        mutatorsToIgnoreByLine: $mutatorsToIgnoreByLine,
                         hasAlreadyMutated: $this->hasMutated(...),
                         trackMutation: $this->trackMutation(...),
                     ));
@@ -100,16 +106,16 @@ class MutationGenerator
             ];
         }
 
-        // filter out mutations that are ignored
-        $mutations = array_filter($mutations, function (Mutation $mutation) use ($ignoreComments): bool {
-            foreach ($ignoreComments as $comment) {
-                if ($comment['line'] === $mutation->startLine) {
-                    return false;
-                }
-            }
-
-            return true;
-        });
+        //        // filter out mutations that are ignored
+        //        $mutations = array_filter($mutations, function (Mutation $mutation) use ($ignoreComments): bool {
+        //            foreach ($ignoreComments as $comment) {
+        //                if ($comment['line'] === $mutation->startLine) {
+        //                    return false;
+        //                }
+        //            }
+        //
+        //            return true;
+        //        });
 
         // sort mutations by line number
         usort($mutations, fn (Mutation $a, Mutation $b): int => $a->startLine <=> $b->startLine);

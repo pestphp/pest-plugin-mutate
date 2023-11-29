@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 use Pest\Mutate\Mutation;
+use Pest\Mutate\Mutators\ControlStructures\IfNegated;
 use Pest\Mutate\Mutators\Equality\GreaterOrEqualToGreater;
 use Pest\Mutate\Mutators\Equality\SmallerToSmallerOrEqual;
 use Pest\Mutate\Support\MutationGenerator;
@@ -11,6 +12,17 @@ use Tests\Fixtures\Classes\SizeHelper;
 
 beforeEach(function (): void {
     $this->generator = new MutationGenerator();
+
+    $this->generate = function (string $content, array $mutators) {
+        $fileName = tempnam(sys_get_temp_dir(), 'pest-mutate');
+
+        file_put_contents($fileName, $content);
+
+        return $this->generator->generate(
+            new SplFileInfo($fileName, '', ''),
+            $mutators,
+        );
+    };
 });
 
 it('generates mutations for the given file', function (): void {
@@ -90,12 +102,166 @@ it('generates mutations for the given file if it contains the given class', func
 ]);
 
 it('ignores lines with the ignore annotation', function (): void {
-    $mutations = $this->generator->generate(
-        new SplFileInfo(dirname(__DIR__).'/Fixtures/Classes/SizeHelper.php', '', ''),
+    $mutations = ($this->generate)(<<<'PHP'
+            <?php
+
+            return $a >= $b; // @pest-mutate-ignore
+            PHP,
         [GreaterOrEqualToGreater::class],
     );
 
     expect($mutations)
-        ->toBeArray()
-        ->toHaveCount(0);
+        ->toBeEmpty();
+});
+
+it('ignores lines with the ignore annotation for a specific mutator', function (): void {
+    $mutations = ($this->generate)(<<<'PHP'
+            <?php
+
+            if($a > $b) { // @pest-mutate-ignore: GreaterOrEqualToGreater
+                $a = $b;
+            }
+            PHP,
+        [GreaterOrEqualToGreater::class, IfNegated::class],
+    );
+
+    expect($mutations)
+        ->toHaveCount(1)
+        ->{0}->mutator->toBe(IfNegated::class);
+});
+
+it('ignores lines with the ignore annotation for multiple mutators', function (): void {
+    $mutations = ($this->generate)(<<<'PHP'
+            <?php
+
+            if($a > $b) { // @pest-mutate-ignore: GreaterOrEqualToGreater,IfNegated
+                $a = $b;
+            }
+            PHP,
+        [GreaterOrEqualToGreater::class, IfNegated::class],
+    );
+
+    expect($mutations)
+        ->toBeEmpty();
+});
+
+it('ignores all mutators for a function', function (): void {
+    $mutations = ($this->generate)(<<<'PHP'
+            <?php
+
+            /**
+             * @pest-mutate-ignore
+             */
+            function test() {
+                return $a >= $b;
+            }
+            PHP,
+        [GreaterOrEqualToGreater::class],
+    );
+
+    expect($mutations)
+        ->toBeEmpty();
+});
+
+it('ignores a specific mutator for a function', function (): void {
+    $mutations = ($this->generate)(<<<'PHP'
+            <?php
+
+            /**
+             * @pest-mutate-ignore: GreaterOrEqualToGreater
+             */
+            function test() {
+                if($a > $b) {
+                    return $a = $b;
+                }
+            }
+            PHP,
+        [GreaterOrEqualToGreater::class, IfNegated::class],
+    );
+
+    expect($mutations)
+        ->toHaveCount(1)
+        ->{0}->mutator->toBe(IfNegated::class);
+});
+
+it('ignores multiple mutators for a function', function (): void {
+    $mutations = ($this->generate)(<<<'PHP'
+            <?php
+
+            /**
+             * @pest-mutate-ignore: GreaterOrEqualToGreater,IfNegated
+             */
+            function test() {
+                if($a >= $b) {
+                    return $a = $b;
+                }
+            }
+            PHP,
+        [GreaterOrEqualToGreater::class, IfNegated::class],
+    );
+
+    expect($mutations)
+        ->toBeEmpty();
+});
+
+it('ignores multiple mutators for a function with a single line doc block', function (): void {
+    $mutations = ($this->generate)(<<<'PHP'
+            <?php
+
+            /** @pest-mutate-ignore: GreaterOrEqualToGreater,IfNegated */
+            function test() {
+                if($a >= $b) {
+                    return $a = $b;
+                }
+            }
+            PHP,
+        [GreaterOrEqualToGreater::class, IfNegated::class],
+    );
+
+    expect($mutations)
+        ->toBeEmpty();
+});
+
+it('ignores multiple mutators for a class', function (): void {
+    $mutations = ($this->generate)(<<<'PHP'
+            <?php
+
+            /**
+             * @pest-mutate-ignore: GreaterOrEqualToGreater,IfNegated
+             */
+            class Test {
+                public function test() {
+                    if($a >= $b) {
+                        return $a = $b;
+                    }
+                }
+            }
+            PHP,
+        [GreaterOrEqualToGreater::class, IfNegated::class],
+    );
+
+    expect($mutations)
+        ->toBeEmpty();
+});
+
+it('ignores multiple mutators for a loop', function (): void {
+    $mutations = ($this->generate)(<<<'PHP'
+            <?php
+
+            function test() {
+                /**
+                 * @pest-mutate-ignore: GreaterOrEqualToGreater,IfNegated
+                 */
+                for($i = 0; $i < 10; $i++) {
+                    if($a >= $b) {
+                        return $a = $b;
+                    }
+                }
+            }
+            PHP,
+        [GreaterOrEqualToGreater::class, IfNegated::class],
+    );
+
+    expect($mutations)
+        ->toBeEmpty();
 });

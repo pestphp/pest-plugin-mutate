@@ -8,6 +8,6 @@ class SizeHelper
 {
     public static function isBig(int $size): bool
     {
-        return $size >= 100; // @pest-mutate-ignore
+        return $size >= 100;
     }
 }
