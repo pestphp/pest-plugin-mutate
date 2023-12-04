@@ -130,6 +130,7 @@ The following options are available.
 - [`stopOnSurvived()`](#stopOnSurvived)
 - [`stopOnNotCovered()`](#stopOnNotCovered)
 - [`bail()`](#bail)
+- [`retry()`](#retry)
 - [`min()`](#min)
 - [`ignoreMinScoreOnZeroMutations()`](#ignoreMinScoreOnZeroMutations)
 
@@ -285,6 +286,22 @@ Stop execution upon first not covered or survived mutant.
 ```php
 mutate()
     ->bail();
+```
+
+
+<a name="options-retry"></a>
+### `retry()`
+CLI: `--retry`
+
+If a mutation previously survived, you typically want to run them first. In such cases, you can use the `--retry` option.
+
+The `--retry` flag reorders your mutations by prioritizing the previously survived mutations. If there were no past survivals, the suite runs as usual.
+
+Additionally, it will stop execution upon first survived mutant.
+
+```php
+mutate()
+    ->retry();
 ```
 
 

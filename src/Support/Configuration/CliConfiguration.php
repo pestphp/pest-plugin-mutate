@@ -18,6 +18,7 @@ use Pest\Mutate\Options\ParallelOption;
 use Pest\Mutate\Options\PathOption;
 use Pest\Mutate\Options\ProcessesOption;
 use Pest\Mutate\Options\ProfileOption;
+use Pest\Mutate\Options\RetryOption;
 use Pest\Mutate\Options\StopOnNotCoveredOption;
 use Pest\Mutate\Options\StopOnSurvivedOption;
 use Pest\Mutate\Options\UncommittedOnlyOption;
@@ -44,6 +45,7 @@ class CliConfiguration extends AbstractConfiguration
         BailOption::class,
         UncommittedOnlyOption::class,
         ChangedOnlyOption::class,
+        RetryOption::class,
     ];
 
     /**
@@ -145,6 +147,11 @@ class CliConfiguration extends AbstractConfiguration
 
         if ($input->hasOption(ChangedOnlyOption::ARGUMENT)) {
             $this->changedOnly($input->getOption(ChangedOnlyOption::ARGUMENT) !== null ? (string) $input->getOption(ChangedOnlyOption::ARGUMENT) : 'main'); // @phpstan-ignore-line
+        }
+
+        if ($input->hasOption(RetryOption::ARGUMENT)) {
+            $this->retry($input->getOption(RetryOption::ARGUMENT) !== 'false');
+
         }
 
         return $arguments;

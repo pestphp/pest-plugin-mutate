@@ -220,3 +220,18 @@ test('globally configure profile option', function (): void {
     expect($this->configuration->toArray()['profile'])
         ->toBeFalse();
 });
+
+test('globally configure retry option', function (): void {
+    mutate(ConfigurationRepository::FAKE)
+        ->retry();
+
+    expect($this->configuration->toArray())
+        ->retry->toBeTrue()
+        ->stop_on_survived->toBeTrue();
+
+    mutate(ConfigurationRepository::FAKE)
+        ->retry(false);
+
+    expect($this->configuration->toArray()['retry'])
+        ->toBeFalse();
+});

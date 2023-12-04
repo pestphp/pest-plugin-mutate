@@ -29,6 +29,7 @@ class Configuration
         public readonly bool $stopOnNotCovered,
         public readonly bool $uncommittedOnly,
         public readonly string|false $changedOnly,
+        public readonly bool $retry,
     ) {
     }
 }

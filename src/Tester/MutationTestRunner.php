@@ -157,6 +157,10 @@ class MutationTestRunner implements MutationTestRunnerContract
 
         Facade::instance()->emitter()->finishMutationGeneration($mutationSuite);
 
+        if ($this->getConfiguration()->retry) {
+            $mutationSuite->repository->sortBySurvivedFirst();
+        }
+
         Facade::instance()->emitter()->startMutationSuite($mutationSuite);
 
         if ($this->getConfiguration()->parallel) {
@@ -171,6 +175,8 @@ class MutationTestRunner implements MutationTestRunnerContract
                 coveredLines: $coveredLines,
             );
         }
+
+        $mutationSuite->repository->saveResults();
 
         Facade::instance()->emitter()->finishMutationSuite($mutationSuite);
 

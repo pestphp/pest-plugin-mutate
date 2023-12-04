@@ -208,3 +208,15 @@ it('enables profile option if --profile argument is passed', function (): void {
     expect($this->configuration->toArray())
         ->profile->toBeTrue();
 });
+
+it('enables profile option if --retry argument is passed', function (): void {
+    $this->configuration->fromArguments(['--mutate='.ConfigurationRepository::FAKE]);
+    expect($this->configuration->toArray())
+        ->retry->toBeNull()
+        ->stop_on_survived->toBeNull();
+
+    $this->configuration->fromArguments(['--retry']);
+    expect($this->configuration->toArray())
+        ->retry->toBeTrue()
+        ->stop_on_survived->toBeTrue();
+});

@@ -28,6 +28,11 @@ class MutationTest
     {
     }
 
+    public function getId(): string
+    {
+        return hash('xxh3', $this->mutation->file->getRealPath().$this->mutation->mutator.$this->mutation->startLine);
+    }
+
     public function result(): MutationTestResult
     {
         return $this->result;
@@ -153,5 +158,13 @@ class MutationTest
         }
 
         return $this->finish - $this->start;
+    }
+
+    /**
+     * @param  array<string, string>  $results
+     */
+    public function lastRunResult(array $results): MutationTestResult
+    {
+        return MutationTestResult::from($results[$this->getId()] ?? 'none');
     }
 }

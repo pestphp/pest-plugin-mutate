@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Support;
 
-enum MutationTestResult
+enum MutationTestResult: string
 {
-    case None;
-    case NotCovered;
-    case Killed;
-    case Survived;
-    case Timeout;
+    case None = 'none';
+    case NotCovered = 'not-covered';
+    case Killed = 'killed';
+    case Survived = 'survived';
+    case Timeout = 'timeout';
 }

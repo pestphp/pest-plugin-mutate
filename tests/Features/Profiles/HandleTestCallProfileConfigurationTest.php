@@ -156,3 +156,12 @@ it('sets the profile option from test', function (): void {
         ->toBeTrue();
 })->mutate(ConfigurationRepository::FAKE.'_17')
     ->profile(true);
+
+it('sets the retry option from test', function (): void {
+    $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_18');
+
+    expect($configuration->toArray())
+        ->retry->toBeTrue()
+        ->stop_on_survived->toBeTrue();
+})->mutate(ConfigurationRepository::FAKE.'_18')
+    ->retry(true);

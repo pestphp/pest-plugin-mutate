@@ -52,4 +52,6 @@ interface Configuration
     public function uncommittedOnly(bool $uncommittedOnly = true): self;
 
     public function changedOnly(?string $branch = 'main'): self;
+
+    public function retry(bool $retry = true): self;
 }

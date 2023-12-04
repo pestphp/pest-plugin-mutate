@@ -56,6 +56,8 @@ abstract class AbstractConfiguration implements ConfigurationContract
 
     private ?string $changedOnly = null;
 
+    private ?bool $retry = null;
+
     /**
      * {@inheritDoc}
      */
@@ -189,7 +191,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
     }
 
     /**
-     * @return array{paths?: string[], paths_to_ignore?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, processes?: int, profile?: bool, min_score?: float, ignore_min_score_on_zero_mutations?: bool, covered_only?: bool, stop_on_survived?: bool, stop_on_not_covered?: bool, uncommitted_only?: bool, changed_only?: string}
+     * @return array{paths?: string[], paths_to_ignore?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, processes?: int, profile?: bool, min_score?: float, ignore_min_score_on_zero_mutations?: bool, covered_only?: bool, stop_on_survived?: bool, stop_on_not_covered?: bool, uncommitted_only?: bool, changed_only?: string, retry?: bool}
      */
     public function toArray(): array
     {
@@ -209,6 +211,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
             'stop_on_not_covered' => $this->stopOnNotCovered,
             'uncommitted_only' => $this->uncommittedOnly,
             'changed_only' => $this->changedOnly,
+            'retry' => $this->retry,
         ], fn (mixed $value): bool => ! is_null($value));
     }
 
@@ -243,5 +246,16 @@ abstract class AbstractConfiguration implements ConfigurationContract
         }
 
         return $mutators; // @phpstan-ignore-line
+    }
+
+    public function retry(bool $retry = true): self
+    {
+        $this->retry = $retry;
+
+        if ($retry) {
+            $this->stopOnSurvived = true;
+        }
+
+        return $this;
     }
 }

@@ -19,7 +19,7 @@
 - [ ] Allow registering Custom Mutators
 - [ ] Disable mutations by annotation
 - [x] Caching
-- [ ] Order mutations to execute
+- [x] Retry (runs survived mutations first)
 - [ ] Verbose output
 - [ ] Text log
 - [ ] HTML report
@@ -29,8 +29,6 @@
 # Known Bugs
 
 # Backlog Prio 1
-- [ ] Run test that killed a mutation first
-- [ ] Run mutations in a reasonable order: New, Survived, NotCovered, Skipped, Killed (Survived first, if --stop-on-survived or --bail; NotCovered first, if --stop-on-uncovered)
 - [ ] Automatically empty cache when package version changes / Maybe there is another approach: Use the same cache key per php file, but store a hash of the file content and the package version in the cache. If the hash changes, the cache is invalid.
 - [ ] Automatically skip "Arch" and "Stressless" tests - wait for arch() and stress() aliases for test()
 - [ ] Properly support xdebug
@@ -46,7 +44,6 @@
 - [ ] Dedicated help output (`vendor/bin/pest --mutate --help`)
 - [ ] Add help to show available mutators and sets
 - [ ] Add more Laravel mutators
-- [ ] Improve test filtering. Some test names, may not work
 - [ ] Better loop detection. For example when mutate break to continue in a while true loop
 - [ ] Beautify output
 - [ ] HTML report

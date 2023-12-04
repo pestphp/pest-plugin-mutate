@@ -187,5 +187,16 @@ class TestCallDecorator implements Configuration
 
         return $this;
     }
+
+    public function retry(bool $retry = true): Configuration
+    {
+        $this->configuration->retry($retry);
+
+        if ($retry) {
+            $this->configuration->stopOnSurvived();
+        }
+
+        return $this;
+    }
 }
 // @codeCoverageIgnoreEnd

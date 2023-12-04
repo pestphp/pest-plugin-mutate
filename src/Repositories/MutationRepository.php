@@ -7,6 +7,7 @@ namespace Pest\Mutate\Repositories;
 use Pest\Mutate\Mutation;
 use Pest\Mutate\MutationTest;
 use Pest\Mutate\MutationTestCollection;
+use Pest\Mutate\Support\ResultCache;
 
 class MutationRepository
 {
@@ -91,5 +92,21 @@ class MutationRepository
         usort($allTests, fn (MutationTest $a, MutationTest $b): int => $b->duration() <=> $a->duration());
 
         return array_slice($allTests, 0, 10);
+    }
+
+    public function sortBySurvivedFirst(): void
+    {
+        usort($this->tests, fn (MutationTestCollection $a, MutationTestCollection $b): int => $b->hasLastRunSurvivedMutation() <=> $a->hasLastRunSurvivedMutation());
+
+        foreach ($this->tests as $testCollection) {
+            $testCollection->sortBySurvivedFirst();
+        }
+    }
+
+    public function saveResults(): void
+    {
+        foreach ($this->tests as $testCollection) {
+            ResultCache::instance()->put($testCollection);
+        }
     }
 }
