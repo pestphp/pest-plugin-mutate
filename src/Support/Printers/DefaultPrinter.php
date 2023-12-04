@@ -9,6 +9,7 @@ use Pest\Mutate\MutationSuite;
 use Pest\Mutate\MutationTest;
 use Pest\Mutate\MutationTestCollection;
 use Pest\Mutate\Repositories\ConfigurationRepository;
+use Pest\Mutate\Support\Configuration\Configuration;
 use Pest\Mutate\Support\MutationTestResult;
 use Pest\Support\Container;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -131,6 +132,9 @@ class DefaultPrinter implements Printer
 
     public function reportMutationSuiteFinished(MutationSuite $mutationSuite): void
     {
+        /** @var Configuration $configuration */
+        $configuration = Container::getInstance()->get(ConfigurationRepository::class)->mergedConfiguration(); // @phpstan-ignore-line
+
         if ($this->compact) {
             $this->output->writeln(''); // add new line after compact test output
         }
@@ -149,8 +153,8 @@ class DefaultPrinter implements Printer
         $duration = number_format($mutationSuite->duration(), 2);
         $this->output->writeln('  <fg=gray>Duration:</>  <fg=default>'.$duration.'s</>');
 
-        if (Container::getInstance()->get(ConfigurationRepository::class)->mergedConfiguration()->parallel) { // @phpstan-ignore-line
-            $processes = Container::getInstance()->get(ConfigurationRepository::class)->mergedConfiguration()->processes; // @phpstan-ignore-line
+        if ($configuration->parallel) {
+            $processes = $configuration->processes;
             $this->output->writeln('  <fg=gray>Parallel:</>  <fg=default>'.$processes.' processes</>');
         }
 
@@ -165,6 +169,10 @@ class DefaultPrinter implements Printer
         }
 
         $this->output->writeln('');
+
+        if ($configuration->profile) {
+            $this->writeMutationTestProfile($mutationSuite);
+        }
     }
 
     private function writeMutationTestLine(string $color, string $symbol, MutationTest $test): void
@@ -213,12 +221,58 @@ class DefaultPrinter implements Printer
 
         $diff = $test->mutation->diff;
         $this->output->writeln($diff);
+    }
 
-        //        render(<<<HTML
-        //                        <div class="mx-2 flex">
-        //                            {$diff}
-        //                        </div>
-        //                    HTML
-        //        );
+    private function writeMutationTestProfile(MutationSuite $mutationSuite): void
+    {
+        /** @var Configuration $configuration */
+        $configuration = Container::getInstance()->get(ConfigurationRepository::class)->mergedConfiguration(); // @phpstan-ignore-line
+
+        $this->output->writeln('  <fg=gray>Top 10 slowest tests:</>');
+
+        $timeElapsed = $mutationSuite->duration() * ($configuration->parallel ? $configuration->processes : 1);
+
+        $slowTests = $mutationSuite->repository->slowest();
+
+        foreach ($slowTests as $slowTest) {
+            $path = str_ireplace(getcwd().'/', '', (string) $slowTest->mutation->file->getRealPath());
+
+            $seconds = number_format($slowTest->duration(), 2, '.', '');
+
+            $color = ($slowTest->duration()) > $timeElapsed * 0.25 ? 'red' : ($slowTest->duration() > $timeElapsed * 0.1 ? 'yellow' : 'gray');
+
+            render(sprintf(<<<'HTML'
+                <div class="flex justify-between space-x-1 mx-2">
+                    <span class="flex-1">
+                        <span class="font-bold">%s</span><span class="text-gray mx-1">></span><span class="text-gray">Line %s: %s</span>
+                    </span>
+                    <span class="ml-1 font-bold text-%s">
+                        %ss
+                    </span>
+                </div>
+            HTML, $path, $slowTest->mutation->startLine, $slowTest->mutation->mutator::name(), $color, $seconds));
+        }
+
+        $timeElapsedInSlowTests = array_sum(array_map(fn (MutationTest $testResult): float => $testResult->duration(), $slowTests));
+
+        $timeElapsedAsString = number_format($timeElapsed, 2, '.', '');
+        $percentageInSlowTestsAsString = number_format($timeElapsedInSlowTests * 100 / $timeElapsed, 2, '.', '');
+        $timeElapsedInSlowTestsAsString = number_format($timeElapsedInSlowTests, 2, '.', '');
+
+        render(sprintf(<<<'HTML'
+            <div class="mx-2 mb-1 flex">
+                <div class="text-gray">
+                    <hr/>
+                </div>
+                <div class="flex space-x-1 justify-between">
+                    <span>
+                    </span>
+                    <span>
+                        <span class="text-gray">(%s%% of %ss)</span>
+                        <span class="ml-1 font-bold">%ss</span>
+                    </span>
+                </div>
+            </div>
+        HTML, $percentageInSlowTestsAsString, $timeElapsedAsString, $timeElapsedInSlowTestsAsString));
     }
 }

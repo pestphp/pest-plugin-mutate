@@ -36,6 +36,8 @@ interface Configuration
 
     public function processes(int $processes = null): self;
 
+    public function profile(bool $profile = true): self;
+
     public function stopOnSurvived(bool $stopOnSurvived = true): self;
 
     public function stopOnNotCovered(bool $stopOnNotCovered = true): self;

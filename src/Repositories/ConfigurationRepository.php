@@ -101,6 +101,7 @@ class ConfigurationRepository
             classes: $config['classes'] ?? [],
             parallel: $parallel,
             processes: $parallel ? ($config['processes'] ?? (new CpuCoreCounter())->getCount()) : 1,
+            profile: $config['profile'] ?? false,
             minScore: $config['min_score'] ?? null,
             ignoreMinScoreOnZeroMutations: $config['ignore_min_score_on_zero_mutations'] ?? false,
             stopOnSurvived: $config['stop_on_survived'] ?? false,

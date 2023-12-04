@@ -393,6 +393,15 @@ Against a single mutation the tests are not run in parallel, regardless of the p
 vendor/bin/pest --mutate --parallel
 ```
 
+### Profiling
+
+You can profile the performance of the mutations by using the `--profile` option.
+It outputs a list of the then slowest mutations.
+
+```bash
+vendor/bin/pest --mutate --profile
+```
+
 ## Ignoring Mutations
 
 ### Ignore for a single line

@@ -136,6 +136,13 @@ class TestCallDecorator implements Configuration
         return $this;
     }
 
+    public function profile(bool $parallel = true): self
+    {
+        $this->configuration->profile($parallel);
+
+        return $this;
+    }
+
     /**
      * {@inheritDoc}
      */

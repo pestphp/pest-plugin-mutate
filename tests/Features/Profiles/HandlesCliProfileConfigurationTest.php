@@ -198,3 +198,13 @@ it('enables changed only option if --changed-only argument is passed', function 
     expect($this->configuration->toArray())
         ->changed_only->toBe('other-branch');
 });
+
+it('enables profile option if --profile argument is passed', function (): void {
+    $this->configuration->fromArguments(['--mutate='.ConfigurationRepository::FAKE]);
+    expect($this->configuration->toArray())
+        ->profile->toBeNull();
+
+    $this->configuration->fromArguments(['--profile']);
+    expect($this->configuration->toArray())
+        ->profile->toBeTrue();
+});

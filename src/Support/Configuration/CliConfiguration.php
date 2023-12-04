@@ -17,6 +17,7 @@ use Pest\Mutate\Options\MutatorsOption;
 use Pest\Mutate\Options\ParallelOption;
 use Pest\Mutate\Options\PathOption;
 use Pest\Mutate\Options\ProcessesOption;
+use Pest\Mutate\Options\ProfileOption;
 use Pest\Mutate\Options\StopOnNotCoveredOption;
 use Pest\Mutate\Options\StopOnSurvivedOption;
 use Pest\Mutate\Options\UncommittedOnlyOption;
@@ -37,6 +38,7 @@ class CliConfiguration extends AbstractConfiguration
         IgnoreOption::class,
         ParallelOption::class,
         ProcessesOption::class,
+        ProfileOption::class,
         StopOnSurvivedOption::class,
         StopOnNotCoveredOption::class,
         BailOption::class,
@@ -109,6 +111,15 @@ class CliConfiguration extends AbstractConfiguration
 
         if ($input->hasOption(ProcessesOption::ARGUMENT)) {
             $this->processes($input->getOption(ProcessesOption::ARGUMENT) !== null ? (int) $input->getOption(ProcessesOption::ARGUMENT) : null); // @phpstan-ignore-line
+        }
+
+        if ($input->hasOption(ProfileOption::ARGUMENT)) {
+            $this->profile($input->getOption(ProfileOption::ARGUMENT) !== 'false');
+        }
+
+        if ($_SERVER['COLLISION_PRINTER_PROFILE'] ?? false) {
+            $this->profile(true);
+            unset($_SERVER['COLLISION_PRINTER_PROFILE']);
         }
 
         if ($input->hasOption(ClassOption::ARGUMENT)) {

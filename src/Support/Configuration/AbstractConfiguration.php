@@ -46,6 +46,8 @@ abstract class AbstractConfiguration implements ConfigurationContract
 
     private ?int $processes = null;
 
+    private ?bool $profile = null;
+
     private ?bool $stopOnSurvived = null;
 
     private ?bool $stopOnNotCovered = null;
@@ -133,6 +135,13 @@ abstract class AbstractConfiguration implements ConfigurationContract
         return $this;
     }
 
+    public function profile(bool $profile = true): self
+    {
+        $this->profile = $profile;
+
+        return $this;
+    }
+
     public function stopOnSurvived(bool $stopOnSurvived = true): self
     {
         $this->stopOnSurvived = $stopOnSurvived;
@@ -180,7 +189,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
     }
 
     /**
-     * @return array{paths?: string[], paths_to_ignore?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, processes?: int, min_score?: float, ignore_min_score_on_zero_mutations?: bool, covered_only?: bool, stop_on_survived?: bool, stop_on_not_covered?: bool, uncommitted_only?: bool, changed_only?: string}
+     * @return array{paths?: string[], paths_to_ignore?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, processes?: int, profile?: bool, min_score?: float, ignore_min_score_on_zero_mutations?: bool, covered_only?: bool, stop_on_survived?: bool, stop_on_not_covered?: bool, uncommitted_only?: bool, changed_only?: string}
      */
     public function toArray(): array
     {
@@ -192,6 +201,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
             'classes' => $this->classes,
             'parallel' => $this->parallel,
             'processes' => $this->processes,
+            'profile' => $this->profile,
             'min_score' => $this->minScore,
             'ignore_min_score_on_zero_mutations' => $this->ignoreMinScoreOnZeroMutations,
             'covered_only' => $this->coveredOnly,

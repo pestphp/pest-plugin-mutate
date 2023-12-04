@@ -78,4 +78,18 @@ class MutationRepository
 
         return ($this->killed() + $this->timedOut()) / $this->total() * 100;
     }
+
+    /**
+     * @return array<int, MutationTest>
+     */
+    public function slowest(): array
+    {
+        $allTests = array_merge(...array_values(array_map(fn (MutationTestCollection $testCollection): array => $testCollection->tests(), $this->tests)));
+
+        $allTests = array_filter($allTests, fn (MutationTest $test): bool => $test->duration() > 0);
+
+        usort($allTests, fn (MutationTest $a, MutationTest $b): int => $b->duration() <=> $a->duration());
+
+        return array_slice($allTests, 0, 10);
+    }
 }

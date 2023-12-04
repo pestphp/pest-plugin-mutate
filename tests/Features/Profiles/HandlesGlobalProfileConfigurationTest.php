@@ -206,3 +206,17 @@ test('globally configure only changed', function (): void {
     expect($this->configuration->toArray()['changed_only'])
         ->toBe('other-branch');
 });
+
+test('globally configure profile option', function (): void {
+    mutate(ConfigurationRepository::FAKE)
+        ->profile();
+
+    expect($this->configuration->toArray()['profile'])
+        ->toBeTrue();
+
+    mutate(ConfigurationRepository::FAKE)
+        ->profile(false);
+
+    expect($this->configuration->toArray()['profile'])
+        ->toBeFalse();
+});

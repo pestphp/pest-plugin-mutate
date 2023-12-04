@@ -18,6 +18,10 @@ class MutationTest
 {
     private MutationTestResult $result = MutationTestResult::None;
 
+    private ?float $start = null;
+
+    private ?float $finish = null;
+
     private Process $process;
 
     public function __construct(public readonly Mutation $mutation)
@@ -85,6 +89,8 @@ class MutationTest
             timeout: $this->calculateTimeout(),
         );
 
+        $this->start = microtime(true);
+
         $process->start();
 
         $this->process = $process;
@@ -113,6 +119,8 @@ class MutationTest
 
             Facade::instance()->emitter()->mutationTimedOut($this);
 
+            $this->finish = microtime(true);
+
             return true;
         }
 
@@ -121,6 +129,8 @@ class MutationTest
 
             Facade::instance()->emitter()->mutationSurvived($this);
 
+            $this->finish = microtime(true);
+
             return true;
         }
 
@@ -128,6 +138,20 @@ class MutationTest
 
         Facade::instance()->emitter()->mutationKilled($this);
 
+        $this->finish = microtime(true);
+
         return true;
+    }
+
+    public function duration(): float
+    {
+        if ($this->start === null) {
+            return 0;
+        }
+        if ($this->finish === null) {
+            return 0;
+        }
+
+        return $this->finish - $this->start;
     }
 }

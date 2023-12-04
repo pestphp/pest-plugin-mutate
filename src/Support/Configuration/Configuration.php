@@ -22,6 +22,7 @@ class Configuration
         public readonly array $classes,
         public readonly bool $parallel,
         public readonly int $processes,
+        public readonly bool $profile,
         public readonly ?float $minScore,
         public readonly bool $ignoreMinScoreOnZeroMutations,
         public readonly bool $stopOnSurvived,

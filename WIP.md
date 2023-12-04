@@ -29,7 +29,7 @@
 # Known Bugs
 
 # Backlog Prio 1
-- [ ] Run test that killed a mutation before first
+- [ ] Run test that killed a mutation first
 - [ ] Run mutations in a reasonable order: New, Survived, NotCovered, Skipped, Killed (Survived first, if --stop-on-survived or --bail; NotCovered first, if --stop-on-uncovered)
 - [ ] Automatically empty cache when package version changes / Maybe there is another approach: Use the same cache key per php file, but store a hash of the file content and the package version in the cache. If the hash changes, the cache is invalid.
 - [ ] Automatically skip "Arch" and "Stressless" tests - wait for arch() and stress() aliases for test()

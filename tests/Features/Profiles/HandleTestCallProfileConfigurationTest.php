@@ -148,3 +148,11 @@ it('sets the changed only option from test', function (): void {
         ->toBe('other-branch');
 })->mutate(ConfigurationRepository::FAKE.'_12')
     ->changedOnly('other-branch');
+
+it('sets the profile option from test', function (): void {
+    $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_17');
+
+    expect($configuration->toArray()['profile'])
+        ->toBeTrue();
+})->mutate(ConfigurationRepository::FAKE.'_17')
+    ->profile(true);
