@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Support\Configuration;
 
+use Pest\Mutate\Cache\NullStore;
 use Pest\Mutate\Options\BailOption;
 use Pest\Mutate\Options\ChangedOnlyOption;
 use Pest\Mutate\Options\ClassOption;
@@ -14,6 +15,7 @@ use Pest\Mutate\Options\IgnoreOption;
 use Pest\Mutate\Options\MinScoreOption;
 use Pest\Mutate\Options\MutateOption;
 use Pest\Mutate\Options\MutatorsOption;
+use Pest\Mutate\Options\NoCache;
 use Pest\Mutate\Options\ParallelOption;
 use Pest\Mutate\Options\PathOption;
 use Pest\Mutate\Options\ProcessesOption;
@@ -22,6 +24,8 @@ use Pest\Mutate\Options\RetryOption;
 use Pest\Mutate\Options\StopOnNotCoveredOption;
 use Pest\Mutate\Options\StopOnSurvivedOption;
 use Pest\Mutate\Options\UncommittedOnlyOption;
+use Pest\Support\Container;
+use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Console\Input\ArgvInput;
 use Symfony\Component\Console\Input\InputDefinition;
 
@@ -46,6 +50,7 @@ class CliConfiguration extends AbstractConfiguration
         UncommittedOnlyOption::class,
         ChangedOnlyOption::class,
         RetryOption::class,
+        NoCache::class,
     ];
 
     /**
@@ -151,7 +156,10 @@ class CliConfiguration extends AbstractConfiguration
 
         if ($input->hasOption(RetryOption::ARGUMENT)) {
             $this->retry($input->getOption(RetryOption::ARGUMENT) !== 'false');
+        }
 
+        if ($input->hasOption(NoCache::ARGUMENT)) {
+            Container::getInstance()->add(CacheInterface::class, new NullStore());
         }
 
         return $arguments;

@@ -10,11 +10,13 @@ use Pest\Contracts\Plugins\Bootable;
 use Pest\Contracts\Plugins\HandlesArguments;
 use Pest\Mutate\Boostrappers\BootPhpUnitSubscribers;
 use Pest\Mutate\Boostrappers\BootSubscribers;
+use Pest\Mutate\Cache\FileStore;
 use Pest\Mutate\Contracts\MutationTestRunner;
 use Pest\Mutate\Repositories\ConfigurationRepository;
 use Pest\Plugins\Concerns\HandleArguments;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
+use Psr\SimpleCache\CacheInterface;
 
 /**
  * @internal
@@ -50,6 +52,11 @@ class Mutate implements Bootable, HandlesArguments
 
     public function boot(): void
     {
+        if (getenv(self::ENV_MUTATION_TESTING) !== false) {
+            IncludeInterceptor::intercept(getenv(self::ENV_MUTATION_TESTING), getenv(self::ENV_MUTATION_FILE));
+            IncludeInterceptor::enable();
+        }
+
         $this->container->add(MutationTestRunner::class, new \Pest\Mutate\Tester\MutationTestRunner());
 
         foreach (self::BOOTSTRAPPERS as $bootstrapper) {
@@ -59,10 +66,7 @@ class Mutate implements Bootable, HandlesArguments
             $bootstrapper->boot();
         }
 
-        if (getenv(self::ENV_MUTATION_TESTING) !== false) {
-            IncludeInterceptor::intercept(getenv(self::ENV_MUTATION_TESTING), getenv(self::ENV_MUTATION_FILE));
-            IncludeInterceptor::enable();
-        }
+        $this->container->add(CacheInterface::class, new FileStore());
     }
 
     /**

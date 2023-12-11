@@ -2,31 +2,32 @@
 
 declare(strict_types=1);
 
-namespace Pest\Mutate\Support;
+namespace Pest\Mutate\Cache;
 
 use DateInterval;
 use DateTime;
 use Exception;
 use Psr\SimpleCache\CacheInterface;
 
-class FileCache implements CacheInterface
+class FileStore implements CacheInterface
 {
-    /**
-     * The temporary folder.
-     */
-    private const CACHE_FOLDER = __DIR__
-    .DIRECTORY_SEPARATOR
-    .'..'
-    .DIRECTORY_SEPARATOR
-    .'..'
-    .DIRECTORY_SEPARATOR
-    .'.temp'
-    .DIRECTORY_SEPARATOR
-    .'cache';
+    private const CACHE_FOLDER_NAME = 'pest-mutate-cache';
+
+    private readonly string $directory;
+
+    public function __construct(string $directory = null)
+    {
+        $this->directory = $directory ??
+            (sys_get_temp_dir().DIRECTORY_SEPARATOR.self::CACHE_FOLDER_NAME);
+
+        if (! is_dir($this->directory)) { // @pest-mutate-ignore
+            mkdir($this->directory, recursive: true);
+        }
+    }
 
     public function get(string $key, mixed $default = null): mixed
     {
-        return $this->getPayload($key)['data'] ?? $default;
+        return $this->getPayload($key) ?? $default;
     }
 
     public function set(string $key, mixed $value, DateInterval|int $ttl = null): bool
@@ -39,7 +40,7 @@ class FileCache implements CacheInterface
 
         $result = file_put_contents($this->filePathFromKey($key), $content);
 
-        return $result !== false;
+        return $result !== false; // @pest-mutate-ignore FalseToTrue
     }
 
     public function delete(string $key): bool
@@ -49,7 +50,11 @@ class FileCache implements CacheInterface
 
     public function clear(): bool
     {
-        array_map('unlink', array_filter((array) glob(self::CACHE_FOLDER.DIRECTORY_SEPARATOR.'*')));
+        foreach ((array) glob($this->directory.DIRECTORY_SEPARATOR.'*') as $fileName) {
+            if ($fileName !== false) {
+                unlink($fileName);
+            }
+        }
 
         return true;
     }
@@ -103,28 +108,25 @@ class FileCache implements CacheInterface
 
     private function filePathFromKey(string $key): string
     {
-        return self::CACHE_FOLDER.DIRECTORY_SEPARATOR.hash('xxh3', $key);
+        return $this->directory.DIRECTORY_SEPARATOR.hash('xxh3', $key);
     }
 
     private function expiration(DateInterval|int|null $seconds): int
     {
-        if ($seconds === null) {
-            return 9_999_999_999;
-        }
-        if ($seconds === 0) {
-            return 9_999_999_999;
-        }
         if ($seconds instanceof DateInterval) {
             return (new DateTime())->add($seconds)->getTimestamp();
+        }
+
+        $seconds ??= 0;
+
+        if ($seconds === 0) {
+            return 9_999_999_999; // @pest-mutate-ignore
         }
 
         return time() + $seconds;
     }
 
-    /**
-     * @return array{data: mixed, time: int|null}
-     */
-    private function getPayload(string $key): array
+    private function getPayload(string $key): mixed
     {
         if (! file_exists($this->filePathFromKey($key))) {
             return $this->emptyPayload();
@@ -132,7 +134,7 @@ class FileCache implements CacheInterface
 
         $content = file_get_contents($this->filePathFromKey($key));
 
-        if ($content === false) {
+        if ($content === false) { // @pest-mutate-ignore
             return $this->emptyPayload();
         }
 
@@ -160,16 +162,16 @@ class FileCache implements CacheInterface
             return $this->emptyPayload();
         }
 
-        $time = $expire - time();
-
-        return ['data' => $data, 'time' => $time];
+        return $data;
     }
 
-    /**
-     * @return array{data: null, time: null}
-     */
-    protected function emptyPayload(): array
+    protected function emptyPayload(): mixed
     {
-        return ['data' => null, 'time' => null];
+        return null;
+    }
+
+    public function directory(): string
+    {
+        return $this->directory;
     }
 }

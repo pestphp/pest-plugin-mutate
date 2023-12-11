@@ -1,11 +1,15 @@
 <?php
 
 declare(strict_types=1);
+use Pest\Mutate\Cache\FileStore;
+use Pest\Mutate\Cache\NullStore;
 use Pest\Mutate\Mutators\Arithmetic\MinusToPlus;
 use Pest\Mutate\Mutators\Arithmetic\PlusToMinus;
 use Pest\Mutate\Mutators\Sets\ArithmeticSet;
 use Pest\Mutate\Repositories\ConfigurationRepository;
 use Pest\Mutate\Support\Configuration\CliConfiguration;
+use Pest\Support\Container;
+use Psr\SimpleCache\CacheInterface;
 use Tests\Fixtures\Classes\AgeHelper;
 use Tests\Fixtures\Classes\SizeHelper;
 
@@ -219,4 +223,14 @@ it('enables profile option if --retry argument is passed', function (): void {
     expect($this->configuration->toArray())
         ->retry->toBeTrue()
         ->stop_on_survived->toBeTrue();
+});
+
+it('enables the NullStore if --no-cache argument is passed', function (): void {
+    $this->configuration->fromArguments(['--mutate='.ConfigurationRepository::FAKE]);
+    expect(Container::getInstance()->get(CacheInterface::class))
+        ->toBeInstanceOf(FileStore::class);
+
+    $this->configuration->fromArguments(['--no-cache']);
+    expect(Container::getInstance()->get(CacheInterface::class))
+        ->toBeInstanceOf(NullStore::class);
 });

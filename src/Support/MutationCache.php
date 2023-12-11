@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pest\Mutate\Support;
 
 use Pest\Mutate\Mutation;
+use Pest\Support\Container;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -21,7 +22,7 @@ class MutationCache
 
     public function __construct()
     {
-        $this->cache = new FileCache();
+        $this->cache = Container::getInstance()->get(CacheInterface::class); // @phpstan-ignore-line
     }
 
     /**
