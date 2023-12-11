@@ -143,6 +143,7 @@ The following options are available.
 - [`retry()`](#retry)
 - [`min()`](#min)
 - [`ignoreMinScoreOnZeroMutations()`](#ignoreMinScoreOnZeroMutations)
+- [`--no-cache`](#noCache)
 
 </div>
 
@@ -343,6 +344,16 @@ Ignores the minimum score threshold if zero mutations are generated. In this cas
 ```php
 mutate()
     ->ignoreMinScoreOnZeroMutations();
+```
+
+
+<a name="options-no-cache"></a>
+### `--no-cache`
+
+Disables the cache (This option is only available on the cli).
+
+```bash
+vendor/bin/pest --mutate --no-cache
 ```
 
 
