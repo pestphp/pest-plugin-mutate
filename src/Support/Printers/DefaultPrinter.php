@@ -215,7 +215,7 @@ class DefaultPrinter implements Printer
         }
 
         $this->output->writeln([
-            '  <fg=default;bg='.$color.';options=bold> '.$label.' </> <fg=default;options=bold>'.$path.' <fg=gray> > Line '.$test->mutation->startLine.': '.$test->mutation->mutator::name().'</>', // @pest-mutate-ignore
+            '  <fg=default;bg='.$color.';options=bold> '.$label.' </> <fg=default;options=bold>'.$path.' <fg=gray> > Line '.$test->mutation->startLine.': '.$test->mutation->mutator::name().' - ID: '.$test->getId().'</>', // @pest-mutate-ignore
             '  <fg=default;options=bold>'.$error.'</>',
         ]);
 
@@ -228,7 +228,7 @@ class DefaultPrinter implements Printer
         /** @var Configuration $configuration */
         $configuration = Container::getInstance()->get(ConfigurationRepository::class)->mergedConfiguration(); // @phpstan-ignore-line
 
-        $this->output->writeln('  <fg=gray>Top 10 slowest tests:</>');
+        $this->output->writeln('  <fg=gray>Top 10 slowest mutation tests:</>');
 
         $timeElapsed = $mutationSuite->duration() * ($configuration->parallel ? $configuration->processes : 1);
 
@@ -244,13 +244,13 @@ class DefaultPrinter implements Printer
             render(sprintf(<<<'HTML'
                 <div class="flex justify-between space-x-1 mx-2">
                     <span class="flex-1">
-                        <span class="font-bold">%s</span><span class="text-gray mx-1">></span><span class="text-gray">Line %s: %s</span>
+                        <span class="font-bold">%s</span><span class="text-gray mx-1">></span><span class="text-gray">Line %s: %s - ID: %s</span>
                     </span>
                     <span class="ml-1 font-bold text-%s">
                         %ss
                     </span>
                 </div>
-            HTML, $path, $slowTest->mutation->startLine, $slowTest->mutation->mutator::name(), $color, $seconds));
+            HTML, $path, $slowTest->mutation->startLine, $slowTest->mutation->mutator::name(), $slowTest->getId(), $color, $seconds));
         }
 
         $timeElapsedInSlowTests = array_sum(array_map(fn (MutationTest $testResult): float => $testResult->duration(), $slowTests));

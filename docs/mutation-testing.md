@@ -133,7 +133,9 @@ The following options are available.
 - [`retry()`](#retry)
 - [`min()`](#min)
 - [`ignoreMinScoreOnZeroMutations()`](#ignoreMinScoreOnZeroMutations)
-- [`--no-cache`](#noCache)
+- [`--id`](#--id)
+- [`--no-cache`](#--no-cache)
+- [`--clear-cache`](#--clear-cache)
 
 </div>
 
@@ -337,6 +339,16 @@ mutate()
 ```
 
 
+<a name="options-id"></a>
+### `--id`
+
+Run only the mutation with the given ID. You can find the ID of a mutation in the console output of a previous run.
+
+```bash
+vendor/bin/pest --mutate --id=fa6913f68aa87747
+```
+
+
 <a name="options-no-cache"></a>
 ### `--no-cache`
 
@@ -344,6 +356,16 @@ Disables the cache (This option is only available on the cli).
 
 ```bash
 vendor/bin/pest --mutate --no-cache
+```
+
+
+<a name="options-clear-cache"></a>
+### `--clear-cache`
+
+Clears the cache (This option is only available on the cli).
+
+```bash
+vendor/bin/pest --mutate --clear-cache
 ```
 
 

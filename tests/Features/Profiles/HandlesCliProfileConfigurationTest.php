@@ -234,3 +234,13 @@ it('enables the NullStore if --no-cache argument is passed', function (): void {
     expect(Container::getInstance()->get(CacheInterface::class))
         ->toBeInstanceOf(NullStore::class);
 });
+
+it('enables the mutatino id filter if --id argument is passed', function (): void {
+    $this->configuration->fromArguments(['--mutate='.ConfigurationRepository::FAKE]);
+    expect($this->configuration->toArray())
+        ->mutation_id->toBeNull();
+
+    $this->configuration->fromArguments(['--id=fa1234']);
+    expect($this->configuration->toArray())
+        ->mutation_id->toBe('fa1234');
+});

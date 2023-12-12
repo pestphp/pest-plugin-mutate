@@ -151,6 +151,10 @@ class MutationTestRunner implements MutationTestRunnerContract
                 linesToMutate: $linesToMutate,
                 classesToMutate: $this->getConfiguration()->classes,
             ) as $mutation) {
+                if ($this->getConfiguration()->mutationId !== null && $mutation->id !== $this->getConfiguration()->mutationId) {
+                    continue;
+                }
+
                 $mutationSuite->repository->add($mutation);
             }
         }

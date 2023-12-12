@@ -49,10 +49,16 @@ class FileStore implements CacheInterface
 
     public function clear(): bool
     {
-        foreach ((array) glob($this->directory.DIRECTORY_SEPARATOR.'*') as $fileName) { // @pest-mutate-ignore
-            if ($fileName !== false && str_starts_with(basename($fileName), 'cache-')) { // @pest-mutate-ignore
-                unlink($fileName);
+        foreach ((array) glob($this->directory.DIRECTORY_SEPARATOR.'*') as $fileName) {
+            // @pest-mutate-ignore
+            if ($fileName === false) {
+                continue;
             }
+            if (! str_starts_with(basename($fileName), 'cache-')) {
+                continue;
+            }
+            // @pest-mutate-ignore
+            unlink($fileName);
         }
 
         return true;
@@ -107,7 +113,7 @@ class FileStore implements CacheInterface
 
     private function filePathFromKey(string $key): string
     {
-        return $this->directory.DIRECTORY_SEPARATOR.'cache-' . hash('xxh3', $key); // @pest-mutate-ignore
+        return $this->directory.DIRECTORY_SEPARATOR.'cache-'.hash('xxh3', $key); // @pest-mutate-ignore
     }
 
     private function expiration(DateInterval|int|null $seconds): int

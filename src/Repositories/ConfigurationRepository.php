@@ -108,6 +108,7 @@ class ConfigurationRepository
             stopOnNotCovered: $config['stop_on_not_covered'] ?? false,
             uncommittedOnly: $config['uncommitted_only'] ?? false,
             changedOnly: $config['changed_only'] ?? false,
+            mutationId: $config['mutation_id'] ?? null,
             retry: $config['retry'] ?? false,
         );
     }

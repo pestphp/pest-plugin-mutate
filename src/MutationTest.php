@@ -30,7 +30,7 @@ class MutationTest
 
     public function getId(): string
     {
-        return hash('xxh3', $this->mutation->file->getRealPath().$this->mutation->mutator.$this->mutation->startLine);
+        return $this->mutation->id;
     }
 
     public function result(): MutationTestResult

@@ -29,6 +29,7 @@ class Mutation
 
     public function __construct(
         public readonly SplFileInfo $file,
+        public readonly string $id,
         public readonly string $mutator,
         public readonly int $startLine,
         public readonly int $endLine,
@@ -64,8 +65,11 @@ class Mutation
             $endLine = $originalNode->getAttribute('parent')->getAttribute('parent')->getEndLine();
         }
 
+        $id = hash('xxh3', $file->getRealPath().$mutator.$modifiedSource);
+
         return new self(
             $file,
+            $id,
             $mutator,
             $originalNode->getStartLine(),
             $endLine,
@@ -112,12 +116,13 @@ class Mutation
     }
 
     /**
-     * @return array{file: string, mutator: string, start_line: int, end_line: int, diff: string, modified_source_path: string}
+     * @return array{file: string, id: string, mutator: string, start_line: int, end_line: int, diff: string, modified_source_path: string}
      */
     public function __serialize(): array
     {
         return [
             'file' => $this->file->getRealPath(),
+            'id' => $this->id,
             'mutator' => $this->mutator,
             'start_line' => $this->startLine,
             'end_line' => $this->endLine,
@@ -127,11 +132,12 @@ class Mutation
     }
 
     /**
-     * @param  array{file: string, mutator: string, start_line: int, end_line: int, diff: string, modified_source_path: string}  $data
+     * @param  array{file: string, id: string, mutator: string, start_line: int, end_line: int, diff: string, modified_source_path: string}  $data
      */
     public function __unserialize(array $data): void
     {
         $this->file = new SplFileInfo($data['file'], '', '');
+        $this->id = $data['id'];
         $this->mutator = $data['mutator'];
         $this->startLine = $data['start_line'];
         $this->endLine = $data['end_line'];

@@ -58,6 +58,8 @@ abstract class AbstractConfiguration implements ConfigurationContract
 
     private ?bool $retry = null;
 
+    private ?string $mutationId = null;
+
     /**
      * {@inheritDoc}
      */
@@ -190,8 +192,15 @@ abstract class AbstractConfiguration implements ConfigurationContract
         return $this;
     }
 
+    public function mutationId(string $id): self
+    {
+        $this->mutationId = $id;
+
+        return $this;
+    }
+
     /**
-     * @return array{paths?: string[], paths_to_ignore?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, processes?: int, profile?: bool, min_score?: float, ignore_min_score_on_zero_mutations?: bool, covered_only?: bool, stop_on_survived?: bool, stop_on_not_covered?: bool, uncommitted_only?: bool, changed_only?: string, retry?: bool}
+     * @return array{paths?: string[], paths_to_ignore?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, processes?: int, profile?: bool, min_score?: float, ignore_min_score_on_zero_mutations?: bool, covered_only?: bool, stop_on_survived?: bool, stop_on_not_covered?: bool, uncommitted_only?: bool, changed_only?: string, mutation_id?: string, retry?: bool}
      */
     public function toArray(): array
     {
@@ -211,6 +220,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
             'stop_on_not_covered' => $this->stopOnNotCovered,
             'uncommitted_only' => $this->uncommittedOnly,
             'changed_only' => $this->changedOnly,
+            'mutation_id' => $this->mutationId,
             'retry' => $this->retry,
         ], fn (mixed $value): bool => ! is_null($value));
     }
