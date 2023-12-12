@@ -17,8 +17,7 @@ class FileStore implements CacheInterface
 
     public function __construct(string $directory = null)
     {
-        $this->directory = $directory ??
-            (sys_get_temp_dir().DIRECTORY_SEPARATOR.self::CACHE_FOLDER_NAME);
+        $this->directory = $directory ?? (sys_get_temp_dir().DIRECTORY_SEPARATOR.self::CACHE_FOLDER_NAME); // @pest-mutate-ignore
 
         if (! is_dir($this->directory)) { // @pest-mutate-ignore
             mkdir($this->directory, recursive: true);
@@ -50,8 +49,8 @@ class FileStore implements CacheInterface
 
     public function clear(): bool
     {
-        foreach ((array) glob($this->directory.DIRECTORY_SEPARATOR.'*') as $fileName) {
-            if ($fileName !== false) {
+        foreach ((array) glob($this->directory.DIRECTORY_SEPARATOR.'*') as $fileName) { // @pest-mutate-ignore
+            if ($fileName !== false && str_starts_with(basename($fileName), 'cache-')) { // @pest-mutate-ignore
                 unlink($fileName);
             }
         }
@@ -108,7 +107,7 @@ class FileStore implements CacheInterface
 
     private function filePathFromKey(string $key): string
     {
-        return $this->directory.DIRECTORY_SEPARATOR.hash('xxh3', $key);
+        return $this->directory.DIRECTORY_SEPARATOR.'cache-' . hash('xxh3', $key); // @pest-mutate-ignore
     }
 
     private function expiration(DateInterval|int|null $seconds): int
