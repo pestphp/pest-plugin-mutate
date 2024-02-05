@@ -29,7 +29,6 @@
 # Known Bugs
 
 # Backlog Prio 1
-- [ ] Show the Mutation Test ID in console and add option to rerun just this mutation test
 - [ ] Automatically empty cache when package version changes / Maybe there is another approach: Use the same cache key per php file, but store a hash of the file content and the package version in the cache. If the hash changes, the cache is invalid.
 - [ ] Automatically skip "Arch" and "Stressless" tests - wait for arch() and stress() aliases for test()
 - [ ] Properly support xdebug

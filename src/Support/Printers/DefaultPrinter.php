@@ -60,8 +60,6 @@ class DefaultPrinter implements Printer
         }
 
         $this->writeMutationTestLine('yellow', '-', $test);
-
-        //        $this->output->writeln('No tests found for mutation: '.$test->mutation->file->getRealPath().':'.$test->mutation->originalNode->getLine().' ('.$test->mutation->mutator::name().')');
     }
 
     public function reportTimedOutMutation(MutationTest $test): void
