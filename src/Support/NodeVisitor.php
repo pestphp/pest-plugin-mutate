@@ -58,7 +58,7 @@ class NodeVisitor extends NodeVisitorAbstract
             return null;
         }
 
-        if ($this->linesToMutate !== [] && ! in_array($node->getStartLine(), $this->linesToMutate, true)) {
+        if ($this->linesToMutate !== [] && array_filter(range($node->getStartLine(), $node->getEndLine()), fn (int $line): bool => in_array($line, $this->linesToMutate, true)) === []) {
             return null;
         }
 
