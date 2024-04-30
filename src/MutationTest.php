@@ -47,7 +47,7 @@ class MutationTest
      * @param  array<string, array<int, array<int, string>>>  $coveredLines
      * @param  array<int, string>  $originalArguments
      */
-    public function start(array $coveredLines, Configuration $configuration, array $originalArguments, int $processId = null): bool
+    public function start(array $coveredLines, Configuration $configuration, array $originalArguments, ?int $processId = null): bool
     {
         // TODO: we should pass the tests to run in another way, maybe via cache, mutation or env variable
         $filters = [];

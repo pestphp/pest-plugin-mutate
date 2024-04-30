@@ -26,7 +26,7 @@ interface Configuration
      */
     public function except(array|string ...$mutators): self;
 
-    public function min(float $minScore, bool $failOnZeroMutations = null): self;
+    public function min(float $minScore, ?bool $failOnZeroMutations = null): self;
 
     public function ignoreMinScoreOnZeroMutations(bool $ignore = true): self;
 
@@ -34,7 +34,7 @@ interface Configuration
 
     public function parallel(bool $parallel = true): self;
 
-    public function processes(int $processes = null): self;
+    public function processes(?int $processes = null): self;
 
     public function profile(bool $profile = true): self;
 

@@ -100,7 +100,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
         return $this;
     }
 
-    public function min(float $minScore, bool $failOnZeroMutations = null): self
+    public function min(float $minScore, ?bool $failOnZeroMutations = null): self
     {
         $this->minScore = $minScore;
 
@@ -132,7 +132,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
         return $this;
     }
 
-    public function processes(int $processes = null): self
+    public function processes(?int $processes = null): self
     {
         $this->processes = $processes;
 

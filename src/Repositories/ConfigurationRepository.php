@@ -53,7 +53,7 @@ class ConfigurationRepository
         $this->profile = $profile;
     }
 
-    public function globalConfiguration(string $name = null): GlobalConfiguration
+    public function globalConfiguration(?string $name = null): GlobalConfiguration
     {
         $name ??= $this->profile;
 
@@ -64,7 +64,7 @@ class ConfigurationRepository
         return $this->globalConfigurations[$name];
     }
 
-    public function fakeTestConfiguration(string $name = null): TestConfiguration
+    public function fakeTestConfiguration(?string $name = null): TestConfiguration
     {
         $name ??= $this->profile;
 

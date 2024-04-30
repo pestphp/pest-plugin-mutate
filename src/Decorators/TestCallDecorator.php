@@ -65,7 +65,7 @@ class TestCallDecorator implements Configuration
         return $this;
     }
 
-    public function min(float $minScore, bool $failOnZeroMutations = null): self
+    public function min(float $minScore, ?bool $failOnZeroMutations = null): self
     {
         $this->configuration->min($minScore);
         if ($failOnZeroMutations !== null) {
@@ -129,7 +129,7 @@ class TestCallDecorator implements Configuration
         return $this;
     }
 
-    public function processes(int $processes = null): Configuration
+    public function processes(?int $processes = null): Configuration
     {
         $this->configuration->processes($processes);
 

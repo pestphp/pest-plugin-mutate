@@ -15,7 +15,7 @@ class FileStore implements CacheInterface
 
     private readonly string $directory;
 
-    public function __construct(string $directory = null)
+    public function __construct(?string $directory = null)
     {
         $this->directory = $directory ?? (sys_get_temp_dir().DIRECTORY_SEPARATOR.self::CACHE_FOLDER_NAME); // @pest-mutate-ignore
 
@@ -29,7 +29,7 @@ class FileStore implements CacheInterface
         return $this->getPayload($key) ?? $default;
     }
 
-    public function set(string $key, mixed $value, DateInterval|int $ttl = null): bool
+    public function set(string $key, mixed $value, DateInterval|int|null $ttl = null): bool
     {
         $payload = serialize($value);
 
@@ -77,7 +77,7 @@ class FileStore implements CacheInterface
     /**
      * @param  iterable<string, mixed>  $values
      */
-    public function setMultiple(iterable $values, DateInterval|int $ttl = null): bool // @phpstan-ignore-line
+    public function setMultiple(iterable $values, DateInterval|int|null $ttl = null): bool // @phpstan-ignore-line
     {
         $result = true;
 

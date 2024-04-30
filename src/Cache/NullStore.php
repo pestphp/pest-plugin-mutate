@@ -14,7 +14,7 @@ class NullStore implements CacheInterface
         return $default;
     }
 
-    public function set(string $key, mixed $value, DateInterval|int $ttl = null): bool
+    public function set(string $key, mixed $value, DateInterval|int|null $ttl = null): bool
     {
         return true;
     }
@@ -42,7 +42,7 @@ class NullStore implements CacheInterface
     /**
      * @param  iterable<string, mixed>  $values
      */
-    public function setMultiple(iterable $values, DateInterval|int $ttl = null): bool // @phpstan-ignore-line
+    public function setMultiple(iterable $values, DateInterval|int|null $ttl = null): bool // @phpstan-ignore-line
     {
         return true;
     }
