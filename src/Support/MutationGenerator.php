@@ -13,6 +13,7 @@ use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
+use PhpParser\PhpVersion;
 use Symfony\Component\Finder\SplFileInfo;
 
 class MutationGenerator
@@ -56,7 +57,7 @@ class MutationGenerator
             }
         }
 
-        $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+        $parser = (new ParserFactory)->createForVersion(PhpVersion::fromString('7.0'));
 
         $mutators = $this->filterMutators($mutators, $contents, $parser);
 

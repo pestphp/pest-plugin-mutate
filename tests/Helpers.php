@@ -6,11 +6,12 @@ use Pest\Mutate\Factories\NodeTraverserFactory;
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\ParserFactory;
+use PhpParser\PhpVersion;
 use PhpParser\PrettyPrinter\Standard;
 
 function mutateCode(string $mutator, string $code): string
 {
-    $stmts = (new ParserFactory)->create(ParserFactory::PREFER_PHP7)->parse($code);
+    $stmts = (new ParserFactory)->createForVersion(PhpVersion::fromString('7.0'))->parse($code);
 
     $mutationCount = 0;
 
@@ -32,6 +33,8 @@ function mutateCode(string $mutator, string $code): string
 
                 return $this->mutator::mutate($node);
             }
+
+            return null;
         }
     });
 

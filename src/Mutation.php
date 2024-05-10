@@ -9,6 +9,7 @@ use PhpParser\Node;
 use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\ParserFactory;
+use PhpParser\PhpVersion;
 use PhpParser\PrettyPrinter\Standard;
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
@@ -52,7 +53,7 @@ class Mutation
         $modifiedSourcePath = self::TMP_FOLDER.DIRECTORY_SEPARATOR.hash('xxh3', $modifiedSource);
         file_put_contents($modifiedSourcePath, $modifiedSource);
 
-        $orignalAst = (new ParserFactory)->create(ParserFactory::PREFER_PHP7)->parse($file->getContents());
+        $orignalAst = (new ParserFactory)->createForVersion(PhpVersion::fromString('7.0'))->parse($file->getContents());
         $newlyRenderedOriginalSource = (new Standard())->prettyPrintFile($orignalAst); // @phpstan-ignore-line
 
         $endLine = $originalNode->getEndLine();

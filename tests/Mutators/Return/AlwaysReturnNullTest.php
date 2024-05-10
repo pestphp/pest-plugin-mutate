@@ -14,7 +14,7 @@ it('mutates a return statement to null if it is not null', function (): void {
         }
         CODE))->toBe(<<<'CODE'
         <?php
-        
+
         function foo()
         {
             return null;
@@ -26,22 +26,22 @@ it('mutates if return type is possibly null', function (): void {
     expect(mutateCode(AlwaysReturnNull::class, <<<'CODE'
         <?php
 
-        function foo() : ?int
+        function foo(): ?int
         {
             return 1;
         }
-        function bar() : int|null
+        function bar(): int|null
         {
             return 1;
         }
         CODE))->toBe(<<<'CODE'
         <?php
-        
-        function foo() : ?int
+
+        function foo(): ?int
         {
             return null;
         }
-        function bar() : int|null
+        function bar(): int|null
         {
             return null;
         }
@@ -54,17 +54,17 @@ it('mutates a return statement in class functions', function (): void {
 
         class Foo
         {
-            function foo() : ?int
+            function foo(): ?int
             {
                 return 1;
             }
         }
         CODE))->toBe(<<<'CODE'
         <?php
-        
+
         class Foo
         {
-            function foo() : ?int
+            function foo(): ?int
             {
                 return null;
             }

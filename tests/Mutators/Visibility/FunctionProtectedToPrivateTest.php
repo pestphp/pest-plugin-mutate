@@ -10,17 +10,17 @@ it('mutates a protected function to a private function', function (): void {
 
         class Foo
         {
-            protected function bar() : bool
+            protected function bar(): bool
             {
                 return true;
             }
         }
         CODE))->toBe(<<<'CODE'
         <?php
-        
+
         class Foo
         {
-            private function bar() : bool
+            private function bar(): bool
             {
                 return true;
             }
