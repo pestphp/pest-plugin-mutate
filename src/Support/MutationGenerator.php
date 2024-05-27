@@ -57,7 +57,7 @@ class MutationGenerator
             }
         }
 
-        $parser = (new ParserFactory)->createForVersion(PhpVersion::fromString('7.0'));
+        $parser = (new ParserFactory)->createForHostVersion();
 
         $mutators = $this->filterMutators($mutators, $contents, $parser);
 

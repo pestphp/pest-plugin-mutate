@@ -11,7 +11,7 @@ use PhpParser\PrettyPrinter\Standard;
 
 function mutateCode(string $mutator, string $code): string
 {
-    $stmts = (new ParserFactory)->createForVersion(PhpVersion::fromString('7.0'))->parse($code);
+    $stmts = (new ParserFactory)->createForHostVersion()->parse($code);
 
     $mutationCount = 0;
 

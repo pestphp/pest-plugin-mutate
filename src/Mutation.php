@@ -53,7 +53,7 @@ class Mutation
         $modifiedSourcePath = self::TMP_FOLDER.DIRECTORY_SEPARATOR.hash('xxh3', $modifiedSource);
         file_put_contents($modifiedSourcePath, $modifiedSource);
 
-        $orignalAst = (new ParserFactory)->createForVersion(PhpVersion::fromString('7.0'))->parse($file->getContents());
+        $orignalAst = (new ParserFactory)->createForHostVersion()->parse($file->getContents());
         $newlyRenderedOriginalSource = (new Standard())->prettyPrintFile($orignalAst); // @phpstan-ignore-line
 
         $endLine = $originalNode->getEndLine();
