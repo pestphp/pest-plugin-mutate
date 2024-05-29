@@ -92,8 +92,10 @@ class MutationTestRunner implements MutationTestRunnerContract
         $start = microtime(true);
 
         if (! file_exists($reportPath = Coverage::getPath())) {
-            // TODO: maybe we can run without a coverage report, but it is really in performant
-            Container::getInstance()->get(Printer::class)->reportError('No coverage report found, aborting mutation testing.'); // @phpstan-ignore-line
+            Container::getInstance()->get(Printer::class)->reportError(
+                'Mutation testing requires code coverage driver to be enabled.',
+            ); // @phpstan-ignore-line
+
             exit(1);
         }
 
