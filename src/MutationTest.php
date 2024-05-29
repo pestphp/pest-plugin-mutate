@@ -55,9 +55,9 @@ class MutationTest
             foreach ($coveredLines[$this->mutation->file->getRealPath()][$lineNumber] ?? [] as $test) {
                 preg_match('/\\\\([a-zA-Z0-9]*)::(__pest_evaluable_)?([^#]*)"?/', $test, $matches);
                 if ($matches[2] === '__pest_evaluable_') {
-                    $filters[] = $matches[1].'::'.str_replace(['__', '_'], ['.{1,2}', '.'], $matches[3]);
+                    $filters[] = $matches[1].'::(.*)'.str_replace(['__', '_'], ['.{1,2}', '.'], $matches[3]);
                 } else {
-                    $filters[] = $matches[1].'::'.$matches[3];
+                    $filters[] = $matches[1].'::(.*)'.$matches[3];
                 }
             }
         }
