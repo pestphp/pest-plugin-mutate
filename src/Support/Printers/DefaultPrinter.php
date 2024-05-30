@@ -205,16 +205,13 @@ class DefaultPrinter implements Printer
         if ($test->result() === MutationTestResult::Survived) {
             $color = 'red';
             $label = 'SURVIVED';
-            $error = 'Mutant has survived.';
         } else {
             $color = 'yellow';
             $label = 'NOT COVERED';
-            $error = 'Mutation is not covered by any test.';
         }
 
         $this->output->writeln([
-            '  <fg=default;bg='.$color.';options=bold> '.$label.' </> <fg=default;options=bold>'.$path.' <fg=gray> > Line '.$test->mutation->startLine.': '.$test->mutation->mutator::name().' - ID: '.$test->getId().'</>', // @pest-mutate-ignore
-            '  <fg=default;options=bold>'.$error.'</>',
+            '  <fg=default;bg='.$color.';options=bold> '.$label.' </> <fg=default;options=bold>'.$path.' <fg=gray>> Line '.$test->mutation->startLine.': '.$test->mutation->mutator::name().' - ID: '.$test->getId().'</>', // @pest-mutate-ignore
         ]);
 
         $diff = $test->mutation->diff;
