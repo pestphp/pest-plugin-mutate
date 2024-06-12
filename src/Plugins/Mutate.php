@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Plugins;
 
-use Infection\StreamWrapper\IncludeInterceptor;
 use Pest\Contracts\Bootstrapper;
 use Pest\Contracts\Plugins\Bootable;
 use Pest\Contracts\Plugins\HandlesArguments;
@@ -13,6 +12,7 @@ use Pest\Mutate\Boostrappers\BootSubscribers;
 use Pest\Mutate\Cache\FileStore;
 use Pest\Mutate\Contracts\MutationTestRunner;
 use Pest\Mutate\Repositories\ConfigurationRepository;
+use Pest\Mutate\Support\StreamWrapper;
 use Pest\Plugins\Concerns\HandleArguments;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
@@ -53,8 +53,7 @@ class Mutate implements Bootable, HandlesArguments
     public function boot(): void
     {
         if (getenv(self::ENV_MUTATION_TESTING) !== false) {
-            IncludeInterceptor::intercept(getenv(self::ENV_MUTATION_TESTING), getenv(self::ENV_MUTATION_FILE));
-            IncludeInterceptor::enable();
+            StreamWrapper::start(getenv(self::ENV_MUTATION_TESTING), (string) getenv(self::ENV_MUTATION_FILE));
         }
 
         $this->container->add(MutationTestRunner::class, new \Pest\Mutate\Tester\MutationTestRunner());
