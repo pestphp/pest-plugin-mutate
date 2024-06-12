@@ -32,6 +32,8 @@ function mutateCode(string $mutator, string $code): string
 
                 return $this->mutator::mutate($node);
             }
+
+            return null;
         }
     });
 
