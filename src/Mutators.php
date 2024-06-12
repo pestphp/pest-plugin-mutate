@@ -125,6 +125,7 @@ use Pest\Mutate\Mutators\Number\DecrementInteger;
 use Pest\Mutate\Mutators\Number\IncrementFloat;
 use Pest\Mutate\Mutators\Number\IncrementInteger;
 use Pest\Mutate\Mutators\Removal\RemoveArrayItem;
+use Pest\Mutate\Mutators\Removal\RemoveEarlyReturn;
 use Pest\Mutate\Mutators\Removal\RemoveFunctionCall;
 use Pest\Mutate\Mutators\Removal\RemoveMethodCall;
 use Pest\Mutate\Mutators\Removal\RemoveNullSafeOperator;
@@ -474,6 +475,8 @@ class Mutators
 
     /** Removal */
     final public const REMOVAL_REMOVE_ARRAY_ITEM = RemoveArrayItem::class;
+
+    final public const REMOVAL_REMOVE_EARLY_RETURN = RemoveEarlyReturn::class;
 
     final public const REMOVAL_REMOVE_FUNCTION_CALL = RemoveFunctionCall::class;
 

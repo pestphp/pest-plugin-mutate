@@ -7,6 +7,7 @@ namespace Pest\Mutate\Mutators\Sets;
 use Pest\Mutate\Contracts\MutatorSet;
 use Pest\Mutate\Mutators\Concerns\HasName;
 use Pest\Mutate\Mutators\Removal\RemoveArrayItem;
+use Pest\Mutate\Mutators\Removal\RemoveEarlyReturn;
 use Pest\Mutate\Mutators\Removal\RemoveFunctionCall;
 use Pest\Mutate\Mutators\Removal\RemoveMethodCall;
 use Pest\Mutate\Mutators\Removal\RemoveNullSafeOperator;
@@ -22,6 +23,7 @@ class RemovalSet implements MutatorSet
     {
         return [
             RemoveArrayItem::class,
+            RemoveEarlyReturn::class,
             RemoveFunctionCall::class,
             RemoveMethodCall::class,
             RemoveNullSafeOperator::class,
