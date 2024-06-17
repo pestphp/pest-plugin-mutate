@@ -308,7 +308,10 @@ class MutationTestRunner implements MutationTestRunnerContract
 
         $pluginVersion = InstalledVersions::getVersion('pestphp/pest-plugin-mutate');
 
-        if (($previousVersion = $cache->get('mutation-plugin-version') !== null) && $previousVersion !== $pluginVersion) { // @phpstan-ignore-line
+        /** @var ?string $previousVersion */
+        $previousVersion = $cache->get('mutation-plugin-version'); // @phpstan-ignore-line
+
+        if ($previousVersion !== null && $previousVersion !== $pluginVersion) {
             $cache->clear(); // @phpstan-ignore-line
         }
 
