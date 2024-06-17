@@ -13,13 +13,13 @@
 - [x] uncommittedOnly()
 - [x] changedOnly()
 - [x] bail()
-- [x] stopOnSurvived()
+- [x] stopOnEscaped()
 - [x] stopOnNotCovered()
 - [x] Minimum Threshold Enforcement
 - [ ] Allow registering Custom Mutators
 - [x] Disable mutations by annotation
 - [x] Caching
-- [x] Retry (runs survived mutations first)
+- [x] Retry (runs escaped mutations first)
 - [ ] Verbose output
 - [ ] Text log
 - [ ] HTML report
@@ -40,7 +40,7 @@
 - [ ] Add array declaration mutators: https://stryker-mutator.io/docs/mutation-testing-elements/supported-mutators/#array-declaration
 - [ ] Add empty block statement mutator?: https://stryker-mutator.io/docs/mutation-testing-elements/supported-mutators/#array-declaration
 - [ ] Check if we have mutators which do the same mutation. For example: "true" to "false", and "return true" to "return false"
-- [ ] Make the output cristal clear that "survived" is bad and "killed" is good. Maybe change the wording to "missed" and "detected"? What do other libraries to work around the confusion? https://x.com/tfidry/status/1719293281568215499?s=46&t=DEd0fniSoLaUYk0rCiXljw
+- [ ] Make the output cristal clear that "escaped" is bad and "killed" is good. Maybe change the wording to "missed" and "detected"? What do other libraries to work around the confusion? https://x.com/tfidry/status/1719293281568215499?s=46&t=DEd0fniSoLaUYk0rCiXljw
 - [ ] Dedicated help output (`vendor/bin/pest --mutate --help`)
 - [ ] Add help to show available mutators and sets
 - [ ] Add more Laravel mutators

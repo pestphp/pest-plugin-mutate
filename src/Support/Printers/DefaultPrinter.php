@@ -40,7 +40,7 @@ class DefaultPrinter implements Printer
         $this->writeMutationTestLine('green', '✓', $test);
     }
 
-    public function reportSurvivedMutation(MutationTest $test): void
+    public function reportEscapedMutation(MutationTest $test): void
     {
         if ($this->compact) {
             $this->output->write('<fg=red;options=bold>x</>');
@@ -142,7 +142,7 @@ class DefaultPrinter implements Printer
         $this->output->writeln([
             '',
             '',
-            '  <fg=gray>Mutations:</> <fg=default>'.($mutationSuite->repository->survived() !== 0 ? '<fg=red;options=bold>'.$mutationSuite->repository->survived().' survived</><fg=gray>,</> ' : '').($mutationSuite->repository->notCovered() !== 0 ? '<fg=yellow;options=bold>'.$mutationSuite->repository->notCovered().' not covered</><fg=gray>,</> ' : '').($mutationSuite->repository->notRun() !== 0 ? '<fg=yellow;options=bold>'.$mutationSuite->repository->notRun().' pending</><fg=gray>,</> ' : '').($mutationSuite->repository->timedOut() !== 0 ? '<fg=green;options=bold>'.$mutationSuite->repository->timedOut().' timeout</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.$mutationSuite->repository->killed().' killed</>',
+            '  <fg=gray>Mutations:</> <fg=default>'.($mutationSuite->repository->escaped() !== 0 ? '<fg=red;options=bold>'.$mutationSuite->repository->escaped().' escaped</><fg=gray>,</> ' : '').($mutationSuite->repository->notCovered() !== 0 ? '<fg=yellow;options=bold>'.$mutationSuite->repository->notCovered().' not covered</><fg=gray>,</> ' : '').($mutationSuite->repository->notRun() !== 0 ? '<fg=yellow;options=bold>'.$mutationSuite->repository->notRun().' pending</><fg=gray>,</> ' : '').($mutationSuite->repository->timedOut() !== 0 ? '<fg=green;options=bold>'.$mutationSuite->repository->timedOut().' timeout</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.$mutationSuite->repository->killed().' killed</>',
         ]);
 
         $score = number_format($mutationSuite->score(), 2);
@@ -189,7 +189,7 @@ class DefaultPrinter implements Printer
 
     private function writeMutationTestSummary(MutationTest $test): void
     {
-        if (! in_array($test->result(), [MutationTestResult::Survived, MutationTestResult::NotCovered], true)) {
+        if (! in_array($test->result(), [MutationTestResult::Escaped, MutationTestResult::NotCovered], true)) {
             return;
         }
 
@@ -202,10 +202,10 @@ class DefaultPrinter implements Printer
                     HTML
         );
 
-        if ($test->result() === MutationTestResult::Survived) {
+        if ($test->result() === MutationTestResult::Escaped) {
             $color = 'red';
-            $label = 'SURVIVED';
-            $error = 'Mutant has survived.';
+            $label = 'ESCAPED';
+            $error = 'Mutant has escaped.';
         } else {
             $color = 'yellow';
             $label = 'NOT COVERED';

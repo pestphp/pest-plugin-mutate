@@ -57,17 +57,17 @@ describe('print mutation test', function (): void {
             ->toMatchSnapshot();
     });
 
-    it('reports a survived mutation in compact mode', function (): void {
+    it('reports a escaped mutation in compact mode', function (): void {
         $this->printer->compact();
 
-        $this->printer->reportSurvivedMutation($this->mutationTest);
+        $this->printer->reportEscapedMutation($this->mutationTest);
 
         expect($this->out->fetch())
             ->toBe('x');
     });
 
-    it('reports a survived mutation in normal mode', function (): void {
-        $this->printer->reportSurvivedMutation($this->mutationTest);
+    it('reports a escaped mutation in normal mode', function (): void {
+        $this->printer->reportEscapedMutation($this->mutationTest);
 
         expect($this->out->fetch())
             ->toContain('⨯', 'Line 4:', 'EqualToIdentical')

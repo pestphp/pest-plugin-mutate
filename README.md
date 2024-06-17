@@ -137,7 +137,7 @@ The following options are available.
 - [`coveredOnly()`](#coveredOnly)
 - [`uncommittedOnly()`](#uncommittedOnly)
 - [`changedOnly()`](#changedOnly)
-- [`stopOnSurvived()`](#stopOnSurvived)
+- [`stopOnEscaped()`](#stopOnEscaped)
 - [`stopOnNotCovered()`](#stopOnNotCovered)
 - [`bail()`](#bail)
 - [`retry()`](#retry)
@@ -266,15 +266,15 @@ mutate()
 ```
 
 
-<a name="options-stop-on-survived"></a>
-### `stopOnSurvived()`
-CLI: `--stop-on-survived`
+<a name="options-stop-on-escaped"></a>
+### `stopOnEscaped()`
+CLI: `--stop-on-escaped`
 
-Stop execution upon first survived mutant.
+Stop execution upon first escaped mutant.
 
 ```php
 mutate()
-    ->stopOnSurvived();
+    ->stopOnEscaped();
 ```
 
 
@@ -294,7 +294,7 @@ mutate()
 ### `bail()`
 CLI: `--bail`
 
-Stop execution upon first not covered or survived mutant.
+Stop execution upon first not covered or escaped mutant.
 
 ```php
 mutate()
@@ -306,11 +306,11 @@ mutate()
 ### `retry()`
 CLI: `--retry`
 
-If a mutation previously survived, you typically want to run them first. In such cases, you can use the `--retry` option.
+If a mutation previously escaped, you typically want to run them first. In such cases, you can use the `--retry` option.
 
-The `--retry` flag reorders your mutations by prioritizing the previously survived mutations. If there were no past survivals, the suite runs as usual.
+The `--retry` flag reorders your mutations by prioritizing the previously escaped mutations. If there were no past escaped mutations, the suite runs as usual.
 
-Additionally, it will stop execution upon first survived mutant.
+Additionally, it will stop execution upon first escaped mutant.
 
 ```php
 mutate()
@@ -388,7 +388,7 @@ Therefore, Pest Muation Testing is optimized to limit the amount of mutations an
 - Run only tests that covers the mutated code
 - It tries to reuse cached mutations
 - Run mutations in a reasonable order
-- Provide options to stop on first survived or not covered mutation
+- Provide options to stop on first escaped or not covered mutation
 
 But there is much more you can do to improve performance. Especially if you have a larger code base and/or you are using mutations testing while developing locally.
 

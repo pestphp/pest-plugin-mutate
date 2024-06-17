@@ -38,7 +38,7 @@ interface Configuration
 
     public function profile(bool $profile = true): self;
 
-    public function stopOnSurvived(bool $stopOnSurvived = true): self;
+    public function stopOnEscaped(bool $stopOnEscaped = true): self;
 
     public function stopOnNotCovered(bool $stopOnNotCovered = true): self;
 

@@ -108,13 +108,13 @@ it('sets the class option from test', function (): void {
 })->mutate(ConfigurationRepository::FAKE.'_6')
     ->class(AgeHelper::class);
 
-it('sets the stop on survived option from test', function (): void {
+it('sets the stop on escaped option from test', function (): void {
     $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_7');
 
-    expect($configuration->toArray()['stop_on_survived'])
+    expect($configuration->toArray()['stop_on_escaped'])
         ->toBeTrue();
 })->mutate(ConfigurationRepository::FAKE.'_7')
-    ->stopOnSurvived();
+    ->stopOnEscaped();
 
 it('sets the stop on not covered option from test', function (): void {
     $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_8');
@@ -124,11 +124,11 @@ it('sets the stop on not covered option from test', function (): void {
 })->mutate(ConfigurationRepository::FAKE.'_8')
     ->stopOnNotCovered();
 
-it('sets the stop on survived and stop on not covered option from test', function (): void {
+it('sets the stop on escaped and stop on not covered option from test', function (): void {
     $configuration = $this->repository->fakeTestConfiguration(ConfigurationRepository::FAKE.'_9');
 
     expect($configuration->toArray())
-        ->stop_on_survived->toBeTrue()
+        ->stop_on_escaped->toBeTrue()
         ->stop_on_not_covered->toBeTrue();
 })->mutate(ConfigurationRepository::FAKE.'_9')
     ->bail();
@@ -162,6 +162,6 @@ it('sets the retry option from test', function (): void {
 
     expect($configuration->toArray())
         ->retry->toBeTrue()
-        ->stop_on_survived->toBeTrue();
+        ->stop_on_escaped->toBeTrue();
 })->mutate(ConfigurationRepository::FAKE.'_18')
     ->retry(true);

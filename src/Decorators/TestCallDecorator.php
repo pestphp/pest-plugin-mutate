@@ -153,9 +153,9 @@ class TestCallDecorator implements Configuration
         return $this;
     }
 
-    public function stopOnSurvived(bool $stopOnSurvived = true): self
+    public function stopOnEscaped(bool $stopOnEscaped = true): self
     {
-        $this->configuration->stopOnSurvived($stopOnSurvived);
+        $this->configuration->stopOnEscaped($stopOnEscaped);
 
         return $this;
     }
@@ -193,7 +193,7 @@ class TestCallDecorator implements Configuration
         $this->configuration->retry($retry);
 
         if ($retry) {
-            $this->configuration->stopOnSurvived();
+            $this->configuration->stopOnEscaped();
         }
 
         return $this;

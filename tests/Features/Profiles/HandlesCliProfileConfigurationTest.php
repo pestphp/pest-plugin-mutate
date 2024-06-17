@@ -147,14 +147,14 @@ it('sets the class if --class argument is passed', function (): void {
         ->toEqual([AgeHelper::class, SizeHelper::class]);
 });
 
-it('enables stop on survived option if --stop-on-survived argument is passed', function (): void {
+it('enables stop on escaped option if --stop-on-escaped argument is passed', function (): void {
     $this->configuration->fromArguments(['--mutate='.ConfigurationRepository::FAKE]);
     expect($this->configuration->toArray())
-        ->stop_on_survived->toBeNull();
+        ->stop_on_escaped->toBeNull();
 
-    $this->configuration->fromArguments(['--stop-on-survived']);
+    $this->configuration->fromArguments(['--stop-on-escaped']);
     expect($this->configuration->toArray())
-        ->stop_on_survived->toBeTrue();
+        ->stop_on_escaped->toBeTrue();
 });
 
 it('enables stop on not covered option if --stop-on-uncovered argument is passed', function (): void {
@@ -167,15 +167,15 @@ it('enables stop on not covered option if --stop-on-uncovered argument is passed
         ->stop_on_not_covered->toBeTrue();
 });
 
-it('enables stop on survived and stop on not covered option if --bail argument is passed', function (): void {
+it('enables stop on escaped and stop on not covered option if --bail argument is passed', function (): void {
     $this->configuration->fromArguments(['--mutate='.ConfigurationRepository::FAKE]);
     expect($this->configuration->toArray())
-        ->stop_on_survived->toBeNull()
+        ->stop_on_escaped->toBeNull()
         ->stop_on_not_covered->toBeNull();
 
     $this->configuration->fromArguments(['--bail']);
     expect($this->configuration->toArray())
-        ->stop_on_survived->toBeTrue()
+        ->stop_on_escaped->toBeTrue()
         ->stop_on_not_covered->toBeTrue();
 });
 
@@ -217,12 +217,12 @@ it('enables profile option if --retry argument is passed', function (): void {
     $this->configuration->fromArguments(['--mutate='.ConfigurationRepository::FAKE]);
     expect($this->configuration->toArray())
         ->retry->toBeNull()
-        ->stop_on_survived->toBeNull();
+        ->stop_on_escaped->toBeNull();
 
     $this->configuration->fromArguments(['--retry']);
     expect($this->configuration->toArray())
         ->retry->toBeTrue()
-        ->stop_on_survived->toBeTrue();
+        ->stop_on_escaped->toBeTrue();
 });
 
 it('enables the NullStore if --no-cache argument is passed', function (): void {

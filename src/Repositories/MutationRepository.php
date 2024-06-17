@@ -46,9 +46,9 @@ class MutationRepository
         return array_sum(array_map(fn (MutationTestCollection $testCollection): int => $testCollection->count(), $this->tests));
     }
 
-    public function survived(): int
+    public function escaped(): int
     {
-        return array_sum(array_map(fn (MutationTestCollection $testCollection): int => $testCollection->survived(), $this->tests));
+        return array_sum(array_map(fn (MutationTestCollection $testCollection): int => $testCollection->escaped(), $this->tests));
     }
 
     public function killed(): int
@@ -94,12 +94,12 @@ class MutationRepository
         return array_slice($allTests, 0, 10);
     }
 
-    public function sortBySurvivedFirst(): void
+    public function sortByEscapedFirst(): void
     {
-        usort($this->tests, fn (MutationTestCollection $a, MutationTestCollection $b): int => $b->hasLastRunSurvivedMutation() <=> $a->hasLastRunSurvivedMutation());
+        usort($this->tests, fn (MutationTestCollection $a, MutationTestCollection $b): int => $b->hasLastRunEscapedMutation() <=> $a->hasLastRunEscapedMutation());
 
         foreach ($this->tests as $testCollection) {
-            $testCollection->sortBySurvivedFirst();
+            $testCollection->sortByEscapedFirst();
         }
     }
 

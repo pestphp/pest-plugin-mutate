@@ -48,7 +48,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
 
     private ?bool $profile = null;
 
-    private ?bool $stopOnSurvived = null;
+    private ?bool $stopOnEscaped = null;
 
     private ?bool $stopOnNotCovered = null;
 
@@ -146,9 +146,9 @@ abstract class AbstractConfiguration implements ConfigurationContract
         return $this;
     }
 
-    public function stopOnSurvived(bool $stopOnSurvived = true): self
+    public function stopOnEscaped(bool $stopOnEscaped = true): self
     {
-        $this->stopOnSurvived = $stopOnSurvived;
+        $this->stopOnEscaped = $stopOnEscaped;
 
         return $this;
     }
@@ -162,7 +162,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
 
     public function bail(): self
     {
-        $this->stopOnSurvived = true;
+        $this->stopOnEscaped = true;
         $this->stopOnNotCovered = true;
 
         return $this;
@@ -200,7 +200,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
     }
 
     /**
-     * @return array{paths?: string[], paths_to_ignore?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, processes?: int, profile?: bool, min_score?: float, ignore_min_score_on_zero_mutations?: bool, covered_only?: bool, stop_on_survived?: bool, stop_on_not_covered?: bool, uncommitted_only?: bool, changed_only?: string, mutation_id?: string, retry?: bool}
+     * @return array{paths?: string[], paths_to_ignore?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, processes?: int, profile?: bool, min_score?: float, ignore_min_score_on_zero_mutations?: bool, covered_only?: bool, stop_on_escaped?: bool, stop_on_not_covered?: bool, uncommitted_only?: bool, changed_only?: string, mutation_id?: string, retry?: bool}
      */
     public function toArray(): array
     {
@@ -216,7 +216,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
             'min_score' => $this->minScore,
             'ignore_min_score_on_zero_mutations' => $this->ignoreMinScoreOnZeroMutations,
             'covered_only' => $this->coveredOnly,
-            'stop_on_survived' => $this->stopOnSurvived,
+            'stop_on_escaped' => $this->stopOnEscaped,
             'stop_on_not_covered' => $this->stopOnNotCovered,
             'uncommitted_only' => $this->uncommittedOnly,
             'changed_only' => $this->changedOnly,
@@ -263,7 +263,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
         $this->retry = $retry;
 
         if ($retry) {
-            $this->stopOnSurvived = true;
+            $this->stopOnEscaped = true;
         }
 
         return $this;

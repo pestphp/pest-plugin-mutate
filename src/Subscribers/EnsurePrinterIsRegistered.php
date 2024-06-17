@@ -12,8 +12,8 @@ use Pest\Mutate\Event\Events\Test\Outcome\Killed;
 use Pest\Mutate\Event\Events\Test\Outcome\KilledSubscriber;
 use Pest\Mutate\Event\Events\Test\Outcome\NotCovered;
 use Pest\Mutate\Event\Events\Test\Outcome\NotCoveredSubscriber;
-use Pest\Mutate\Event\Events\Test\Outcome\Survived;
-use Pest\Mutate\Event\Events\Test\Outcome\SurvivedSubscriber;
+use Pest\Mutate\Event\Events\Test\Outcome\Escaped;
+use Pest\Mutate\Event\Events\Test\Outcome\EscapedSubscriber;
 use Pest\Mutate\Event\Events\Test\Outcome\Timeout;
 use Pest\Mutate\Event\Events\Test\Outcome\TimeoutSubscriber;
 use Pest\Mutate\Event\Events\TestSuite\FinishMutationGeneration;
@@ -72,11 +72,11 @@ class EnsurePrinterIsRegistered implements StartedSubscriber
                 }
             },
 
-            new class($printer) extends PrinterSubscriber implements SurvivedSubscriber
+            new class($printer) extends PrinterSubscriber implements EscapedSubscriber
             {
-                public function notify(Survived $event): void
+                public function notify(Escaped $event): void
                 {
-                    $this->printer()->reportSurvivedMutation($event->test);
+                    $this->printer()->reportEscapedMutation($event->test);
                 }
             },
 

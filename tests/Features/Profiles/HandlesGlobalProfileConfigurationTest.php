@@ -160,11 +160,11 @@ test('globally configure class option', function (): void {
         ->toBe([AgeHelper::class]);
 });
 
-test('globally configure stop on survived', function (): void {
+test('globally configure stop on escaped', function (): void {
     mutate(ConfigurationRepository::FAKE)
-        ->stopOnSurvived();
+        ->stopOnEscaped();
 
-    expect($this->configuration->toArray()['stop_on_survived'])
+    expect($this->configuration->toArray()['stop_on_escaped'])
         ->toBeTrue();
 });
 
@@ -181,7 +181,7 @@ test('globally configure bail', function (): void {
         ->bail();
 
     expect($this->configuration->toArray())
-        ->stop_on_survived->toBeTrue()
+        ->stop_on_escaped->toBeTrue()
         ->stop_on_not_covered->toBeTrue();
 });
 
@@ -227,7 +227,7 @@ test('globally configure retry option', function (): void {
 
     expect($this->configuration->toArray())
         ->retry->toBeTrue()
-        ->stop_on_survived->toBeTrue();
+        ->stop_on_escaped->toBeTrue();
 
     mutate(ConfigurationRepository::FAKE)
         ->retry(false);

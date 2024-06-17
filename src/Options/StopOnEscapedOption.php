@@ -6,9 +6,9 @@ namespace Pest\Mutate\Options;
 
 use Symfony\Component\Console\Input\InputOption;
 
-class StopOnSurvivedOption
+class StopOnEscapedOption
 {
-    final public const ARGUMENT = 'stop-on-survived';
+    final public const ARGUMENT = 'stop-on-escaped';
 
     public static function remove(): bool
     {

@@ -130,9 +130,9 @@ class MutationTest
         }
 
         if ($this->process->isSuccessful()) {
-            $this->updateResult(MutationTestResult::Survived);
+            $this->updateResult(MutationTestResult::Escaped);
 
-            Facade::instance()->emitter()->mutationSurvived($this);
+            Facade::instance()->emitter()->mutationEscaped($this);
 
             $this->finish = microtime(true);
 

@@ -9,6 +9,6 @@ enum MutationTestResult: string
     case None = 'none';
     case NotCovered = 'not-covered';
     case Killed = 'killed';
-    case Survived = 'survived';
+    case Escaped = 'escaped';
     case Timeout = 'timeout';
 }

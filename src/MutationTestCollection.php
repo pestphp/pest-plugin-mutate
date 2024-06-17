@@ -37,9 +37,9 @@ class MutationTestCollection
         return count($this->tests);
     }
 
-    public function survived(): int
+    public function escaped(): int
     {
-        return count(array_filter($this->tests, fn (MutationTest $test): bool => $test->result() === MutationTestResult::Survived));
+        return count(array_filter($this->tests, fn (MutationTest $test): bool => $test->result() === MutationTestResult::Escaped));
     }
 
     public function killed(): int
@@ -62,9 +62,9 @@ class MutationTestCollection
         return count(array_filter($this->tests, fn (MutationTest $test): bool => $test->result() === MutationTestResult::None));
     }
 
-    public function hasLastRunSurvivedMutation(): bool
+    public function hasLastRunEscapedMutation(): bool
     {
-        return array_filter(ResultCache::instance()->get($this), fn (string $result): bool => $result === MutationTestResult::Survived->value) !== [];
+        return array_filter(ResultCache::instance()->get($this), fn (string $result): bool => $result === MutationTestResult::Escaped->value) !== [];
     }
 
     /**
@@ -83,11 +83,11 @@ class MutationTestCollection
         return $results;
     }
 
-    public function sortBySurvivedFirst(): void
+    public function sortByEscapedFirst(): void
     {
         $lastRunResults = ResultCache::instance()->get($this);
 
-        usort($this->tests, fn (MutationTest $a, MutationTest $b): int => ($b->lastRunResult($lastRunResults) === MutationTestResult::Survived) <=> ($a->lastRunResult($lastRunResults) === MutationTestResult::Survived));
+        usort($this->tests, fn (MutationTest $a, MutationTest $b): int => ($b->lastRunResult($lastRunResults) === MutationTestResult::Escaped) <=> ($a->lastRunResult($lastRunResults) === MutationTestResult::Escaped));
     }
 
     public function isComplete(): bool

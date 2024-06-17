@@ -24,7 +24,7 @@ use Pest\Mutate\Options\ProcessesOption;
 use Pest\Mutate\Options\ProfileOption;
 use Pest\Mutate\Options\RetryOption;
 use Pest\Mutate\Options\StopOnNotCoveredOption;
-use Pest\Mutate\Options\StopOnSurvivedOption;
+use Pest\Mutate\Options\StopOnEscapedOption;
 use Pest\Mutate\Options\UncommittedOnlyOption;
 use Pest\Support\Container;
 use Psr\SimpleCache\CacheInterface;
@@ -46,7 +46,7 @@ class CliConfiguration extends AbstractConfiguration
         ParallelOption::class,
         ProcessesOption::class,
         ProfileOption::class,
-        StopOnSurvivedOption::class,
+        StopOnEscapedOption::class,
         StopOnNotCoveredOption::class,
         BailOption::class,
         UncommittedOnlyOption::class,
@@ -137,8 +137,8 @@ class CliConfiguration extends AbstractConfiguration
             $this->class(explode(',', (string) $input->getOption(ClassOption::ARGUMENT))); // @phpstan-ignore-line
         }
 
-        if ($input->hasOption(StopOnSurvivedOption::ARGUMENT)) {
-            $this->stopOnSurvived($input->getOption(StopOnSurvivedOption::ARGUMENT) !== 'false');
+        if ($input->hasOption(StopOnEscapedOption::ARGUMENT)) {
+            $this->stopOnEscaped($input->getOption(StopOnEscapedOption::ARGUMENT) !== 'false');
         }
 
         if ($input->hasOption(StopOnNotCoveredOption::ARGUMENT)) {
@@ -146,7 +146,7 @@ class CliConfiguration extends AbstractConfiguration
         }
 
         if ($input->hasOption(BailOption::ARGUMENT)) {
-            $this->stopOnSurvived();
+            $this->stopOnEscaped();
             $this->stopOnNotCovered();
         }
 

@@ -162,7 +162,7 @@ class MutationTestRunner implements MutationTestRunnerContract
         Facade::instance()->emitter()->finishMutationGeneration($mutationSuite);
 
         if ($this->getConfiguration()->retry) {
-            $mutationSuite->repository->sortBySurvivedFirst();
+            $mutationSuite->repository->sortByEscapedFirst();
         }
 
         Facade::instance()->emitter()->startMutationSuite($mutationSuite);

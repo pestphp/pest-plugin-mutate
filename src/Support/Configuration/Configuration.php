@@ -25,7 +25,7 @@ class Configuration
         public readonly bool $profile,
         public readonly ?float $minScore,
         public readonly bool $ignoreMinScoreOnZeroMutations,
-        public readonly bool $stopOnSurvived,
+        public readonly bool $stopOnEscaped,
         public readonly bool $stopOnNotCovered,
         public readonly bool $uncommittedOnly,
         public readonly string|false $changedOnly,
