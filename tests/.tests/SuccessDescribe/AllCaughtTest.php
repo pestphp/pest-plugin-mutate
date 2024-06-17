@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-describe('kills all', function(){
-    it('kills all the mutants', function (int $age, bool $isAdult) {
+describe('catches all', function(){
+    it('catches all the mutants', function (int $age, bool $isAdult) {
         expect(\Tests\Fixtures\Classes\AgeHelper::isAdult($age))
             ->toBe($isAdult);
     })->with([

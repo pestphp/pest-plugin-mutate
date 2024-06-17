@@ -39,17 +39,17 @@ describe('print mutation test', function (): void {
         $this->mutationTest = new MutationTest(($this->createMutation)());
     });
 
-    it('reports a killed mutation in compact mode', function (): void {
+    it('reports a caught mutation in compact mode', function (): void {
         $this->printer->compact();
 
-        $this->printer->reportKilledMutation($this->mutationTest);
+        $this->printer->reportCaughtMutation($this->mutationTest);
 
         expect($this->out->fetch())
             ->toBe('.');
     });
 
-    it('reports a killed mutation in normal mode', function (): void {
-        $this->printer->reportKilledMutation($this->mutationTest);
+    it('reports a caught mutation in normal mode', function (): void {
+        $this->printer->reportCaughtMutation($this->mutationTest);
 
         expect($this->out->fetch())
             ->toContain('✓', 'Line 4:', 'EqualToIdentical')

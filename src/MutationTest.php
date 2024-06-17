@@ -139,9 +139,9 @@ class MutationTest
             return true;
         }
 
-        $this->updateResult(MutationTestResult::Killed);
+        $this->updateResult(MutationTestResult::Caught);
 
-        Facade::instance()->emitter()->mutationKilled($this);
+        Facade::instance()->emitter()->mutationCaught($this);
 
         $this->finish = microtime(true);
 

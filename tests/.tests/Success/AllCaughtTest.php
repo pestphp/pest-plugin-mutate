@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-it('kills all the mutants', function (int $age, bool $isAdult) {
+it('catches all the mutants', function (int $age, bool $isAdult) {
     expect(\Tests\Fixtures\Classes\AgeHelper::isAdult($age))
         ->toBe($isAdult);
 })->with([

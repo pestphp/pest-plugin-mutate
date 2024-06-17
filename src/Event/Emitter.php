@@ -6,8 +6,8 @@ namespace Pest\Mutate\Event;
 
 use Pest\Mutate\Event\Events\Test\HookMethod\BeforeFirstTestExecuted;
 use Pest\Mutate\Event\Events\Test\HookMethod\BeforeFirstTestExecutedSubscriber;
-use Pest\Mutate\Event\Events\Test\Outcome\Killed;
-use Pest\Mutate\Event\Events\Test\Outcome\KilledSubscriber;
+use Pest\Mutate\Event\Events\Test\Outcome\Caught;
+use Pest\Mutate\Event\Events\Test\Outcome\CaughtSubscriber;
 use Pest\Mutate\Event\Events\Test\Outcome\NotCovered;
 use Pest\Mutate\Event\Events\Test\Outcome\NotCoveredSubscriber;
 use Pest\Mutate\Event\Events\Test\Outcome\Escaped;
@@ -39,12 +39,12 @@ class Emitter
         return self::$instance;
     }
 
-    public function mutationKilled(MutationTest $test): void
+    public function mutationCaught(MutationTest $test): void
     {
-        $event = new Killed($test);
+        $event = new Caught($test);
 
-        foreach (Facade::instance()->subscribers()[KilledSubscriber::class] ?? [] as $subscriber) {
-            /** @var KilledSubscriber $subscriber */
+        foreach (Facade::instance()->subscribers()[CaughtSubscriber::class] ?? [] as $subscriber) {
+            /** @var CaughtSubscriber $subscriber */
             $subscriber->notify($event);
         }
     }

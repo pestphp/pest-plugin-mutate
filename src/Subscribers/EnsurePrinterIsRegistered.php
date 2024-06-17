@@ -8,8 +8,8 @@ use Pest\Mutate\Contracts\MutationTestRunner;
 use Pest\Mutate\Contracts\Printer;
 use Pest\Mutate\Event\Events\Test\HookMethod\BeforeFirstTestExecuted;
 use Pest\Mutate\Event\Events\Test\HookMethod\BeforeFirstTestExecutedSubscriber;
-use Pest\Mutate\Event\Events\Test\Outcome\Killed;
-use Pest\Mutate\Event\Events\Test\Outcome\KilledSubscriber;
+use Pest\Mutate\Event\Events\Test\Outcome\Caught;
+use Pest\Mutate\Event\Events\Test\Outcome\CaughtSubscriber;
 use Pest\Mutate\Event\Events\Test\Outcome\NotCovered;
 use Pest\Mutate\Event\Events\Test\Outcome\NotCoveredSubscriber;
 use Pest\Mutate\Event\Events\Test\Outcome\Escaped;
@@ -64,11 +64,11 @@ class EnsurePrinterIsRegistered implements StartedSubscriber
             },
 
             // Test > Outcome
-            new class($printer) extends PrinterSubscriber implements KilledSubscriber
+            new class($printer) extends PrinterSubscriber implements CaughtSubscriber
             {
-                public function notify(Killed $event): void
+                public function notify(Caught $event): void
                 {
-                    $this->printer()->reportKilledMutation($event->test);
+                    $this->printer()->reportCaughtMutation($event->test);
                 }
             },
 

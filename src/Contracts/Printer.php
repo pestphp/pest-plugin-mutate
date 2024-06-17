@@ -12,7 +12,7 @@ interface Printer
 {
     public function compact(): void;
 
-    public function reportKilledMutation(MutationTest $test): void;
+    public function reportCaughtMutation(MutationTest $test): void;
 
     public function reportEscapedMutation(MutationTest $test): void;
 

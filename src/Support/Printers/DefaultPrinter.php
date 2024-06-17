@@ -29,7 +29,7 @@ class DefaultPrinter implements Printer
         $this->compact = true;
     }
 
-    public function reportKilledMutation(MutationTest $test): void
+    public function reportCaughtMutation(MutationTest $test): void
     {
         if ($this->compact) {
             $this->output->write('<fg=gray;options=bold>.</>');
@@ -142,7 +142,7 @@ class DefaultPrinter implements Printer
         $this->output->writeln([
             '',
             '',
-            '  <fg=gray>Mutations:</> <fg=default>'.($mutationSuite->repository->escaped() !== 0 ? '<fg=red;options=bold>'.$mutationSuite->repository->escaped().' escaped</><fg=gray>,</> ' : '').($mutationSuite->repository->notCovered() !== 0 ? '<fg=yellow;options=bold>'.$mutationSuite->repository->notCovered().' not covered</><fg=gray>,</> ' : '').($mutationSuite->repository->notRun() !== 0 ? '<fg=yellow;options=bold>'.$mutationSuite->repository->notRun().' pending</><fg=gray>,</> ' : '').($mutationSuite->repository->timedOut() !== 0 ? '<fg=green;options=bold>'.$mutationSuite->repository->timedOut().' timeout</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.$mutationSuite->repository->killed().' killed</>',
+            '  <fg=gray>Mutations:</> <fg=default>'.($mutationSuite->repository->escaped() !== 0 ? '<fg=red;options=bold>'.$mutationSuite->repository->escaped().' escaped</><fg=gray>,</> ' : '').($mutationSuite->repository->notCovered() !== 0 ? '<fg=yellow;options=bold>'.$mutationSuite->repository->notCovered().' not covered</><fg=gray>,</> ' : '').($mutationSuite->repository->notRun() !== 0 ? '<fg=yellow;options=bold>'.$mutationSuite->repository->notRun().' pending</><fg=gray>,</> ' : '').($mutationSuite->repository->timedOut() !== 0 ? '<fg=green;options=bold>'.$mutationSuite->repository->timedOut().' timeout</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.$mutationSuite->repository->caught().' caught</>',
         ]);
 
         $score = number_format($mutationSuite->score(), 2);

@@ -1,5 +1,5 @@
 
-  Running initial test suite ...  
+  Running initial test suite ...
 
   ....
 
@@ -7,8 +7,8 @@
   Duration: xxx
 
 
-  Running mutation tests:  
+  Running mutation tests:
 
 
-  [90mMutations:[39m    [32;1m0 killed[39;22m
+  [90mMutations:[39m    [32;1m0 caught[39;22m
 

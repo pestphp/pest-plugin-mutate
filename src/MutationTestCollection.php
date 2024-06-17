@@ -42,9 +42,9 @@ class MutationTestCollection
         return count(array_filter($this->tests, fn (MutationTest $test): bool => $test->result() === MutationTestResult::Escaped));
     }
 
-    public function killed(): int
+    public function caught(): int
     {
-        return count(array_filter($this->tests, fn (MutationTest $test): bool => $test->result() === MutationTestResult::Killed));
+        return count(array_filter($this->tests, fn (MutationTest $test): bool => $test->result() === MutationTestResult::Caught));
     }
 
     public function timedOut(): int
