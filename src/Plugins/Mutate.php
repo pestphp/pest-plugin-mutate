@@ -82,7 +82,7 @@ class Mutate implements Bootable, HandlesArguments
             if ($coverageRequired) {
                 $mutationTestRunner->doNotDisableCodeCoverage();
             } else {
-                $arguments[] = '--coverage-php=' . Coverage::getPath();
+                $arguments[] = '--coverage-php='.Coverage::getPath();
             }
         }
 

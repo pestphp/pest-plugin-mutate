@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Tester;
 
+use Composer\InstalledVersions;
 use Pest\Mutate\Contracts\MutationTestRunner as MutationTestRunnerContract;
 use Pest\Mutate\Contracts\Printer;
 use Pest\Mutate\Event\Facade;
@@ -17,6 +18,7 @@ use Pest\Mutate\Support\GitDiff;
 use Pest\Mutate\Support\MutationGenerator;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
+use Psr\SimpleCache\CacheInterface;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 
 class MutationTestRunner implements MutationTestRunnerContract
@@ -96,6 +98,8 @@ class MutationTestRunner implements MutationTestRunnerContract
             Container::getInstance()->get(Printer::class)->reportError('No coverage report found, aborting mutation testing.'); // @phpstan-ignore-line
             exit(1);
         }
+
+        $this->clearCacheIfPluginVersionChanged();
 
         $mutationSuite = MutationSuite::instance();
 
@@ -296,5 +300,18 @@ class MutationTestRunner implements MutationTestRunnerContract
         }
 
         return false;
+    }
+
+    private function clearCacheIfPluginVersionChanged(): void
+    {
+        $cache = Container::getInstance()->get(CacheInterface::class);
+
+        $pluginVersion = InstalledVersions::getVersion('pestphp/pest-plugin-mutate');
+
+        if (($previousVersion = $cache->get('mutation-plugin-version') !== null) && $previousVersion !== $pluginVersion) { // @phpstan-ignore-line
+            $cache->clear(); // @phpstan-ignore-line
+        }
+
+        $cache->set('mutation-plugin-version', $pluginVersion); // @phpstan-ignore-line
     }
 }
