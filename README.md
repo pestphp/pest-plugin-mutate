@@ -1,10 +1,18 @@
 This repository contains the Pest Plugin Mutate.
 
-> **This plugin hasn't been officially released yet and is currently in an early development stage.**
+> **This plugin is currently under development.**
 > 
-> Some of the known bugs and missing features are listed in the WIP.md file. 
+>  But you can still use it safely, as it does not affect your application, when not explicitly activated.
 
-To stay up to date, follow me on social media (**[Twitter/X](https://twitter.com/gehrisandro)**, **[Mastodon](https://phpc.social/@gehrisandro)**, **[Bluesky](https://bsky.app/profile/gehrisandro.bsky.social)**) or keep an eye on this repository.
+## Roadmap
+
+We are going to release new beta versions on a regular basis.
+
+A stable version will be released at [Laracon US](https://laracon.us/) by the end of August 2024.
+
+To stay but to date, star the repository and follow it closely.
+
+Another option is to follow Sandro Gehri on **[Twitter/X](https://twitter.com/gehrisandro)** or [LinkedId](https://www.linkedin.com/in/sandro-gehri-02150b41/), where I will post tips and tricks, and updates about the ongoing development. 
 
 ---
 
@@ -31,6 +39,8 @@ You can run the mutation testing from the CLI providing the `--mutate` option.
 vendor/bin/pest --mutate
 ```
 
+> When you are working with a larger codebase, checkout the [performance](#performance) section first, otherwise you will not have satisfying experience.
+
 By default, it uses the default [configuration](#configuration) (if available) or you can use a different configuration by providing its name.
 
 ```bash
@@ -52,21 +62,22 @@ vendor/bin/pest --mutate --covered-only --group=unit
 
 ### `mutate()`
 
-> Attention: This requires a change to the Pest core, which is not merged yet. You need to install [this fork](https://github.com/gehrisandro/pest/tree/mutate) of Pest in order to use `->mutate()` directly on your test cases or describe blocks.
-> All other features are not affected and do work with the official Pest 2.x version.
-
-You can use the `mutate()` function on test cases or describe blocks to run the mutations only for code covered by the given test or describe block.
+Another powerful technique is to call the `mutate()` function directly in your test file. This automatically start mutation testing ones you run `vendor/bin/pest`. Additionally it limits the test run, to the tests in this file.
 
 This function is intended to be used in your daily development workflow to establish a mutation testing practice right when you are implementing or modifying a feature.
 
 By default, it inherits the default configuration. You can change this by providing an alternative configuration name.
 
+> In conjunction with the next release of Pest, it will be possible to append the `mutate()` function direct to an individual test case or a describe block. 
+
 ```php
+mutate();
+
 test('sum', function () {
   $result = sum(1, 2);
 
   expect($result)->toBe(3);
-})->mutate(); // or ->mutate('arithmetic only')
+})
 ```
 
 Executing the `./vendor/bin/pest` command will now automatically run mutation testing. It is not necessary to provide the `--mutate` option.
@@ -74,16 +85,15 @@ Executing the `./vendor/bin/pest` command will now automatically run mutation te
 You can append options after calling `mutate()`.
 
 ```php
+->mutate()
+  ->path('src/functions.php')
+
 test('sum', function () {
   $result = sum(1, 2);
 
   expect($result)->toBe(3);
-})->mutate()
-  ->path('src/functions.php');
+});
 ```
-
-> Using the `mutate()` function on a test case or describe block will only create mutations for code covered by the given test or describe block.
-> To disable this behaviour append `->coveredOnly(false)` or execute Pest with the `--covered-only=false` option (`vendor/bin/pest --mutate --covered-only=false`).
 
 <a name="configuration"></a>
 ## Configuration
@@ -383,7 +393,7 @@ vendor/bin/pest --mutate --clear-cache
 
 Mutation testing is potentially very time-consuming and resource intensive because of the sheer amount of possible mutations and tests to run them against.
 
-Therefore, Pest Muation Testing is optimized to limit the amount of mutations and tests to run against as much as possible. To achieve this, it uses the following strategies:
+Therefore, Pest Mutation Testing is optimized to limit the amount of mutations and tests to run against as much as possible. To achieve this, it uses the following strategies:
 - Limit the amount of possible mutations by having a carefully chosen set of mutators
 - Run only tests that covers the mutated code
 - It tries to reuse cached mutations
@@ -397,14 +407,6 @@ But there is much more you can do to improve performance. Especially if you have
 If you have a code coverage driver available, Pest will use it to only run tests that cover the mutated code.
 
 **Supports [XDebug 3.0+](https://xdebug.org/docs/install/)** or [PCOV](https://github.com/krakjoe/pcov).
-
-### Reduce the number of mutators
-
-Reduce the number of mutations by choosing a smaller set of mutators.
-
-```php
-vendor/bin/pest --mutate --mutator=ArithmeticPlusToMinus
-```
 
 ### Reduce the number of files to mutate
 
@@ -453,10 +455,18 @@ Against a single mutation the tests are not run in parallel, regardless of the p
 vendor/bin/pest --mutate --parallel
 ```
 
+### Reduce the number of mutators
+
+Reduce the number of mutations by choosing a smaller set of mutators.
+
+```php
+vendor/bin/pest --mutate --mutator=ArithmeticPlusToMinus
+```
+
 ### Profiling
 
 You can profile the performance of the mutations by using the `--profile` option.
-It outputs a list of the then slowest mutations.
+It outputs a list of the ten slowest mutations.
 
 ```bash
 vendor/bin/pest --mutate --profile
@@ -779,6 +789,7 @@ This set consists of various mutators from different sets. Mutators included are
 <div class="collection-method-list" markdown="1">
 
 - [RemoveArrayItem](#removearrayitem-) (*)
+- [RemoveEarlyReturn](#removeearlyreturn-) (*)
 - [RemoveFunctionCall](#removefunctioncall-) (*)
 - [RemoveMethodCall](#removemethodcall-) (*)
 - [RemoveNullSafeOperator](#removenullsafeoperator-) (*)
@@ -1860,6 +1871,20 @@ Removes double cast.
 ```php
 $a = (double) $b;  // [tl! remove]
 $a = $b;           // [tl! add]
+```
+
+<a name="removeearlyreturn"></a>
+### RemoveEarlyReturn (*)
+Set: Removal
+
+Removes an early return statement
+
+```php
+if ($a > $b) {
+    return true // [tl! remove]
+}
+
+return false;
 ```
 
 <a name="removefunctioncall"></a>
