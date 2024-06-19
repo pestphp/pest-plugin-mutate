@@ -12,7 +12,7 @@ A stable version will be released at [Laracon US](https://laracon.us/) by the en
 
 To stay but to date, star the repository and follow it closely.
 
-Another option is to follow Sandro Gehri on **[Twitter/X](https://twitter.com/gehrisandro)** or [LinkedId](https://www.linkedin.com/in/sandro-gehri-02150b41/), where I will post tips and tricks, and updates about the ongoing development. 
+Another option is to follow Sandro Gehri on **[Twitter/X](https://twitter.com/gehrisandro)** or **[LinkedIn](https://www.linkedin.com/in/sandro-gehri-02150b41/)**, where I will post tips and tricks, and updates about the ongoing development. 
 
 ---
 
