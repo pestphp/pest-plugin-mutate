@@ -14,6 +14,8 @@ To stay but to date, star the repository and follow it closely.
 
 Another option is to follow Sandro Gehri on **[Twitter/X](https://twitter.com/gehrisandro)** or **[LinkedIn](https://www.linkedin.com/in/sandro-gehri-02150b41/)**, where I will post tips and tricks, and updates about the ongoing development. 
 
+If you have any question not covered in the docs or need help. Checkout the [discussions section](https://github.com/pestphp/pest-plugin-mutate/discussions) on GitHub.
+
 ---
 
 # Mutation Testing
