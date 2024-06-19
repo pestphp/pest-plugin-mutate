@@ -27,7 +27,7 @@ If you have any question not covered in the docs or need help. Checkout the [dis
 To start using Pest's Mutation plugin, you need to require the plugin via Composer.
 
 ```bash
-composer require pestphp/pest-plugin-mutate --dev
+composer require pestphp/pest-plugin-mutate:^2.0@beta --dev --with-all-dependencies
 ```
 
 <a name="run-mutation-testing"></a>
