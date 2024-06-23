@@ -35,8 +35,7 @@ class Mutation
         public readonly int $endLine,
         public readonly string $diff,
         public readonly string $modifiedSourcePath,
-    ) {
-    }
+    ) {}
 
     /**
      * @param  array<array-key, Node>  $modifiedAst

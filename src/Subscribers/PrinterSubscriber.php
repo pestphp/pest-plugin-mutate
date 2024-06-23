@@ -11,9 +11,7 @@ use Pest\Mutate\Contracts\Printer;
  */
 abstract class PrinterSubscriber
 {
-    public function __construct(private readonly Printer $printer)
-    {
-    }
+    public function __construct(private readonly Printer $printer) {}
 
     protected function printer(): Printer
     {

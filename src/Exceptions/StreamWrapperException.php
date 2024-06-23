@@ -6,6 +6,4 @@ namespace Pest\Mutate\Exceptions;
 
 use Exception;
 
-class StreamWrapperException extends Exception
-{
-}
+class StreamWrapperException extends Exception {}

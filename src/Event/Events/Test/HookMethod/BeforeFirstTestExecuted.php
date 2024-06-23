@@ -11,6 +11,5 @@ class BeforeFirstTestExecuted implements Event
 {
     public function __construct(
         public readonly MutationTestCollection $testCollection,
-    ) {
-    }
+    ) {}
 }

@@ -184,8 +184,7 @@ class MutationGenerator
              * @param  callable  $callback
              */
             public function __construct(private $callback) // @pest-ignore-type
-            {
-            }
+            {}
 
             public function enterNode(Node $node): ?Node
             {

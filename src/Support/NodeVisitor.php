@@ -25,8 +25,7 @@ class NodeVisitor extends NodeVisitorAbstract
         private readonly array $mutatorsToIgnoreByLine,
         private $hasAlreadyMutated, // @pest-ignore-type
         private $trackMutation, // @pest-ignore-type
-    ) {
-    }
+    ) {}
 
     public function enterNode(Node $node): Node|int|null
     {

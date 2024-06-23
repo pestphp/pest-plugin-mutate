@@ -20,9 +20,7 @@ class TestCallDecorator implements Configuration
 
     private TestConfiguration $configuration;
 
-    public function __construct(private readonly TestCall $testCall)
-    {
-    }
+    public function __construct(private readonly TestCall $testCall) {}
 
     /**
      * @param  array<int, mixed>  $arguments

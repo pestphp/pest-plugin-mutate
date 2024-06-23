@@ -11,6 +11,5 @@ class Timeout implements Event
 {
     public function __construct(
         public readonly MutationTest $test,
-    ) {
-    }
+    ) {}
 }

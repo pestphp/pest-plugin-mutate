@@ -11,6 +11,5 @@ class StartMutationGeneration implements Event
 {
     public function __construct(
         public readonly MutationSuite $mutationSuite,
-    ) {
-    }
+    ) {}
 }

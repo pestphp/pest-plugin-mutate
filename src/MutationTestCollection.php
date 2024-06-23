@@ -16,8 +16,7 @@ class MutationTestCollection
     public function __construct(
         public readonly SplFileInfo $file,
         private array $tests = [],
-    ) {
-    }
+    ) {}
 
     public function add(MutationTest $test): void
     {

@@ -11,6 +11,5 @@ class Caught implements Event
 {
     public function __construct(
         public readonly MutationTest $test,
-    ) {
-    }
+    ) {}
 }

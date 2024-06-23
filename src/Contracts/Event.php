@@ -4,6 +4,4 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Contracts;
 
-interface Event
-{
-}
+interface Event {}

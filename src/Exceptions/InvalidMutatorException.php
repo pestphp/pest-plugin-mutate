@@ -6,6 +6,4 @@ namespace Pest\Mutate\Exceptions;
 
 use Exception;
 
-class InvalidMutatorException extends Exception
-{
-}
+class InvalidMutatorException extends Exception {}

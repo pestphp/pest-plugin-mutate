@@ -31,6 +31,5 @@ class Configuration
         public readonly string|false $changedOnly,
         public readonly ?string $mutationId,
         public readonly bool $retry,
-    ) {
-    }
+    ) {}
 }

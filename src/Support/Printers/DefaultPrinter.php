@@ -20,9 +20,7 @@ class DefaultPrinter implements Printer
 {
     private bool $compact = false;
 
-    public function __construct(protected readonly OutputInterface $output)
-    {
-    }
+    public function __construct(protected readonly OutputInterface $output) {}
 
     public function compact(): void
     {

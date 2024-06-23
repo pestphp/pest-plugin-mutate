@@ -24,9 +24,7 @@ class MutationTest
 
     private Process $process;
 
-    public function __construct(public readonly Mutation $mutation)
-    {
-    }
+    public function __construct(public readonly Mutation $mutation) {}
 
     public function getId(): string
     {

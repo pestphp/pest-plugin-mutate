@@ -22,8 +22,7 @@ function mutateCode(string $mutator, string $code): string
         public function __construct(
             private readonly string $mutator,
             private $incrementMutationCount,
-        ) {
-        }
+        ) {}
 
         public function leaveNode(Node $node)
         {

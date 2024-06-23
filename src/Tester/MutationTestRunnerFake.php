@@ -13,9 +13,7 @@ class MutationTestRunnerFake implements MutationTestRunnerContract
         // TODO: Implement run() method.
     }
 
-    public function enable(): void
-    {
-    }
+    public function enable(): void {}
 
     public function isEnabled(): bool
     {
