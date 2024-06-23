@@ -1,3 +1,14 @@
+<p align="center">
+    <img src="https://raw.githubusercontent.com/pestphp/pest-plugin-mutate/2.x/art/example.png" width="600" alt="OpenAI PHP">
+    <p align="center">
+        <a href="https://github.com/pestphp/pest-plugin-mutate/actions"><img alt="GitHub Workflow Status (main)" src="https://img.shields.io/github/actions/workflow/status/pestphp/pest-plugin-mutate/tests.yml?branch=main&label=tests&style=round-square"></a>
+        <a href="https://packagist.org/packages/pestphp/pest-plugin-mutate"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/pestphp/pest-plugin-mutate"></a>
+        <a href="https://packagist.org/packages/pestphp/pest-plugin-mutate"><img alt="Latest Version" src="https://img.shields.io/packagist/v/pestphp/pest-plugin-mutate"></a>
+        <a href="https://packagist.org/packages/pestphp/pest-plugin-mutate"><img alt="License" src="https://img.shields.io/github/license/pestphp/pest-plugin-mutate"></a>
+    </p>
+</p>
+
+------
 This repository contains the Pest Plugin Mutate.
 
 > **This plugin is currently under development.**
