@@ -1,7 +1,7 @@
 <?php
 
 declare(strict_types=1);
-
+use Composer\InstalledVersions;
 use Pest\Mutate\Mutators\Arithmetic\MinusToPlus;
 use Pest\Mutate\Mutators\Arithmetic\PlusToMinus;
 use Pest\Mutate\Mutators\Equality\GreaterToGreaterOrEqual;
@@ -12,7 +12,7 @@ use Tests\Fixtures\Classes\AgeHelper;
 
 beforeEach(function (): void {
     $this->repository = Container::getInstance()->get(ConfigurationRepository::class);
-});
+})->skip(fn (): bool => version_compare(InstalledVersions::getVersion('pestphp/pest'), '3.0') === -1);
 
 it('forwards calls to the original test call', function (): never {
     throw new Exception('test exception');
