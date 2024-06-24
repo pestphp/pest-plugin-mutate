@@ -44,7 +44,7 @@ class AlwaysReturnNull extends AbstractMutator
             return false;
         }
 
-        if ($node->expr instanceof ConstFetch && $node->expr->name->parts[0] === 'null') {
+        if ($node->expr instanceof ConstFetch && $node->expr->name->getParts()[0] === 'null') {
             return false;
         }
 

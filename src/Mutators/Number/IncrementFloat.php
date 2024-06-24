@@ -7,6 +7,7 @@ namespace Pest\Mutate\Mutators\Number;
 use Pest\Mutate\Mutators\Abstract\AbstractMutator;
 use PhpParser\Node;
 use PhpParser\Node\Scalar\DNumber;
+use PhpParser\Node\Scalar\Float_;
 
 class IncrementFloat extends AbstractMutator
 {
@@ -21,12 +22,15 @@ class IncrementFloat extends AbstractMutator
 
     public static function nodesToHandle(): array
     {
-        return [DNumber::class];
+        return [
+            DNumber::class,
+            Float_::class,
+        ];
     }
 
     public static function mutate(Node $node): Node
     {
-        /** @var Node\Scalar\LNumber $node */
+        /** @var Node\Scalar\LNumber|Node\Scalar\Float_ $node */
         $node->value++;
 
         return $node;

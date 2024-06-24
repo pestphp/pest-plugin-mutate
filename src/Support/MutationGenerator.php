@@ -12,7 +12,6 @@ use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\Parser;
-use PhpParser\ParserFactory;
 use Symfony\Component\Finder\SplFileInfo;
 
 class MutationGenerator
@@ -56,7 +55,7 @@ class MutationGenerator
             }
         }
 
-        $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+        $parser = PhpParserFactory::make();
 
         $mutators = $this->filterMutators($mutators, $contents, $parser);
 
@@ -82,7 +81,11 @@ class MutationGenerator
                         trackMutation: $this->trackMutation(...),
                     ));
 
-                    $modifiedAst = $traverser->traverse($parser->parse($contents)); // @phpstan-ignore-line
+                    $stmts = $parser->parse($contents);
+
+                    assert($stmts !== null);
+
+                    $modifiedAst = $traverser->traverse($stmts);
 
                     if (! $this->hasMutated()) {
                         break;

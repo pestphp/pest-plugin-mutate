@@ -6,6 +6,7 @@ use Pest\Mutate\Mutators\ControlStructures\IfNegated;
 use Pest\Mutate\Mutators\Equality\GreaterOrEqualToGreater;
 use Pest\Mutate\Mutators\Equality\SmallerToSmallerOrEqual;
 use Pest\Mutate\Support\MutationGenerator;
+use Pest\Mutate\Support\PhpParserFactory;
 use Symfony\Component\Finder\SplFileInfo;
 use Tests\Fixtures\Classes\AgeHelper;
 use Tests\Fixtures\Classes\SizeHelper;
@@ -51,7 +52,35 @@ it('generates mutations for the given file', function (): void {
         ->mutator->toBe(SmallerToSmallerOrEqual::class)
         ->startLine->toBe(21)
         ->modifiedSource()->toMatchSnapshot();
-});
+})->skip(PhpParserFactory::version() === 4);
+
+it('generates mutations for the given file with v4 parser', function (): void {
+    $mutations = $this->generator->generate(
+        $file = new SplFileInfo(dirname(__DIR__).'/Fixtures/Classes/AgeHelper.php', '', ''),
+        [GreaterOrEqualToGreater::class, SmallerToSmallerOrEqual::class],
+        []
+    );
+
+    expect($mutations)
+        ->toBeArray()
+        ->toHaveCount(3)
+        ->each->toBeInstanceOf(Mutation::class)
+        ->and($mutations[0])
+        ->file->getRealPath()->toBe($file->getRealPath())
+        ->mutator->toBe(GreaterOrEqualToGreater::class)
+        ->startLine->toBe(11)
+        ->modifiedSource()->toMatchSnapshot()
+        ->and($mutations[1])
+        ->file->getRealPath()->toBe($file->getRealPath())
+        ->mutator->toBe(GreaterOrEqualToGreater::class)
+        ->startLine->toBe(16)
+        ->modifiedSource()->toMatchSnapshot()
+        ->and($mutations[2])
+        ->file->getRealPath()->toBe($file->getRealPath())
+        ->mutator->toBe(SmallerToSmallerOrEqual::class)
+        ->startLine->toBe(21)
+        ->modifiedSource()->toMatchSnapshot();
+})->skip(PhpParserFactory::version() !== 4);
 
 it('ignores lines with no line coverage', function (): void {
     $mutations = $this->generator->generate(

@@ -3,14 +3,14 @@
 declare(strict_types=1);
 
 use Pest\Mutate\Factories\NodeTraverserFactory;
+use Pest\Mutate\Support\PhpParserFactory;
 use PhpParser\Node;
 use PhpParser\NodeVisitorAbstract;
-use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
 
 function mutateCode(string $mutator, string $code): string
 {
-    $stmts = (new ParserFactory)->create(ParserFactory::PREFER_PHP7)->parse($code);
+    $stmts = PhpParserFactory::make()->parse($code);
 
     $mutationCount = 0;
 

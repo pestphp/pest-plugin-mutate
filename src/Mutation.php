@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Pest\Mutate;
 
 use Pest\Exceptions\ShouldNotHappen;
+use Pest\Mutate\Support\PhpParserFactory;
 use PhpParser\Node;
 use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter\Standard;
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
@@ -51,8 +51,12 @@ class Mutation
         $modifiedSourcePath = self::TMP_FOLDER.DIRECTORY_SEPARATOR.hash('xxh3', $modifiedSource);
         file_put_contents($modifiedSourcePath, $modifiedSource);
 
-        $orignalAst = (new ParserFactory)->create(ParserFactory::PREFER_PHP7)->parse($file->getContents());
-        $newlyRenderedOriginalSource = (new Standard())->prettyPrintFile($orignalAst); // @phpstan-ignore-line
+        $parser = PhpParserFactory::make();
+        $orignalAst = $parser->parse($file->getContents());
+
+        assert($orignalAst !== null);
+
+        $newlyRenderedOriginalSource = (new Standard())->prettyPrintFile($orignalAst);
 
         $endLine = $originalNode->getEndLine();
 

@@ -24,7 +24,10 @@ class RemoveArrayItem extends AbstractMutator
 
     public static function nodesToHandle(): array
     {
-        return [ArrayItem::class];
+        return [
+            ArrayItem::class,
+            Node\ArrayItem::class,
+        ];
     }
 
     public static function mutate(Node $node): int

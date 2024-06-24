@@ -7,6 +7,7 @@ namespace Pest\Mutate\Mutators\Number;
 use Pest\Mutate\Mutators\Abstract\AbstractMutator;
 use PhpParser\Node;
 use PhpParser\Node\Expr\UnaryMinus;
+use PhpParser\Node\Scalar\Int_;
 use PhpParser\Node\Scalar\LNumber;
 use PhpParser\Node\Stmt\DeclareDeclare;
 
@@ -23,7 +24,10 @@ class IncrementInteger extends AbstractMutator
 
     public static function nodesToHandle(): array
     {
-        return [LNumber::class];
+        return [
+            LNumber::class,
+            Int_::class,
+        ];
     }
 
     public static function can(Node $node): bool
@@ -39,7 +43,7 @@ class IncrementInteger extends AbstractMutator
 
     public static function mutate(Node $node): Node
     {
-        /** @var Node\Scalar\LNumber $node */
+        /** @var Node\Scalar\LNumber|Node\Scalar\Int_ $node */
         $node->value += $node->getAttribute('parent') instanceof UnaryMinus ? -1 : 1;
 
         return $node;

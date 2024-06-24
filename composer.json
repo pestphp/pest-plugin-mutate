@@ -27,7 +27,7 @@
     },
     "require": {
         "php": "^8.1",
-        "nikic/php-parser": "^4.19.1",
+        "nikic/php-parser": "^4.19.1|^v5.0.2",
         "pestphp/pest-plugin": "^v2.1.1",
         "psr/simple-cache": "^3.0"
     },
