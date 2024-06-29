@@ -15,3 +15,15 @@ it('unwraps the trim function', function (): void {
         $a = 'foo ';
         CODE);
 });
+
+it('replaces a trim used as a first class callable with an empty callable', function (): void {
+    expect(mutateCode(UnwrapTrim::class, <<<'CODE'
+        <?php
+        
+        array_map(trim(...), $array);
+        CODE))->toBe(<<<'CODE'
+        <?php
+        
+        array_map(fn($value) => $value, $array);
+        CODE);
+});

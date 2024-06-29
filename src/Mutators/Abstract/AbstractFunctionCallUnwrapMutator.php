@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace Pest\Mutate\Mutators\Abstract;
 
 use PhpParser\Node;
+use PhpParser\Node\Expr\ArrowFunction;
 use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Name;
+use PhpParser\Node\Param;
+use PhpParser\Node\VariadicPlaceholder;
 
 abstract class AbstractFunctionCallUnwrapMutator extends AbstractMutator
 {
@@ -30,8 +34,16 @@ abstract class AbstractFunctionCallUnwrapMutator extends AbstractMutator
 
     public static function mutate(Node $node): Node
     {
-        /** @var Node\Expr\FuncCall $node */
-        return $node->args[0]->value; // @phpstan-ignore-line
+        assert($node instanceof FuncCall);
+
+        if ($node->args[0] instanceof VariadicPlaceholder) {
+            return new ArrowFunction([
+                'params' => [new Param(new Variable('value'))],
+                'expr' => new Variable('value'),
+            ]);
+        }
+
+        return $node->args[0]->value;
     }
 
     abstract public static function functionName(): string;
