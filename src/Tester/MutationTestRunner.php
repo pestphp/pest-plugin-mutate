@@ -17,6 +17,8 @@ use Pest\Mutate\Support\FileFinder;
 use Pest\Mutate\Support\MutationGenerator;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
+use Pest\TestSuite;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Psr\SimpleCache\CacheInterface;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 
@@ -128,11 +130,31 @@ class MutationTestRunner implements MutationTestRunnerContract
                 $linesToMutate = array_keys($coveredLines[$file->getRealPath()]);
             }
 
+            $classesToMutate = $this->getConfiguration()->classes;
+
+            if ($classesToMutate === []) {
+                // collect classes to mutate from `covers(...)` in test cases
+                foreach ((fn (): array => $this->testCases)->call(TestSuite::getInstance()->tests) as $test) {
+                    $coveredClasses = [];
+
+                    foreach ($test->attributes as $attribute) {
+                        if ($attribute->name === CoversClass::class) {
+                            $coveredClasses = [
+                                ...$coveredClasses,
+                                ...$attribute->arguments,
+                            ];
+                        }
+                    }
+
+                    $classesToMutate = array_merge($classesToMutate, $coveredClasses);
+                }
+            }
+
             foreach ($generator->generate(
                 file: $file,
                 mutators: $this->getConfiguration()->mutators,
                 linesToMutate: $linesToMutate,
-                classesToMutate: $this->getConfiguration()->classes,
+                classesToMutate: $classesToMutate, // @phpstan-ignore-line
             ) as $mutation) {
                 if ($this->getConfiguration()->mutationId !== null && $mutation->id !== $this->getConfiguration()->mutationId) {
                     continue;
