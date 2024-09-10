@@ -12,7 +12,7 @@ class ProcessesOption
 
     public static function remove(): bool
     {
-        return true;
+        return false;
     }
 
     public static function match(string $argument): bool
