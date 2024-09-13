@@ -7,7 +7,7 @@ namespace Pest\Mutate;
 use ParaTest\Options;
 use Pest\Mutate\Event\Facade;
 use Pest\Mutate\Plugins\Mutate;
-use Pest\Mutate\Repositories\ConfigurationRepository;
+use Pest\Mutate\Repositories\TelemetryRepository;
 use Pest\Mutate\Support\Configuration\Configuration;
 use Pest\Mutate\Support\MutationTestResult;
 use Pest\Support\Container;
@@ -103,10 +103,11 @@ class MutationTest
 
     private function calculateTimeout(): int
     {
-        // TODO: calculate a reasonable timeout
-        return Container::getInstance()->get(ConfigurationRepository::class)->mergedConfiguration()->parallel ? // @phpstan-ignore-line
-            10 :
-            3;
+        $initialTestSuiteDuration = Container::getInstance()->get(TelemetryRepository::class) // @phpstan-ignore-line
+            ->getInitialTestSuiteDuration()
+            ->seconds();
+
+        return $initialTestSuiteDuration + max(5, $initialTestSuiteDuration * 0.2);
     }
 
     public function hasFinished(): bool
