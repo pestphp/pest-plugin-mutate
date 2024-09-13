@@ -107,7 +107,7 @@ class MutationTest
             ->getInitialTestSuiteDuration()
             ->seconds();
 
-        return $initialTestSuiteDuration + max(5, $initialTestSuiteDuration * 1.2);
+        return $initialTestSuiteDuration + max(5, $initialTestSuiteDuration * 0.2);
     }
 
     public function hasFinished(): bool
