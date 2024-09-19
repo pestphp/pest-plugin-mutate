@@ -159,11 +159,12 @@ class Mutate implements AddsOutput, Bootable, HandlesArguments
         $paths = $configurationRepository->cliConfiguration->toArray()['paths'] ?? false;
 
         if (! is_array($paths) && $configuration->classes === [] && ! $configuration->everything) {
-            $this->output->writeln(['  <bg=red> ERROR </> Mutation testing requires the usage of the `covers()` function. Here is an example:', '']);
+            $this->output->writeln(['  <bg=red> ERROR </> Mutation testing requires the usage of the `covers()` function or `mutates()` function. Here is an example:', '']);
 
             $highlighter = new Highlighter;
             $content = $highlighter->highlight(<<<'PHP'
                 covers(TodoController::class); // mutations will be generated only for this class
+                // or mutates(TodoController::class);
 
                 it('list todos', function () {
                     // your test here...
@@ -180,7 +181,7 @@ class Mutate implements AddsOutput, Bootable, HandlesArguments
                 '  <fg=gray>pest --mutate --parallel --everything --covered-only</>',
             ]);
 
-            $this->output->writeln(['', '  However, we recommend using the `covers()` function for better performance, and keep tracking of your mutation testing score over time.']);
+            $this->output->writeln(['', '  However, we recommend using the `covers()` function or the `mutates` function for better performance, and keep tracking of your mutation testing score over time.']);
 
             return 1;
         }
