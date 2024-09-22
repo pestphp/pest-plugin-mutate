@@ -104,10 +104,9 @@ class MutationTest
     private function calculateTimeout(): int
     {
         $initialTestSuiteDuration = Container::getInstance()->get(TelemetryRepository::class) // @phpstan-ignore-line
-            ->getInitialTestSuiteDuration()
-            ->seconds();
+            ->getInitialTestSuiteDuration();
 
-        return $initialTestSuiteDuration + max(5, (int) ($initialTestSuiteDuration * 0.2));
+        return (int) ($initialTestSuiteDuration + max(5, $initialTestSuiteDuration * 0.2));
     }
 
     public function hasFinished(): bool

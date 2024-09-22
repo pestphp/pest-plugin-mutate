@@ -29,4 +29,9 @@ class MutationTestRunnerFake implements MutationTestRunnerContract
     {
         // TODO: Implement setOriginalArguments() method.
     }
+
+    public function setStartTime(float $startTime): void
+    {
+        // TODO: Implement setStartTime() method.
+    }
 }

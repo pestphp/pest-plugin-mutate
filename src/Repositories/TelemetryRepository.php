@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace Pest\Mutate\Repositories;
 
-use PHPUnit\Event\Telemetry\Duration;
-
 class TelemetryRepository
 {
-    private Duration $initialTestSuiteDuration;
+    private float $initialTestSuiteDuration;
 
-    public function initialTestSuiteDuration(Duration $duration): void
+    public function initialTestSuiteDuration(float $duration): void
     {
         $this->initialTestSuiteDuration = $duration;
     }
 
-    public function getInitialTestSuiteDuration(): Duration
+    public function getInitialTestSuiteDuration(): float
     {
         return $this->initialTestSuiteDuration;
     }
