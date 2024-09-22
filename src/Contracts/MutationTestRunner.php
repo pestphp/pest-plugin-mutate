@@ -15,6 +15,8 @@ interface MutationTestRunner
      */
     public function setOriginalArguments(array $arguments): void;
 
+    public function setStartTime(float $startTime): void;
+
     public function isCodeCoverageRequested(): bool;
 
     public function run(): int;

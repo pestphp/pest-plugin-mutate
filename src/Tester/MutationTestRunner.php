@@ -12,6 +12,7 @@ use Pest\Mutate\MutationSuite;
 use Pest\Mutate\MutationTest;
 use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Repositories\ConfigurationRepository;
+use Pest\Mutate\Repositories\TelemetryRepository;
 use Pest\Mutate\Support\Configuration\Configuration;
 use Pest\Mutate\Support\FileFinder;
 use Pest\Mutate\Support\MutationGenerator;
@@ -37,6 +38,8 @@ class MutationTestRunner implements MutationTestRunnerContract
      * @var array<int, ?MutationTest>
      */
     private array $runningTests;
+
+    private float $startTime;
 
     public static function fake(): MutationTestRunnerFake
     {
@@ -90,7 +93,9 @@ class MutationTestRunner implements MutationTestRunnerContract
 
     public function run(): int
     {
-        $start = microtime(true);
+        Container::getInstance()->get(TelemetryRepository::class)->initialTestSuiteDuration( // @phpstan-ignore-line
+            microtime(true) - $this->startTime
+        );
 
         if (! Coverage::isAvailable() || ! file_exists($reportPath = Coverage::getPath())) {
             Container::getInstance()->get(Printer::class)->reportError('No coverage report found, aborting mutation testing.'); // @phpstan-ignore-line
@@ -293,5 +298,10 @@ class MutationTestRunner implements MutationTestRunnerContract
         }
 
         $cache->set('mutation-plugin-version', $pluginVersion); // @phpstan-ignore-line
+    }
+
+    public function setStartTime(float $startTime): void
+    {
+        $this->startTime = $startTime;
     }
 }

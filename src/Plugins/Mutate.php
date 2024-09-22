@@ -135,6 +135,7 @@ class Mutate implements AddsOutput, Bootable, HandlesArguments
             ->cliConfiguration->fromArguments($arguments);
 
         $mutationTestRunner->setOriginalArguments($arguments);
+        $mutationTestRunner->setStartTime(microtime(true));
 
         return $arguments;
     }
