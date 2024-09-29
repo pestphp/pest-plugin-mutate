@@ -48,9 +48,16 @@ class MutationTest
     public function start(array $coveredLines, Configuration $configuration, array $originalArguments, ?int $processId = null): bool
     {
         // TODO: we should pass the tests to run in another way, maybe via cache, mutation or env variable
+
         $filters = [];
         foreach (range($this->mutation->startLine, $this->mutation->endLine) as $lineNumber) {
-            foreach ($coveredLines[$this->mutation->file->getRealPath()][$lineNumber] ?? [] as $test) {
+            $tests = $coveredLines[$this->mutation->file->getRealPath()][$lineNumber] ?? [];
+
+            if ($tests === [] && array_key_exists($this->mutation->file->getRealPath(), $coveredLines)) {
+                $tests = array_unique(array_merge(...array_values($coveredLines[$this->mutation->file->getRealPath()])));
+            }
+
+            foreach ($tests as $test) {
                 preg_match('/\\\\([a-zA-Z0-9]*)::(__pest_evaluable_)?([^#]*)"?/', $test, $matches);
                 if ($matches[2] === '__pest_evaluable_') { // @phpstan-ignore-line
                     $filters[] = $matches[1].'::(.*)'.str_replace(['__', '_'], ['.{1,2}', '.'], $matches[3]); // @phpstan-ignore-line
@@ -59,6 +66,7 @@ class MutationTest
                 }
             }
         }
+
         $filters = array_unique($filters);
 
         if ($filters === []) {
