@@ -23,7 +23,7 @@ final readonly class BootPhpUnitSubscribers implements Bootstrapper
      *
      * @var array<int, class-string<Subscriber>>
      */
-    private const SUBSCRIBERS = [
+    private const array SUBSCRIBERS = [
         DisplayInitialTestRunMessage::class,
         PrepareForInitialTestRun::class,
         EnsureInitialTestRunWasSuccessful::class,

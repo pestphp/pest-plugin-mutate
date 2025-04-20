@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ParallelOption
 {
-    final public const ARGUMENT = 'parallel';
+    final public const string ARGUMENT = 'parallel';
 
     public static function remove(): bool
     {

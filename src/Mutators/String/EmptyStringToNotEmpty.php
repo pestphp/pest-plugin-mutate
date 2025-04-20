@@ -24,6 +24,7 @@ class EmptyStringToNotEmpty extends AbstractMutator
         return [String_::class];
     }
 
+    #[\Override]
     public static function can(Node $node): bool
     {
         return $node instanceof String_ &&

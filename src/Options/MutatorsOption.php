@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class MutatorsOption
 {
-    final public const ARGUMENT = 'mutator';
+    final public const string ARGUMENT = 'mutator';
 
     public static function remove(): bool
     {

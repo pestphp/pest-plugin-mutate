@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class RetryOption
 {
-    final public const ARGUMENT = 'retry';
+    final public const string ARGUMENT = 'retry';
 
     public static function remove(): bool
     {

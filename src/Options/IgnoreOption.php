@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class IgnoreOption
 {
-    final public const ARGUMENT = 'ignore';
+    final public const string ARGUMENT = 'ignore';
 
     public static function remove(): bool
     {

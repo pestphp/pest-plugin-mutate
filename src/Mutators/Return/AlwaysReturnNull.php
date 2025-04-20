@@ -32,6 +32,7 @@ class AlwaysReturnNull extends AbstractMutator
         return [Return_::class];
     }
 
+    #[\Override]
     public static function can(Node $node): bool
     {
         if (! $node instanceof Return_) {
@@ -48,7 +49,7 @@ class AlwaysReturnNull extends AbstractMutator
             return false;
         }
 
-        if ($parent->returnType === null) {
+        if (! $parent->returnType instanceof \PhpParser\Node) {
             return true;
         }
 

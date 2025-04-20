@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class BailOption
 {
-    final public const ARGUMENT = 'bail';
+    final public const string ARGUMENT = 'bail';
 
     public static function remove(): bool
     {

@@ -32,7 +32,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 
 class CliConfiguration extends AbstractConfiguration
 {
-    private const OPTIONS = [
+    private const array OPTIONS = [
         MutateOption::class,
         ClassOption::class,
         MinScoreOption::class,
@@ -118,6 +118,7 @@ class CliConfiguration extends AbstractConfiguration
             $this->profile($input->getOption(ProfileOption::ARGUMENT) !== 'false');
         }
 
+        /** @phpstan-ignore-next-line */
         if ($_SERVER['COLLISION_PRINTER_PROFILE'] ?? false) {
             $this->profile(true);
             unset($_SERVER['COLLISION_PRINTER_PROFILE']);

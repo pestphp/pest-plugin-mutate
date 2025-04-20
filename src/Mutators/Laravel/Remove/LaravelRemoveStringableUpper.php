@@ -28,6 +28,7 @@ class LaravelRemoveStringableUpper extends AbstractMutator
         return [MethodCall::class];
     }
 
+    #[\Override]
     public static function can(Node $node): bool
     {
         if (! parent::can($node)) {

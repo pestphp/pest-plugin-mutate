@@ -17,7 +17,7 @@ use Symfony\Component\Finder\SplFileInfo;
 
 class Mutation
 {
-    private const TMP_FOLDER = __DIR__
+    private const string TMP_FOLDER = __DIR__
         .DIRECTORY_SEPARATOR
         .'..'
         .DIRECTORY_SEPARATOR
@@ -25,7 +25,7 @@ class Mutation
         .DIRECTORY_SEPARATOR
         .'mutations';
 
-    private const DIFF_SEPARATOR = '--- Expected'.PHP_EOL.'+++ Actual'.PHP_EOL.'@@ @@'.PHP_EOL;
+    private const string DIFF_SEPARATOR = '--- Expected'.PHP_EOL.'+++ Actual'.PHP_EOL.'@@ @@'.PHP_EOL;
 
     public function __construct(
         public readonly SplFileInfo $file,

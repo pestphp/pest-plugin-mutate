@@ -31,6 +31,7 @@ class AlwaysReturnEmptyArray extends AbstractMutator
         return [Return_::class];
     }
 
+    #[\Override]
     public static function can(Node $node): bool
     {
         if (! $node instanceof Return_) {

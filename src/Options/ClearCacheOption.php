@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ClearCacheOption
 {
-    final public const ARGUMENT = 'clear-cache';
+    final public const string ARGUMENT = 'clear-cache';
 
     public static function remove(): bool
     {

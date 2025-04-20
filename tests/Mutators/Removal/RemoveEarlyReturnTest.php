@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Pest\Mutate\Mutators\Removal\RemoveEarlyReturn;
 
-//mutate()
+// mutate()
 //    ->class(RemoveEarlyReturn::class);
 
 it('removes an early return statement', function (): void {

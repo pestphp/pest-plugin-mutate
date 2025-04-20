@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ClassOption
 {
-    final public const ARGUMENT = 'class';
+    final public const string ARGUMENT = 'class';
 
     public static function remove(): bool
     {

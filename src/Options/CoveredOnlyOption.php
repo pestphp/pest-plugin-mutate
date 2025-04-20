@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class CoveredOnlyOption
 {
-    final public const ARGUMENT = 'covered-only';
+    final public const string ARGUMENT = 'covered-only';
 
     public static function remove(): bool
     {

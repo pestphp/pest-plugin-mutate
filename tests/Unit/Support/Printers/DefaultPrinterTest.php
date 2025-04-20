@@ -200,7 +200,7 @@ describe('mutation suite', function (): void {
 
         $this->printer->reportMutationSuiteFinished($this->mutationSuite);
 
-        expect(preg_replace('/\n  Parallel:  \d* processes/', '', $this->out->fetch()))
+        expect(preg_replace('/\n  Parallel:  \d* processes/', '', (string) $this->out->fetch()))
             ->toContain('Mutations:', 'Score:', 'Duration:', 'INFO', 'No mutations created.')
             ->toEndWith(PHP_EOL)
             ->toMatchSnapshot();

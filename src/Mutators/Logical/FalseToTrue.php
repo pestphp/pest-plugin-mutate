@@ -27,6 +27,7 @@ class FalseToTrue extends AbstractMutator
         return [ConstFetch::class];
     }
 
+    #[\Override]
     public static function can(Node $node): bool
     {
         if (! parent::can($node)) {

@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ExceptOption
 {
-    final public const ARGUMENT = 'except';
+    final public const string ARGUMENT = 'except';
 
     public static function remove(): bool
     {

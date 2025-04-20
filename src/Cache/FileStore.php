@@ -11,7 +11,7 @@ use Psr\SimpleCache\CacheInterface;
 
 class FileStore implements CacheInterface
 {
-    private const CACHE_FOLDER_NAME = 'pest-mutate-cache';
+    private const string CACHE_FOLDER_NAME = 'pest-mutate-cache';
 
     private readonly string $directory;
 
@@ -147,7 +147,7 @@ class FileStore implements CacheInterface
             $expire = (int) substr(
                 $content, 0, 10
             );
-        } catch (Exception) { // @phpstan-ignore-line
+        } catch (Exception) {
             $this->delete($key);
 
             return $this->emptyPayload();
@@ -161,7 +161,7 @@ class FileStore implements CacheInterface
 
         try {
             $data = unserialize(substr($content, 10));
-        } catch (Exception) { // @phpstan-ignore-line
+        } catch (Exception) {
             $this->delete($key);
 
             return $this->emptyPayload();

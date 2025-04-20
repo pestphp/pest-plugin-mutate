@@ -19,6 +19,7 @@ abstract class AbstractFunctionCallUnwrapMutator extends AbstractMutator
         return [FuncCall::class];
     }
 
+    #[\Override]
     public static function can(Node $node): bool
     {
         if (! $node instanceof FuncCall) {

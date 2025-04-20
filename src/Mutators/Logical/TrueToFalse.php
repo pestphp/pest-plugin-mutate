@@ -12,7 +12,7 @@ use PhpParser\Node\Name;
 
 class TrueToFalse extends AbstractMutator
 {
-    private const FUNCTIONS_TO_IGNORE = ['in_array', 'array_search'];
+    private const array FUNCTIONS_TO_IGNORE = ['in_array', 'array_search'];
 
     public const SET = 'Logical';
 
@@ -30,6 +30,7 @@ class TrueToFalse extends AbstractMutator
         return [ConstFetch::class];
     }
 
+    #[\Override]
     public static function can(Node $node): bool
     {
         if (! parent::can($node)) {

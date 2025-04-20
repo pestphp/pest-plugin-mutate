@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class MinScoreOption
 {
-    final public const ARGUMENT = 'min';
+    final public const string ARGUMENT = 'min';
 
     public static function remove(): bool
     {

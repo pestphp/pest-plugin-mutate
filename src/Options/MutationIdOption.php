@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class MutationIdOption
 {
-    final public const ARGUMENT = 'id';
+    final public const string ARGUMENT = 'id';
 
     public static function remove(): bool
     {

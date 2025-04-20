@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class IgnoreMinScoreOnZeroMutationsOption
 {
-    final public const ARGUMENT = 'ignore-min-score-on-zero-mutations';
+    final public const string ARGUMENT = 'ignore-min-score-on-zero-mutations';
 
     public static function remove(): bool
     {

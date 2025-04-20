@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class StopOnUncoveredOption
 {
-    final public const ARGUMENT = 'stop-on-uncovered';
+    final public const string ARGUMENT = 'stop-on-uncovered';
 
     public static function remove(): bool
     {

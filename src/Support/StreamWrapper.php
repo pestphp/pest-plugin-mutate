@@ -11,7 +11,7 @@ use RuntimeException;
 
 class StreamWrapper
 {
-    private const PROTOCOL = 'file';
+    private const string PROTOCOL = 'file';
 
     /**
      * @var resource

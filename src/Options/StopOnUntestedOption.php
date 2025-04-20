@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class StopOnUntestedOption
 {
-    final public const ARGUMENT = 'stop-on-untested';
+    final public const string ARGUMENT = 'stop-on-untested';
 
     public static function remove(): bool
     {

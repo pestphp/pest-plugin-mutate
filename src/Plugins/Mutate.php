@@ -54,16 +54,16 @@ class Mutate implements AddsOutput, Bootable, HandlesArguments
 {
     use HandleArguments;
 
-    final public const ENV_MUTATION_TESTING = 'PEST_MUTATION_TESTING';
+    final public const string ENV_MUTATION_TESTING = 'PEST_MUTATION_TESTING';
 
-    final public const ENV_MUTATION_FILE = 'PEST_MUTATION_FILE';
+    final public const string ENV_MUTATION_FILE = 'PEST_MUTATION_FILE';
 
     /**
      * The Kernel bootstrappers.
      *
      * @var array<int, class-string>
      */
-    private const BOOTSTRAPPERS = [
+    private const array BOOTSTRAPPERS = [
         BootPhpUnitSubscribers::class,
         BootSubscribers::class,
     ];
@@ -81,12 +81,14 @@ class Mutate implements AddsOutput, Bootable, HandlesArguments
     public function boot(): void
     {
         if (getenv(self::ENV_MUTATION_TESTING) !== false) {
+            /** @phpstan-ignore-next-line */
             StreamWrapper::start(getenv(self::ENV_MUTATION_TESTING), (string) getenv(self::ENV_MUTATION_FILE));
         }
 
         $this->container->add(MutationTestRunner::class, $runner = new \Pest\Mutate\Tester\MutationTestRunner);
         $this->container->add(Printer::class, $printer = new DefaultPrinter($this->output));
 
+        /** @phpstan-ignore-next-line */
         if ($_SERVER['COLLISION_PRINTER_COMPACT'] ?? false) {
             $printer->compact();
         }

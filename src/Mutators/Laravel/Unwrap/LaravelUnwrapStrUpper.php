@@ -27,6 +27,7 @@ class LaravelUnwrapStrUpper extends AbstractMutator
         return [MethodCall::class, StaticCall::class];
     }
 
+    #[\Override]
     public static function can(Node $node): bool
     {
         if (! parent::can($node)) {

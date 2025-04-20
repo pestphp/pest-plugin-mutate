@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputOption;
 
 class ProfileOption
 {
-    final public const ARGUMENT = 'profile';
+    final public const string ARGUMENT = 'profile';
 
     public static function remove(): bool
     {

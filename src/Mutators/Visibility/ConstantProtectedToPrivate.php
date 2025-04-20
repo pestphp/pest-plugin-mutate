@@ -26,6 +26,7 @@ class ConstantProtectedToPrivate extends AbstractMutator
         return [ClassConst::class];
     }
 
+    #[\Override]
     public static function can(Node $node): bool
     {
         return $node instanceof ClassConst && $node->isProtected();

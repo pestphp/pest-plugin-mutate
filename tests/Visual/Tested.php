@@ -23,8 +23,8 @@ test('visual snapshot of mutation tests on success', function (): void {
         '$1',
     ], $process->getOutput());
 
-    $output = preg_replace('/Duration:  .*/', 'Duration:  xxx', $output);
-    $output = preg_replace('/Duration: .*/', 'Duration: xxx', $output);
+    $output = preg_replace('/Duration:  .*/', 'Duration:  xxx', (string) $output);
+    $output = preg_replace('/Duration: .*/', 'Duration: xxx', (string) $output);
 
     expect($output)
         ->toMatchSnapshot();
