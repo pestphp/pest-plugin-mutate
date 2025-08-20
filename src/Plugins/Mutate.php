@@ -88,7 +88,6 @@ class Mutate implements AddsOutput, Bootable, HandlesArguments
         $this->container->add(MutationTestRunner::class, $runner = new \Pest\Mutate\Tester\MutationTestRunner);
         $this->container->add(Printer::class, $printer = new DefaultPrinter($this->output));
 
-        /** @phpstan-ignore-next-line */
         if ($_SERVER['COLLISION_PRINTER_COMPACT'] ?? false) {
             $printer->compact();
         }

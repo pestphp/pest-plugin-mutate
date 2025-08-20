@@ -15,13 +15,17 @@
     "license": "MIT",
     "authors": [
         {
+            "name": "Nuno Maduro",
+            "email": "enunomaduro@gmail.com"
+        },
+        {
             "name": "Sandro Gehri",
             "email": "sandrogehri@gmail.com"
         }
     ],
     "require": {
         "php": "^8.3",
-        "nikic/php-parser": "^5.4.0",
+        "nikic/php-parser": "^5.6.1",
         "pestphp/pest-plugin": "^4.0.0",
         "psr/simple-cache": "^3.0.0"
     },
