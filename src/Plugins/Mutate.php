@@ -81,6 +81,7 @@ class Mutate implements AddsOutput, Bootable, HandlesArguments
     public function boot(): void
     {
         if (getenv(self::ENV_MUTATION_TESTING) !== false) {
+            // @phpstan-ignore-next-line
             StreamWrapper::start(getenv(self::ENV_MUTATION_TESTING), (string) getenv(self::ENV_MUTATION_FILE));
         }
 

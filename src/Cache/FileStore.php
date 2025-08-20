@@ -77,7 +77,7 @@ class FileStore implements CacheInterface
     /**
      * @param  iterable<string, mixed>  $values
      */
-    public function setMultiple(iterable $values, DateInterval|int|null $ttl = null): bool // @phpstan-ignore-line
+    public function setMultiple(iterable $values, DateInterval|int|null $ttl = null): bool
     {
         $result = true;
 
@@ -147,7 +147,7 @@ class FileStore implements CacheInterface
             $expire = (int) substr(
                 $content, 0, 10
             );
-        } catch (Exception) { // @phpstan-ignore-line
+        } catch (Exception) {
             $this->delete($key);
 
             return $this->emptyPayload();
@@ -161,7 +161,7 @@ class FileStore implements CacheInterface
 
         try {
             $data = unserialize(substr($content, 10));
-        } catch (Exception) { // @phpstan-ignore-line
+        } catch (Exception) {
             $this->delete($key);
 
             return $this->emptyPayload();

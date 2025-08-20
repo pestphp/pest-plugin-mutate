@@ -187,7 +187,7 @@ class StreamWrapper
         return $this->withOriginalWrapper(function () use ($value, $path, $option): bool {
             switch ($option) {
                 case STREAM_META_TOUCH:
-                    if (empty($value)) { // @phpstan-ignore-line
+                    if (empty($value)) {
                         return touch($path);
                     }
 

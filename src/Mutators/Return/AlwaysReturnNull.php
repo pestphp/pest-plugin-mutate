@@ -48,7 +48,7 @@ class AlwaysReturnNull extends AbstractMutator
             return false;
         }
 
-        if ($parent->returnType === null) {
+        if (! $parent->returnType instanceof \PhpParser\Node) {
             return true;
         }
 
