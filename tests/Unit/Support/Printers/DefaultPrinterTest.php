@@ -16,8 +16,8 @@ beforeEach(function (): void {
     $this->printer = new DefaultPrinter($this->out);
 
     $this->createMutation = fn (): Mutation => new Mutation(
-        id: 'test-id',
         file: new SplFileInfo('test.php', '', ''),
+        id: 'test-id',
         mutator: EqualToIdentical::class,
         startLine: 4,
         endLine: 4,
