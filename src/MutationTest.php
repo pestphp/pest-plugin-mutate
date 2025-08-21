@@ -81,10 +81,13 @@ class MutationTest
             $envs['LARAVEL_PARALLEL_TESTING'] = 1;
         }
 
+        // remove coverage arguments from the original arguments
+        $filteredArguments = array_filter($originalArguments, fn (string $argument): bool => ! str_starts_with($argument, '--coverage'));
+
         // TODO: filter arguments to remove unnecessary stuff (Teamcity, Coverage, etc.)
         $process = new Process(
             command: [
-                ...$originalArguments,
+                ...$filteredArguments,
                 '--bail',
                 '--filter="'.implode('|', $filters).'"',
             ],
