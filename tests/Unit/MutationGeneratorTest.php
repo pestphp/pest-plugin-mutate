@@ -96,7 +96,7 @@ it('generates mutations for the given file if it contains the given class', func
     [['AgeHelper'], 2],
     [['SizeHelper'], 0],
     [[AgeHelper::class], 2],
-    [['Tests\\Fixtures\\Classes\\AgeHelp'], 2],
+    [['Tests\\Fixtures\\Classes\\AgeHelp'], 0],
     [['Invalid\\Namespace\\AgeHelper'], 0],
     [['Invalid\\Namespace\\AgeHelp'], 0],
     [['Invalid\\Namespace\\AgeHelper', AgeHelper::class], 2],
@@ -118,7 +118,7 @@ it('generates mutations for the given file if it contains the given trait', func
     [[SizeHelper::class], 0],
     [[SizeHelperTrait::class, SizeHelper::class], 1],
     [['SizeHelperTrait'], 1],
-    [['Tests\\Fixtures\\Traits\\SizeHelperTrai'], 1],
+    [['Tests\\Fixtures\\Traits\\SizeHelperTrai'], 0],
     [['Invalid\\Namespace\\SizeHelperTrait'], 0],
 ]);
 
