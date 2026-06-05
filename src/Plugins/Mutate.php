@@ -35,6 +35,7 @@ use Pest\Mutate\Event\Events\TestSuite\StartMutationSuite;
 use Pest\Mutate\Event\Events\TestSuite\StartMutationSuiteSubscriber;
 use Pest\Mutate\Event\Facade;
 use Pest\Mutate\Repositories\ConfigurationRepository;
+use Pest\Mutate\Subscribers\LoggerSubscriber;
 use Pest\Mutate\Subscribers\PrinterSubscriber;
 use Pest\Mutate\Support\Printers\DefaultPrinter;
 use Pest\Mutate\Support\StreamWrapper;
@@ -44,6 +45,9 @@ use Pest\Support\Container;
 use Pest\Support\Coverage;
 use Psr\SimpleCache\CacheInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Pest\Mutate\Logging\JsonLogger;
+use Pest\Mutate\Contracts\Logger;
+use Pest\Mutate\Logging\NullLogger;
 
 /**
  * @internal
@@ -57,6 +61,11 @@ class Mutate implements AddsOutput, Bootable, HandlesArguments
     final public const ENV_MUTATION_TESTING = 'PEST_MUTATION_TESTING';
 
     final public const ENV_MUTATION_FILE = 'PEST_MUTATION_FILE';
+
+    /**
+     * The logger used to output mutation metrics to a file.
+     */
+    private Logger $logger;
 
     /**
      * The Kernel bootstrappers.
@@ -75,7 +84,7 @@ class Mutate implements AddsOutput, Bootable, HandlesArguments
         private readonly Container $container,
         private readonly OutputInterface $output,
     ) {
-        //
+        $this->logger = new NullLogger();
     }
 
     public function boot(): void
@@ -122,6 +131,13 @@ class Mutate implements AddsOutput, Bootable, HandlesArguments
             throw new InvalidOption('Mutation testing requires code coverage to be enabled. You can find more about code coverage in the Pest documentation.');
         }
 
+        foreach ($arguments as $argIndex => $arg) {
+            if (str_starts_with((string) $arg, "--mutate-output-json=")) { // @phpstan-ignore-linereturn true;
+                $this->logger = new JsonLogger(explode('=', $arg)[1]);
+                unset($arguments[$argIndex]);
+            }
+        }
+
         $mutationTestRunner->enable();
         $this->ensurePrinterIsRegistered();
 
@@ -133,7 +149,7 @@ class Mutate implements AddsOutput, Bootable, HandlesArguments
         }
 
         $arguments = Container::getInstance()->get(ConfigurationRepository::class) // @phpstan-ignore-line
-            ->cliConfiguration->fromArguments($arguments);
+        ->cliConfiguration->fromArguments($arguments);
 
         $mutationTestRunner->setOriginalArguments($arguments);
         $mutationTestRunner->setStartTime(microtime(true));
@@ -269,6 +285,15 @@ class Mutate implements AddsOutput, Bootable, HandlesArguments
                 public function notify(FinishMutationSuite $event): void
                 {
                     $this->printer()->reportMutationSuiteFinished($event->mutationSuite);
+                }
+            },
+
+            // Logging
+            new class($this->logger) extends LoggerSubscriber implements FinishMutationSuiteSubscriber
+            {
+                public function notify(FinishMutationSuite $event): void
+                {
+                    $this->logger()->mutationSuiteFinished($event->mutationSuite);
                 }
             },
         ];
