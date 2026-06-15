@@ -36,7 +36,7 @@ class FileFinder
         $dirs = [];
         $files = [];
         foreach ($paths as $path) {
-            if (! str_starts_with($path, DIRECTORY_SEPARATOR)) {
+            if (! self::isAbsolutePath($path)) {
                 $path = getcwd().DIRECTORY_SEPARATOR.$path;
             }
             if (is_dir($path)) {
@@ -48,6 +48,31 @@ class FileFinder
         }
 
         return ['directories' => $dirs, 'files' => $files];
+    }
+
+    /**
+     * Determine whether a path is absolute, in a cross-platform way.
+     *
+     * The previous check — str_starts_with($path, DIRECTORY_SEPARATOR) — only
+     * recognised a leading separator. On Windows that misread a drive-letter
+     * absolute path (e.g. "C:\project\app", which PHPUnit hands us for every
+     * <source> include directory) as *relative*: getcwd() was then prepended,
+     * producing a non-existent doubled path that is_dir() rejected, so the
+     * directory was silently dropped and no mutations were generated. This
+     * mirrors PHPUnit's own drive-letter-aware absoluteness check.
+     */
+    private static function isAbsolutePath(string $path): bool
+    {
+        // A leading separator: POSIX "/…", or "\…" / UNC "\\server\share" on Windows.
+        if (str_starts_with($path, '/') || str_starts_with($path, '\\')) {
+            return true;
+        }
+
+        // A Windows drive-letter prefix: "C:\…" or "C:/…".
+        return strlen($path) >= 3
+            && ctype_alpha($path[0])
+            && $path[1] === ':'
+            && ($path[2] === '/' || $path[2] === '\\');
     }
 
     /**
