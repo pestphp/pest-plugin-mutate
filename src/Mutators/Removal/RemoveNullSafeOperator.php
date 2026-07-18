@@ -13,11 +13,11 @@ use PhpParser\Node\Expr\PropertyFetch;
 
 class RemoveNullSafeOperator extends AbstractMutator
 {
-    public const SET = 'Removal';
+    public const string SET = 'Removal';
 
-    public const DESCRIPTION = 'Converts nullsafe method and property calls to regular calls.';
+    public const string DESCRIPTION = 'Converts nullsafe method and property calls to regular calls.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a?->b();  // [tl! remove]
         $a->b();  // [tl! add]
         DIFF;

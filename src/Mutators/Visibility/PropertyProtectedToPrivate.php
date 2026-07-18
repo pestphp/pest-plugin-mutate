@@ -12,11 +12,11 @@ use PhpParser\Node\Stmt\Property;
 
 class PropertyProtectedToPrivate extends AbstractMutator
 {
-    public const SET = 'Visibility';
+    public const string SET = 'Visibility';
 
-    public const DESCRIPTION = 'Mutates a protected property to a private property';
+    public const string DESCRIPTION = 'Mutates a protected property to a private property';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         protected bool $foo = true;  // [tl! remove]
         private bool $foo = true;  // [tl! add]
         DIFF;

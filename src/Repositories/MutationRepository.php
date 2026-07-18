@@ -96,7 +96,7 @@ class MutationRepository
 
     public function sortByEscapedFirst(): void
     {
-        usort($this->tests, fn (MutationTestCollection $a, MutationTestCollection $b): int => $b->hasLastRunEscapedMutation() <=> $a->hasLastRunEscapedMutation());
+        uasort($this->tests, fn (MutationTestCollection $a, MutationTestCollection $b): int => $b->hasLastRunEscapedMutation() <=> $a->hasLastRunEscapedMutation());
 
         foreach ($this->tests as $testCollection) {
             $testCollection->sortByEscapedFirst();

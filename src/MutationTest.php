@@ -51,7 +51,10 @@ class MutationTest
         $filters = [];
         foreach (range($this->mutation->startLine, $this->mutation->endLine) as $lineNumber) {
             foreach ($coveredLines[$this->mutation->file->getRealPath()][$lineNumber] ?? [] as $test) {
-                preg_match('/\\\\([a-zA-Z0-9]*)::(__pest_evaluable_)?([^#]*)"?/', $test, $matches);
+                if (preg_match('/\\\\([a-zA-Z0-9]*)::(__pest_evaluable_)?([^#]*)"?/', $test, $matches) !== 1) {
+                    continue;
+                }
+
                 if ($matches[2] === '__pest_evaluable_') {
                     $filters[] = $matches[1].'::(.*)'.str_replace(['__', '_'], ['.{1,2}', '.'], $matches[3]);
                 } else {
@@ -76,9 +79,9 @@ class MutationTest
 
         if ($processId !== null) {
             $envs['PARATEST'] = '1';
-            $envs[Options::ENV_KEY_TOKEN] = $processId;
+            $envs[Options::ENV_KEY_TOKEN] = (string) $processId;
             $envs[Options::ENV_KEY_UNIQUE_TOKEN] = uniqid($processId.'_');
-            $envs['LARAVEL_PARALLEL_TESTING'] = 1;
+            $envs['LARAVEL_PARALLEL_TESTING'] = '1';
         }
 
         // remove coverage arguments from the original arguments
@@ -106,8 +109,10 @@ class MutationTest
 
     private function calculateTimeout(): int
     {
-        $initialTestSuiteDuration = Container::getInstance()->get(TelemetryRepository::class) // @phpstan-ignore-line
-            ->getInitialTestSuiteDuration();
+        /** @var TelemetryRepository $telemetryRepository */
+        $telemetryRepository = Container::getInstance()->get(TelemetryRepository::class);
+
+        $initialTestSuiteDuration = $telemetryRepository->getInitialTestSuiteDuration();
 
         return (int) ($initialTestSuiteDuration + max(5, $initialTestSuiteDuration * 0.2));
     }

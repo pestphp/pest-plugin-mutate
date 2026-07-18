@@ -248,7 +248,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
             }
         }
 
-        return $mutators; // @phpstan-ignore-line
+        return $mutators;
     }
 
     public function retry(bool $retry = true): self

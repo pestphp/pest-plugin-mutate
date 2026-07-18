@@ -11,11 +11,11 @@ use PhpParser\Node\Stmt\ElseIf_;
 
 class ElseIfNegated extends AbstractMutator
 {
-    public const SET = 'ControlStructures';
+    public const string SET = 'ControlStructures';
 
-    public const DESCRIPTION = 'Negates the condition in an elseif statement.';
+    public const string DESCRIPTION = 'Negates the condition in an elseif statement.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         if ($a === 1) {
             // ...
         } elseif ($a === 2) {  // [tl! remove]

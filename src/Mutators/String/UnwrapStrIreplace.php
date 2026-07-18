@@ -10,11 +10,11 @@ use PhpParser\Node\Expr\FuncCall;
 
 class UnwrapStrIreplace extends AbstractFunctionCallUnwrapMutator
 {
-    public const SET = 'String';
+    public const string SET = 'String';
 
-    public const DESCRIPTION = 'Unwraps `str_ireplace` calls.';
+    public const string DESCRIPTION = 'Unwraps `str_ireplace` calls.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = str_ireplace('Hello', 'Hi', 'Hello World');  // [tl! remove]
         $a = 'Hello World';  // [tl! add]
         DIFF;

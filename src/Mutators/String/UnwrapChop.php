@@ -8,11 +8,11 @@ use Pest\Mutate\Mutators\Abstract\AbstractFunctionCallUnwrapMutator;
 
 class UnwrapChop extends AbstractFunctionCallUnwrapMutator
 {
-    public const SET = 'String';
+    public const string SET = 'String';
 
-    public const DESCRIPTION = 'Unwraps `chop` calls.';
+    public const string DESCRIPTION = 'Unwraps `chop` calls.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = chop('Hello World ', ' ');  // [tl! remove]
         $a = 'Hello World ';  // [tl! add]
         DIFF;

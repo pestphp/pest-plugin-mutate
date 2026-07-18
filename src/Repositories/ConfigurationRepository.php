@@ -13,8 +13,8 @@ use Pest\Mutate\Support\Configuration\GlobalConfiguration;
 use Pest\Mutate\Support\Configuration\TestConfiguration;
 use Pest\Support\Container;
 use PHPUnit\TextUI\Configuration\Configuration as PhpUnitConfiguration;
-use PHPUnit\TextUI\Configuration\File;
 use PHPUnit\TextUI\Configuration\FilterDirectory;
+use PHPUnit\TextUI\Configuration\FilterFile;
 use PHPUnit\TextUI\Configuration\Source;
 
 class ConfigurationRepository
@@ -120,7 +120,7 @@ class ConfigurationRepository
         /** @var Source $source */
         $source = Container::getInstance()->get(PhpUnitConfiguration::class)->source(); // @phpstan-ignore-line
 
-        return array_map(fn (FilterDirectory|File $path): string => $path->path(), [
+        return array_map(fn (FilterDirectory|FilterFile $path): string => $path->path(), [
             ...$source->includeDirectories(),
             ...$source->includeFiles(),
         ]);

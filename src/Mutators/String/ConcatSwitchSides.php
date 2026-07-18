@@ -13,11 +13,11 @@ use PhpParser\Node\Scalar\String_;
 
 class ConcatSwitchSides extends AbstractMutator
 {
-    public const SET = 'String';
+    public const string SET = 'String';
 
-    public const DESCRIPTION = 'Switches the sides of a concat expression.';
+    public const string DESCRIPTION = 'Switches the sides of a concat expression.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = 'Hello' . ' World';  // [tl! remove]
         $a = ' World' . 'Hello';  // [tl! add]
         DIFF;

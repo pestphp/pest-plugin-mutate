@@ -8,11 +8,11 @@ use Pest\Mutate\Mutators\Abstract\AbstractFunctionCallUnwrapMutator;
 
 class UnwrapHtmlspecialcharsDecode extends AbstractFunctionCallUnwrapMutator
 {
-    public const SET = 'String';
+    public const string SET = 'String';
 
-    public const DESCRIPTION = 'Unwraps `htmlspecialchars_decode` calls.';
+    public const string DESCRIPTION = 'Unwraps `htmlspecialchars_decode` calls.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = htmlspecialchars_decode('&lt;h1&gt;Hello World&lt;/h1&gt;');  // [tl! remove]
         $a = '&lt;h1&gt;Hello World&lt;/h1&gt;';  // [tl! add]
         DIFF;

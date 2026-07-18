@@ -182,9 +182,10 @@ class MutationTestRunner implements MutationTestRunnerContract
 
     private function isMinScoreIsReached(MutationSuite $mutationSuite): bool
     {
-        /** @var Configuration $configuration */
-        $configuration = Container::getInstance()->get(ConfigurationRepository::class) // @phpstan-ignore-line
-            ->mergedConfiguration();
+        /** @var ConfigurationRepository $configurationRepository */
+        $configurationRepository = Container::getInstance()->get(ConfigurationRepository::class);
+
+        $configuration = $configurationRepository->mergedConfiguration();
 
         $minScore = $configuration->minScore;
 
@@ -201,8 +202,10 @@ class MutationTestRunner implements MutationTestRunnerContract
             return true;
         }
 
-        Container::getInstance()->get(Printer::class) // @phpstan-ignore-line
-            ->reportScoreNotReached($score, $minScore);
+        /** @var Printer $printer */
+        $printer = Container::getInstance()->get(Printer::class);
+
+        $printer->reportScoreNotReached($score, $minScore);
 
         return false;
     }

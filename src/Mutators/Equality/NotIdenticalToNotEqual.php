@@ -11,11 +11,11 @@ use PhpParser\Node\Expr\BinaryOp\NotIdentical;
 
 class NotIdenticalToNotEqual extends AbstractMutator
 {
-    public const SET = 'Equality';
+    public const string SET = 'Equality';
 
-    public const DESCRIPTION = 'Converts the not identical operator to the not equal operator.';
+    public const string DESCRIPTION = 'Converts the not identical operator to the not equal operator.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         if ($a !== $b) {  // [tl! remove]
         if ($a != $b) {  // [tl! add]
             // ...

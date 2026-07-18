@@ -11,11 +11,11 @@ use PhpParser\Node\Expr\BinaryOp\LogicalXor;
 
 class LogicalXorToLogicalAnd extends AbstractMutator
 {
-    public const SET = 'Logical';
+    public const string SET = 'Logical';
 
-    public const DESCRIPTION = 'Converts the logical xor operator to the logical and operator.';
+    public const string DESCRIPTION = 'Converts the logical xor operator to the logical and operator.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         if ($a xor $b) {  // [tl! remove]
         if ($a && $b) {  // [tl! add]
             // ...

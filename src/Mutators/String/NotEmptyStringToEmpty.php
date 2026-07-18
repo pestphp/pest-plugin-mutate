@@ -12,11 +12,11 @@ use PhpParser\Node\Scalar\String_;
 
 class NotEmptyStringToEmpty extends AbstractMutator
 {
-    public const SET = 'String';
+    public const string SET = 'String';
 
-    public const DESCRIPTION = 'Changes a non-empty string to an empty string.';
+    public const string DESCRIPTION = 'Changes a non-empty string to an empty string.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = 'Hello World';  // [tl! remove]
         $a = '';  // [tl! add]
         DIFF;
@@ -41,7 +41,7 @@ class NotEmptyStringToEmpty extends AbstractMutator
             return false;
         }
 
-        return ! ($node->getAttribute('parent') instanceof ArrayItem && $node->getAttribute('parent')->key === $node);
+        return ! $node->getAttribute('parent') instanceof ArrayItem || $node->getAttribute('parent')->key !== $node;
     }
 
     public static function mutate(Node $node): Node

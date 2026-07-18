@@ -12,11 +12,11 @@ use PhpParser\Node\Stmt\Do_;
 
 class DoWhileAlwaysFalse extends AbstractMutator
 {
-    public const SET = 'ControlStructures';
+    public const string SET = 'ControlStructures';
 
-    public const DESCRIPTION = 'Makes the condition in a do-while loop always false.';
+    public const string DESCRIPTION = 'Makes the condition in a do-while loop always false.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         do {
             // ...
         } while ($a < 100);  // [tl! remove]

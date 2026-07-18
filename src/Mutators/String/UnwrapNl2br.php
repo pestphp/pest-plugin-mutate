@@ -8,11 +8,11 @@ use Pest\Mutate\Mutators\Abstract\AbstractFunctionCallUnwrapMutator;
 
 class UnwrapNl2br extends AbstractFunctionCallUnwrapMutator
 {
-    public const SET = 'String';
+    public const string SET = 'String';
 
-    public const DESCRIPTION = 'Unwraps `nl2br` calls.';
+    public const string DESCRIPTION = 'Unwraps `nl2br` calls.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = nl2br('Hello World');  // [tl! remove]
         $a = 'Hello World';  // [tl! add]
         DIFF;

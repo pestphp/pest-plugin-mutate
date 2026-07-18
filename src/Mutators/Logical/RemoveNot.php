@@ -10,11 +10,11 @@ use PhpParser\Node\Expr\BooleanNot;
 
 class RemoveNot extends AbstractMutator
 {
-    public const SET = 'Logical';
+    public const string SET = 'Logical';
 
-    public const DESCRIPTION = 'Removes the not operator.';
+    public const string DESCRIPTION = 'Removes the not operator.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         if (!$a) {  // [tl! remove]
         if ($a) {  // [tl! add]
             // ...

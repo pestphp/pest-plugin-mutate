@@ -12,11 +12,11 @@ use PhpParser\Node\Scalar\LNumber;
 
 class DecrementFloat extends AbstractMutator
 {
-    public const SET = 'Number';
+    public const string SET = 'Number';
 
-    public const DESCRIPTION = 'Decrements a float number by 1.';
+    public const string DESCRIPTION = 'Decrements a float number by 1.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = 1.2;  // [tl! remove]
         $a = 0.2;  // [tl! add]
         DIFF;

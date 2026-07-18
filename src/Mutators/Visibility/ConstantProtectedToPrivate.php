@@ -12,11 +12,11 @@ use PhpParser\Node\Stmt\Property;
 
 class ConstantProtectedToPrivate extends AbstractMutator
 {
-    public const SET = 'Visibility';
+    public const string SET = 'Visibility';
 
-    public const DESCRIPTION = 'Mutates a protected constant to a private constant';
+    public const string DESCRIPTION = 'Mutates a protected constant to a private constant';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         protected const FOO = true;  // [tl! remove]
         private const FOO = true;  // [tl! add]
         DIFF;

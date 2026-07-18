@@ -10,11 +10,11 @@ use PhpParser\Node\Expr\FuncCall;
 
 class UnwrapArrayMap extends AbstractFunctionCallUnwrapMutator
 {
-    public const SET = 'Array';
+    public const string SET = 'Array';
 
-    public const DESCRIPTION = 'Unwraps `array_map` calls.';
+    public const string DESCRIPTION = 'Unwraps `array_map` calls.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = array_map(fn ($value) => $value + 1, [1, 2, 3]);  // [tl! remove]
         $a = [1, 2, 3];  // [tl! add]
         DIFF;

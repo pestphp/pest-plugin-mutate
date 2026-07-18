@@ -8,11 +8,11 @@ use Pest\Mutate\Mutators\Abstract\AbstractFunctionReplaceMutator;
 
 class ArrayShiftToArrayPop extends AbstractFunctionReplaceMutator
 {
-    public const SET = 'Array';
+    public const string SET = 'Array';
 
-    public const DESCRIPTION = 'Replaces `array_shift` with `array_pop`.';
+    public const string DESCRIPTION = 'Replaces `array_shift` with `array_pop`.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = array_shift([1, 2, 3]);  // [tl! remove]
         $a = array_pop([1, 2, 3]);  // [tl! add]
         DIFF;

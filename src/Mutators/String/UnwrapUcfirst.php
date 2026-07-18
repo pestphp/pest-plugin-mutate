@@ -8,11 +8,11 @@ use Pest\Mutate\Mutators\Abstract\AbstractFunctionCallUnwrapMutator;
 
 class UnwrapUcfirst extends AbstractFunctionCallUnwrapMutator
 {
-    public const SET = 'String';
+    public const string SET = 'String';
 
-    public const DESCRIPTION = 'Unwraps `ucfirst` calls.';
+    public const string DESCRIPTION = 'Unwraps `ucfirst` calls.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = ucfirst('hello world');  // [tl! remove]
         $a = 'hello world';  // [tl! add]
         DIFF;

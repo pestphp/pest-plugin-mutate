@@ -11,7 +11,7 @@ use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\PrettyPrinter\Standard;
 use SebastianBergmann\Diff\Differ;
-use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
+use SebastianBergmann\Diff\Output\StrictUnifiedDiffOutputBuilder;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -94,8 +94,11 @@ class Mutation
 
     private static function diff(string $originalSource, string $modifiedSource): string
     {
-        $diff = (new Differ(new UnifiedDiffOutputBuilder("\n--- Expected\n+++ Actual\n")))
-            ->diff($originalSource, $modifiedSource);
+        $diff = new Differ(new StrictUnifiedDiffOutputBuilder([
+            'addLineNumbers' => false,
+            'emitNoLineEndEofWarning' => false,
+            'header' => "\n--- Expected\n+++ Actual\n",
+        ]))->diff($originalSource, $modifiedSource);
 
         if (! str_contains($diff, self::DIFF_SEPARATOR)) {
             return '';

@@ -11,11 +11,11 @@ use PhpParser\Node\Name;
 
 class FalseToTrue extends AbstractMutator
 {
-    public const SET = 'Logical';
+    public const string SET = 'Logical';
 
-    public const DESCRIPTION = 'Converts `false` to `true`.';
+    public const string DESCRIPTION = 'Converts `false` to `true`.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         if (false) {  // [tl! remove]
         if (true) {  // [tl! add]
             // ...

@@ -10,11 +10,11 @@ use PhpParser\Node\Expr\BinaryOp\Spaceship;
 
 class SpaceshipSwitchSides extends AbstractMutator
 {
-    public const SET = 'Equality';
+    public const string SET = 'Equality';
 
-    public const DESCRIPTION = 'Switches the sides of the spaceship operator.';
+    public const string DESCRIPTION = 'Switches the sides of the spaceship operator.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         return $a <=> $b;  // [tl! remove]
         return $b <=> $a;  // [tl! add]
         DIFF;

@@ -8,11 +8,11 @@ use Pest\Mutate\Mutators\Abstract\AbstractFunctionCallUnwrapMutator;
 
 class UnwrapHtmlentities extends AbstractFunctionCallUnwrapMutator
 {
-    public const SET = 'String';
+    public const string SET = 'String';
 
-    public const DESCRIPTION = 'Unwraps `htmlentities` calls.';
+    public const string DESCRIPTION = 'Unwraps `htmlentities` calls.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = htmlentities('<h1>Hello World</h1>');  // [tl! remove]
         $a = '<h1>Hello World</h1>';  // [tl! add]
         DIFF;

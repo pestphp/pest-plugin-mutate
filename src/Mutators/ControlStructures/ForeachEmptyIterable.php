@@ -11,11 +11,11 @@ use PhpParser\Node\Stmt\Foreach_;
 
 class ForeachEmptyIterable extends AbstractMutator
 {
-    public const SET = 'ControlStructures';
+    public const string SET = 'ControlStructures';
 
-    public const DESCRIPTION = 'Replaces the iterable in a foreach loop with an empty array.';
+    public const string DESCRIPTION = 'Replaces the iterable in a foreach loop with an empty array.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         foreach ($items as $item) {  // [tl! remove]
         foreach ([] as $item) {  // [tl! add]
             // ...

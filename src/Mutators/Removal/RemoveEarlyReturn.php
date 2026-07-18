@@ -13,11 +13,11 @@ use PhpParser\Node\Stmt\Return_;
 
 class RemoveEarlyReturn extends AbstractMutator
 {
-    public const SET = 'Removal';
+    public const string SET = 'Removal';
 
-    public const DESCRIPTION = 'Removes an early return statement';
+    public const string DESCRIPTION = 'Removes an early return statement';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         if ($a > $b) {
             return true // [tl! remove]
         }

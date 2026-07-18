@@ -13,11 +13,11 @@ use PhpParser\Node\Stmt\DeclareDeclare;
 
 class IncrementInteger extends AbstractMutator
 {
-    public const SET = 'Number';
+    public const string SET = 'Number';
 
-    public const DESCRIPTION = 'Increments an integer number by 1.';
+    public const string DESCRIPTION = 'Increments an integer number by 1.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = 1;  // [tl! remove]
         $a = 2;  // [tl! add]
         DIFF;

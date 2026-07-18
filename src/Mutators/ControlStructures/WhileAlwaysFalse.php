@@ -12,11 +12,11 @@ use PhpParser\Node\Stmt\While_;
 
 class WhileAlwaysFalse extends AbstractMutator
 {
-    public const SET = 'ControlStructures';
+    public const string SET = 'ControlStructures';
 
-    public const DESCRIPTION = 'Makes the condition in a while loop always false.';
+    public const string DESCRIPTION = 'Makes the condition in a while loop always false.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         while ($a < 100) {  // [tl! remove]
         while (false) {  // [tl! add]
             // ...

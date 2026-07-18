@@ -11,11 +11,11 @@ use PhpParser\Node\Expr\AssignOp\Mul;
 
 class ModulusEqualToMultiplyEqual extends AbstractMutator
 {
-    public const SET = 'Assignment';
+    public const string SET = 'Assignment';
 
-    public const DESCRIPTION = 'Replaces `%=` with `*=`.';
+    public const string DESCRIPTION = 'Replaces `%=` with `*=`.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a %= $b;  // [tl! remove]
         $a *= $b;  // [tl! add]
         DIFF;

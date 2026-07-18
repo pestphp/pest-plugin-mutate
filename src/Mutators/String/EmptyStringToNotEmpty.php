@@ -10,11 +10,11 @@ use PhpParser\Node\Scalar\String_;
 
 class EmptyStringToNotEmpty extends AbstractMutator
 {
-    public const SET = 'String';
+    public const string SET = 'String';
 
-    public const DESCRIPTION = 'Changes an empty string to a non-empty string.';
+    public const string DESCRIPTION = 'Changes an empty string to a non-empty string.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = '';  // [tl! remove]
         $a = 'PEST Mutator was here!';  // [tl! add]
         DIFF;

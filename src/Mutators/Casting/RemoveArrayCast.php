@@ -10,11 +10,11 @@ use PhpParser\Node\Expr\Cast\Array_;
 
 class RemoveArrayCast extends AbstractMutator
 {
-    public const SET = 'Casting';
+    public const string SET = 'Casting';
 
-    public const DESCRIPTION = 'Removes array cast.';
+    public const string DESCRIPTION = 'Removes array cast.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = (array) $b;  // [tl! remove]
         $a = $b;          // [tl! add]
         DIFF;

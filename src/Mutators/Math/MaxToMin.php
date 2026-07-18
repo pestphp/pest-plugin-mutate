@@ -8,11 +8,11 @@ use Pest\Mutate\Mutators\Abstract\AbstractFunctionReplaceMutator;
 
 class MaxToMin extends AbstractFunctionReplaceMutator
 {
-    public const SET = 'Math';
+    public const string SET = 'Math';
 
-    public const DESCRIPTION = 'Replaces `max` function with `min` function.';
+    public const string DESCRIPTION = 'Replaces `max` function with `min` function.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = max(1, 2);  // [tl! remove]
         $a = min(1, 2);  // [tl! add]
         DIFF;

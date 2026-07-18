@@ -11,11 +11,11 @@ use PhpParser\Node\Expr\BinaryOp\Smaller;
 
 class SmallerToGreaterOrEqual extends AbstractMutator
 {
-    public const SET = 'Equality';
+    public const string SET = 'Equality';
 
-    public const DESCRIPTION = 'Converts the smaller operator to the greater or equal operator.';
+    public const string DESCRIPTION = 'Converts the smaller operator to the greater or equal operator.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         if ($a < $b) {  // [tl! remove]
         if ($a >= $b) {  // [tl! add]
             // ...

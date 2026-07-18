@@ -26,7 +26,7 @@ class MutationSuite
 
     public static function instance(): self
     {
-        if (! self::$instance instanceof \Pest\Mutate\MutationSuite) {
+        if (! self::$instance instanceof MutationSuite) {
             self::$instance = new MutationSuite;
         }
 

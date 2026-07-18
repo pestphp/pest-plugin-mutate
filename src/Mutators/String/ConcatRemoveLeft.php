@@ -10,11 +10,11 @@ use PhpParser\Node\Expr\BinaryOp\Concat;
 
 class ConcatRemoveLeft extends AbstractMutator
 {
-    public const SET = 'String';
+    public const string SET = 'String';
 
-    public const DESCRIPTION = 'Removes the left part of a concat expression.';
+    public const string DESCRIPTION = 'Removes the left part of a concat expression.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = 'Hello' . ' World';  // [tl! remove]
         $a = ' World';  // [tl! add]
         DIFF;

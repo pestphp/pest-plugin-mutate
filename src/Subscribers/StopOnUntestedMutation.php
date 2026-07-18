@@ -17,13 +17,16 @@ final class StopOnUntestedMutation implements UntestedSubscriber
 {
     public function notify(Untested $event): void
     {
-        if (! Container::getInstance()->get(ConfigurationRepository::class) // @phpstan-ignore-line
-            ->mergedConfiguration()
-            ->stopOnUntested) {
+        /** @var ConfigurationRepository $configurationRepository */
+        $configurationRepository = Container::getInstance()->get(ConfigurationRepository::class);
+
+        if (! $configurationRepository->mergedConfiguration()->stopOnUntested) {
             return;
         }
 
-        Container::getInstance()->get(MutationTestRunner::class) // @phpstan-ignore-line
-            ->stopExecution();
+        /** @var \Pest\Mutate\Tester\MutationTestRunner $mutationTestRunner */
+        $mutationTestRunner = Container::getInstance()->get(MutationTestRunner::class);
+
+        $mutationTestRunner->stopExecution();
     }
 }

@@ -14,11 +14,11 @@ class TrueToFalse extends AbstractMutator
 {
     private const array FUNCTIONS_TO_IGNORE = ['in_array', 'array_search'];
 
-    public const SET = 'Logical';
+    public const string SET = 'Logical';
 
-    public const DESCRIPTION = 'Converts `true` to `false`.';
+    public const string DESCRIPTION = 'Converts `true` to `false`.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         if (true) {  // [tl! remove]
         if (false) {  // [tl! add]
             // ...

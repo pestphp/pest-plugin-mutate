@@ -219,11 +219,11 @@ class Mutators
     final public const string SET_LARAVEL = LaravelSet::class;
 
     /** Arithmetic */
-    final public const string ARITHMETIC_BITWISE_AND_TO_BITWISE_OR = \Pest\Mutate\Mutators\Arithmetic\BitwiseAndToBitwiseOr::class;
+    final public const string ARITHMETIC_BITWISE_AND_TO_BITWISE_OR = Mutators\Arithmetic\BitwiseAndToBitwiseOr::class;
 
-    final public const string ARITHMETIC_BITWISE_OR_TO_BITWISE_AND = \Pest\Mutate\Mutators\Arithmetic\BitwiseOrToBitwiseAnd::class;
+    final public const string ARITHMETIC_BITWISE_OR_TO_BITWISE_AND = Mutators\Arithmetic\BitwiseOrToBitwiseAnd::class;
 
-    final public const string ARITHMETIC_BITWISE_XOR_TO_BITWISE_AND = \Pest\Mutate\Mutators\Arithmetic\BitwiseXorToBitwiseAnd::class;
+    final public const string ARITHMETIC_BITWISE_XOR_TO_BITWISE_AND = Mutators\Arithmetic\BitwiseXorToBitwiseAnd::class;
 
     final public const string ARITHMETIC_PLUS_TO_MINUS = PlusToMinus::class;
 
@@ -237,9 +237,9 @@ class Mutators
 
     final public const string ARITHMETIC_POWER_TO_MULTIPLICATION = PowerToMultiplication::class;
 
-    final public const string ARITHMETIC_SHIFT_LEFT_TO_SHIFT_RIGHT = \Pest\Mutate\Mutators\Arithmetic\ShiftLeftToShiftRight::class;
+    final public const string ARITHMETIC_SHIFT_LEFT_TO_SHIFT_RIGHT = Mutators\Arithmetic\ShiftLeftToShiftRight::class;
 
-    final public const string ARITHMETIC_SHIFT_RIGHT_TO_SHIFT_LEFT = \Pest\Mutate\Mutators\Arithmetic\ShiftRightToShiftLeft::class;
+    final public const string ARITHMETIC_SHIFT_RIGHT_TO_SHIFT_LEFT = Mutators\Arithmetic\ShiftRightToShiftLeft::class;
 
     final public const string ARITHMETIC_POST_DECREMENT_TO_POST_INCREMENT = PostDecrementToPostIncrement::class;
 

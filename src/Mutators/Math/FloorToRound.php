@@ -8,11 +8,11 @@ use Pest\Mutate\Mutators\Abstract\AbstractFunctionReplaceMutator;
 
 class FloorToRound extends AbstractFunctionReplaceMutator
 {
-    public const SET = 'Math';
+    public const string SET = 'Math';
 
-    public const DESCRIPTION = 'Replaces `floor` function with `round` function.';
+    public const string DESCRIPTION = 'Replaces `floor` function with `round` function.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = floor(1.2);  // [tl! remove]
         $a = round(1.2);  // [tl! add]
         DIFF;

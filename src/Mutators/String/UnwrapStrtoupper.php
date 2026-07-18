@@ -8,11 +8,11 @@ use Pest\Mutate\Mutators\Abstract\AbstractFunctionCallUnwrapMutator;
 
 class UnwrapStrtoupper extends AbstractFunctionCallUnwrapMutator
 {
-    public const SET = 'String';
+    public const string SET = 'String';
 
-    public const DESCRIPTION = 'Unwraps `strtoupper` calls.';
+    public const string DESCRIPTION = 'Unwraps `strtoupper` calls.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = strtoupper('Hello World');  // [tl! remove]
         $a = 'Hello World';  // [tl! add]
         DIFF;

@@ -11,11 +11,11 @@ use PhpParser\NodeTraverser;
 
 class RemoveArrayItem extends AbstractMutator
 {
-    public const SET = 'Removal';
+    public const string SET = 'Removal';
 
-    public const DESCRIPTION = 'Removes an item from an array';
+    public const string DESCRIPTION = 'Removes an item from an array';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         return [
             'foo' => 1,  // [tl! remove]
             'bar' => 2,

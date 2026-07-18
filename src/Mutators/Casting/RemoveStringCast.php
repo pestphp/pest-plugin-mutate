@@ -10,11 +10,11 @@ use PhpParser\Node\Expr\Cast\String_;
 
 class RemoveStringCast extends AbstractMutator
 {
-    public const SET = 'Casting';
+    public const string SET = 'Casting';
 
-    public const DESCRIPTION = 'Removes string cast.';
+    public const string DESCRIPTION = 'Removes string cast.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = (string) $b;  // [tl! remove]
         $a = $b;           // [tl! add]
         DIFF;

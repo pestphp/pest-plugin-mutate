@@ -8,11 +8,11 @@ use Pest\Mutate\Mutators\Abstract\AbstractFunctionCallUnwrapMutator;
 
 class UnwrapStripTags extends AbstractFunctionCallUnwrapMutator
 {
-    public const SET = 'String';
+    public const string SET = 'String';
 
-    public const DESCRIPTION = 'Unwraps `strip_tags` calls.';
+    public const string DESCRIPTION = 'Unwraps `strip_tags` calls.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = strip_tags('Hello World');  // [tl! remove]
         $a = 'Hello World';  // [tl! add]
         DIFF;

@@ -11,11 +11,11 @@ use PhpParser\Node\Stmt\ClassMethod;
 
 class FunctionPublicToProtected extends AbstractMutator
 {
-    public const SET = 'Visibility';
+    public const string SET = 'Visibility';
 
-    public const DESCRIPTION = 'Mutates a public function to a protected function';
+    public const string DESCRIPTION = 'Mutates a public function to a protected function';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         public function foo(): bool  // [tl! remove]
         protected function foo(): bool  // [tl! add]
         {

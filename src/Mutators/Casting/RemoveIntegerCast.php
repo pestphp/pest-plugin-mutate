@@ -10,11 +10,11 @@ use PhpParser\Node\Expr\Cast\Int_;
 
 class RemoveIntegerCast extends AbstractMutator
 {
-    public const SET = 'Casting';
+    public const string SET = 'Casting';
 
-    public const DESCRIPTION = 'Removes integer cast.';
+    public const string DESCRIPTION = 'Removes integer cast.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = (int) $b;  // [tl! remove]
         $a = $b;        // [tl! add]
         DIFF;

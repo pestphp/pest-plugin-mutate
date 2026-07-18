@@ -8,11 +8,11 @@ use Pest\Mutate\Mutators\Abstract\AbstractFunctionCallUnwrapMutator;
 
 class UnwrapTrim extends AbstractFunctionCallUnwrapMutator
 {
-    public const SET = 'String';
+    public const string SET = 'String';
 
-    public const DESCRIPTION = 'Unwraps `trim` calls.';
+    public const string DESCRIPTION = 'Unwraps `trim` calls.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = trim(' Hello World ');  // [tl! remove]
         $a = ' Hello World ';  // [tl! add]
         DIFF;

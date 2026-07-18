@@ -8,11 +8,11 @@ use Pest\Mutate\Mutators\Abstract\AbstractFunctionCallUnwrapMutator;
 
 class UnwrapStrrev extends AbstractFunctionCallUnwrapMutator
 {
-    public const SET = 'String';
+    public const string SET = 'String';
 
-    public const DESCRIPTION = 'Unwraps `strrev` calls.';
+    public const string DESCRIPTION = 'Unwraps `strrev` calls.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = strrev('Hello World');  // [tl! remove]
         $a = 'Hello World';  // [tl! add]
         DIFF;

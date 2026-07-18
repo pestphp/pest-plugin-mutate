@@ -13,11 +13,11 @@ use PhpParser\Node\Name\FullyQualified;
 // TODO: This is a POC, lot of refactor and extraction needed
 class LaravelUnwrapStrUpper extends AbstractMutator
 {
-    public const SET = 'Laravel';
+    public const string SET = 'Laravel';
 
-    public const DESCRIPTION = 'Unwraps the string upper method call.';
+    public const string DESCRIPTION = 'Unwraps the string upper method call.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = Illuminate\Support\Str::upper('foo');  // [tl! remove]
         $a = 'foo';  // [tl! add]
         DIFF;

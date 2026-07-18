@@ -11,11 +11,11 @@ use PhpParser\Node\Stmt\Continue_;
 
 class BreakToContinue extends AbstractMutator
 {
-    public const SET = 'ControlStructures';
+    public const string SET = 'ControlStructures';
 
-    public const DESCRIPTION = 'Replaces `break` with `continue`.';
+    public const string DESCRIPTION = 'Replaces `break` with `continue`.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         foreach ($items as $item) {
             if ($item === 'foo') {
                 break;  // [tl! remove]

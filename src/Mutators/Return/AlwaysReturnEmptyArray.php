@@ -17,11 +17,11 @@ use PhpParser\Node\UnionType;
 
 class AlwaysReturnEmptyArray extends AbstractMutator
 {
-    public const SET = 'Return';
+    public const string SET = 'Return';
 
-    public const DESCRIPTION = 'Mutates a return statement to an empty array';
+    public const string DESCRIPTION = 'Mutates a return statement to an empty array';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         return [1];  // [tl! remove]
         return [];  // [tl! add]
         DIFF;

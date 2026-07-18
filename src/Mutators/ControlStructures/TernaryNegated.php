@@ -12,11 +12,11 @@ use PhpParser\Node\Expr\Ternary;
 
 class TernaryNegated extends AbstractMutator
 {
-    public const SET = 'ControlStructures';
+    public const string SET = 'ControlStructures';
 
-    public const DESCRIPTION = 'Negates the condition in a ternary statement.';
+    public const string DESCRIPTION = 'Negates the condition in a ternary statement.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = $b ? 1 : 2;  // [tl! remove]
         $a = !$b ? 1 : 2;  // [tl! add]
         DIFF;

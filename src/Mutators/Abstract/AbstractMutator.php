@@ -10,11 +10,11 @@ use PhpParser\Node;
 
 abstract class AbstractMutator implements Mutator
 {
-    public const SET = '';
+    public const string SET = '';
 
-    public const DESCRIPTION = '';
+    public const string DESCRIPTION = '';
 
-    public const DIFF = '';
+    public const string DIFF = '';
 
     use HasName;
 

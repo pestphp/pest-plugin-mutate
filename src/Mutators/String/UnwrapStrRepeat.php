@@ -8,11 +8,11 @@ use Pest\Mutate\Mutators\Abstract\AbstractFunctionCallUnwrapMutator;
 
 class UnwrapStrRepeat extends AbstractFunctionCallUnwrapMutator
 {
-    public const SET = 'String';
+    public const string SET = 'String';
 
-    public const DESCRIPTION = 'Unwraps `str_repeat` calls.';
+    public const string DESCRIPTION = 'Unwraps `str_repeat` calls.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = str_repeat('Hello World', 2);  // [tl! remove]
         $a = 'Hello World';  // [tl! add]
         DIFF;

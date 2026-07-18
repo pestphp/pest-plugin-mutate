@@ -10,11 +10,11 @@ use PhpParser\Node\Expr\Cast\Double;
 
 class RemoveDoubleCast extends AbstractMutator
 {
-    public const SET = 'Casting';
+    public const string SET = 'Casting';
 
-    public const DESCRIPTION = 'Removes double cast.';
+    public const string DESCRIPTION = 'Removes double cast.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = (double) $b;  // [tl! remove]
         $a = $b;           // [tl! add]
         DIFF;

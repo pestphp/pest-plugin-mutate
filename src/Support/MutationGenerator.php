@@ -49,7 +49,7 @@ class MutationGenerator
             if (str_contains($line, '@pest-mutate-ignore')) {
                 if (Str::after($line, '@pest-mutate-ignore:') !== $line) {
                     $mutatorsToIgnore = explode(',', Str::after($line, '@pest-mutate-ignore:'));
-                    $mutatorsToIgnore = array_map(fn (string $mutator): string => trim($mutator), $mutatorsToIgnore);
+                    $mutatorsToIgnore = array_map(trim(...), $mutatorsToIgnore);
                 }
                 $mutatorsToIgnoreByLine[$lineNumber + 1] = $mutatorsToIgnore ?? ['all'];
             }

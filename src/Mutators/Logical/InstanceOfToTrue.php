@@ -12,11 +12,11 @@ use PhpParser\Node\Name;
 
 class InstanceOfToTrue extends AbstractMutator
 {
-    public const SET = 'Logical';
+    public const string SET = 'Logical';
 
-    public const DESCRIPTION = 'Converts `instanceof` to `true`.';
+    public const string DESCRIPTION = 'Converts `instanceof` to `true`.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         if ($a instanceof $b) {  // [tl! remove]
         if (true) {  // [tl! add]
             // ...

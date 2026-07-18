@@ -13,11 +13,11 @@ use PhpParser\Node\Stmt\Nop;
 
 class RemoveMethodCall extends AbstractMutator
 {
-    public const SET = 'Removal';
+    public const string SET = 'Removal';
 
-    public const DESCRIPTION = 'Removes a method call';
+    public const string DESCRIPTION = 'Removes a method call';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $this->foo();  // [tl! remove]
         DIFF;
 

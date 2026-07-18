@@ -18,11 +18,11 @@ use PhpParser\Node\UnionType;
 
 class AlwaysReturnNull extends AbstractMutator
 {
-    public const SET = 'Return';
+    public const string SET = 'Return';
 
-    public const DESCRIPTION = 'Mutates a return statement to null if it is not null';
+    public const string DESCRIPTION = 'Mutates a return statement to null if it is not null';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         return $a;  // [tl! remove]
         return null;  // [tl! add]
         DIFF;
@@ -49,7 +49,7 @@ class AlwaysReturnNull extends AbstractMutator
             return false;
         }
 
-        if (! $parent->returnType instanceof \PhpParser\Node) {
+        if (! $parent->returnType instanceof Node) {
             return true;
         }
 

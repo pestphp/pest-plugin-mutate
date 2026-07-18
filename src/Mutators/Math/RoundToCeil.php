@@ -8,11 +8,11 @@ use Pest\Mutate\Mutators\Abstract\AbstractFunctionReplaceMutator;
 
 class RoundToCeil extends AbstractFunctionReplaceMutator
 {
-    public const SET = 'Math';
+    public const string SET = 'Math';
 
-    public const DESCRIPTION = 'Replaces `round` function with `ceil` function.';
+    public const string DESCRIPTION = 'Replaces `round` function with `ceil` function.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = round(1.2);  // [tl! remove]
         $a = ceil(1.2);  // [tl! add]
         DIFF;

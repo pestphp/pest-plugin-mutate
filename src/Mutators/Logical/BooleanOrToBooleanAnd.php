@@ -11,11 +11,11 @@ use PhpParser\Node\Expr\BinaryOp\BooleanOr;
 
 class BooleanOrToBooleanAnd extends AbstractMutator
 {
-    public const SET = 'Logical';
+    public const string SET = 'Logical';
 
-    public const DESCRIPTION = 'Converts the boolean or operator to the boolean and operator.';
+    public const string DESCRIPTION = 'Converts the boolean or operator to the boolean and operator.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         if ($a || $b) {  // [tl! remove]
         if ($a && $b) {  // [tl! add]
             // ...

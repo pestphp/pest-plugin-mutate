@@ -12,7 +12,7 @@ test('contract')
     ->toBeInterface();
 
 test('mutators')
-    ->expect(Mutators::class)
+    ->expect('Pest\Mutate\Mutators\\')
     ->classes()
     ->toImplement(Mutator::class)
     ->ignoring('Pest\Mutate\Mutators\Sets');
@@ -22,7 +22,7 @@ test('mutator sets')
     ->toImplement(MutatorSet::class);
 
 test('all mutators and sets have a corresponding constant', function (): void {
-    $constants = (new ReflectionClass(Mutators::class))->getConstants();
+    $constants = new ReflectionClass(Mutators::class)->getConstants();
 
     $files = Finder::create()
         ->in(__DIR__.'/../src/Mutators')

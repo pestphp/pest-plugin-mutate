@@ -11,11 +11,11 @@ use PhpParser\Node\Expr\PreInc;
 
 class PreIncrementToPreDecrement extends AbstractMutator
 {
-    public const SET = 'Arithmetic';
+    public const string SET = 'Arithmetic';
 
-    public const DESCRIPTION = 'Replaces `++` with `--`.';
+    public const string DESCRIPTION = 'Replaces `++` with `--`.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $b = ++$a;  // [tl! remove]
         $b = --$a;  // [tl! add]
         DIFF;

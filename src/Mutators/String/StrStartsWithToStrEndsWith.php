@@ -8,11 +8,11 @@ use Pest\Mutate\Mutators\Abstract\AbstractFunctionReplaceMutator;
 
 class StrStartsWithToStrEndsWith extends AbstractFunctionReplaceMutator
 {
-    public const SET = 'String';
+    public const string SET = 'String';
 
-    public const DESCRIPTION = 'Replaces `str_starts_with` with `str_ends_with`.';
+    public const string DESCRIPTION = 'Replaces `str_starts_with` with `str_ends_with`.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = str_starts_with('Hello World', 'World');  // [tl! remove]
         $a = str_ends_with('Hello World', 'World');  // [tl! add]
         DIFF;

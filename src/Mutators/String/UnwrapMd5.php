@@ -8,11 +8,11 @@ use Pest\Mutate\Mutators\Abstract\AbstractFunctionCallUnwrapMutator;
 
 class UnwrapMd5 extends AbstractFunctionCallUnwrapMutator
 {
-    public const SET = 'String';
+    public const string SET = 'String';
 
-    public const DESCRIPTION = 'Unwraps `md5` calls.';
+    public const string DESCRIPTION = 'Unwraps `md5` calls.';
 
-    public const DIFF = <<<'DIFF'
+    public const string DIFF = <<<'DIFF'
         $a = md5('Hello World');  // [tl! remove]
         $a = 'Hello World';  // [tl! add]
         DIFF;
