@@ -34,6 +34,9 @@
         "pestphp/pest-dev-tools": "^5.0.0",
         "pestphp/pest-plugin-type-coverage": "^5.0.0"
     },
+    "conflict": {
+        "pestphp/pest": "<5.0.0"
+    },
     "autoload": {
         "psr-4": {
             "Pest\\Mutate\\": "src/"
