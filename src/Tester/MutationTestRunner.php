@@ -20,6 +20,7 @@ use Pest\Support\Container;
 use Pest\Support\Coverage;
 use Psr\SimpleCache\CacheInterface;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
+use SebastianBergmann\CodeCoverage\Data\ProcessedCodeCoverageData;
 
 class MutationTestRunner implements MutationTestRunnerContract
 {
@@ -109,11 +110,27 @@ class MutationTestRunner implements MutationTestRunnerContract
 
         Facade::instance()->emitter()->startMutationGeneration($mutationSuite);
 
-        /** @var CodeCoverage $codeCoverage */
-        $codeCoverage = require $reportPath;
+        /** @var CodeCoverage|array{basePath: string, codeCoverage: ProcessedCodeCoverageData} $loadedCoverage */
+        $loadedCoverage = require $reportPath;
 
         unlink($reportPath);
-        $coveredLines = array_map(fn (array $lines): array => array_filter($lines, fn (?array $tests): bool => $tests !== [] && $tests !== null), $codeCoverage->getData()->lineCoverage());
+
+        if ($loadedCoverage instanceof CodeCoverage) {
+            $coverageData = $loadedCoverage->getData();
+        } else {
+            // since phpunit/php-code-coverage 14, `--coverage-php` writes an array instead of a
+            // serialized CodeCoverage, and its file keys are relative to `basePath`
+            $coverageData = $loadedCoverage['codeCoverage'];
+            $basePath = $loadedCoverage['basePath'];
+
+            if ($basePath !== '') {
+                foreach ($coverageData->coveredFiles() as $relativePath) {
+                    $coverageData->renameFile($relativePath, $basePath.DIRECTORY_SEPARATOR.$relativePath);
+                }
+            }
+        }
+
+        $coveredLines = array_map(fn (array $lines): array => array_filter($lines, fn (?array $tests): bool => $tests !== [] && $tests !== null), $coverageData->lineCoverage());
         $coveredLines = array_filter($coveredLines, fn (array $lines): bool => $lines !== []);
 
         $files = FileFinder::files($this->getConfiguration()->paths, $this->getConfiguration()->pathsToIgnore);
