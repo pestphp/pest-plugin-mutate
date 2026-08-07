@@ -130,8 +130,7 @@ class MutationTestRunner implements MutationTestRunnerContract
             }
         }
 
-        $coveredLines = array_map(fn (array $lines): array => array_filter($lines, fn (?array $tests): bool => $tests !== [] && $tests !== null), $coverageData->lineCoverage());
-        $coveredLines = array_filter($coveredLines, fn (array $lines): bool => $lines !== []);
+        $coveredLines = $this->coveredLines($coverageData);
 
         $files = FileFinder::files($this->getConfiguration()->paths, $this->getConfiguration()->pathsToIgnore);
 
@@ -190,6 +189,62 @@ class MutationTestRunner implements MutationTestRunnerContract
         Facade::instance()->emitter()->finishMutationSuite($mutationSuite);
 
         return $this->isMinScoreIsReached($mutationSuite) ? 0 : 1;
+    }
+
+    /**
+     * Returns the tests covering each line, as `[file => [line => [testId, ...]]]`.
+     *
+     * @return array<string, array<int, array<int, string>>>
+     */
+    private function coveredLines(ProcessedCodeCoverageData $coverageData): array
+    {
+        /** @var array<int, string> $testIds */
+        $testIds = method_exists($coverageData, 'testIds') ? $coverageData->testIds() : []; // @phpstan-ignore function.alreadyNarrowedType
+
+        $coveredLines = [];
+
+        foreach ($coverageData->lineCoverage() as $file => $lines) {
+            foreach ($lines as $line => $tests) {
+                $ids = $this->testIdsCoveringLine($tests ?? [], $testIds);
+
+                if ($ids === []) {
+                    continue;
+                }
+
+                $coveredLines[$file][$line] = $ids;
+            }
+        }
+
+        return $coveredLines;
+    }
+
+    /**
+     * Resolves the test ids a single line holds.
+     *
+     * Up to phpunit/php-code-coverage 14.2 a line held the test ids themselves. Since
+     * 14.3 it holds hit counts, keyed by an index into the coverage data's test ids.
+     *
+     * @param  array<int|string, mixed>  $tests
+     * @param  array<int, string>  $testIds
+     * @return array<int, string>
+     */
+    private function testIdsCoveringLine(array $tests, array $testIds): array
+    {
+        $ids = [];
+
+        foreach ($tests as $index => $test) {
+            if (is_string($test)) {
+                $ids[] = $test;
+
+                continue;
+            }
+
+            if (is_int($index) && isset($testIds[$index])) {
+                $ids[] = $testIds[$index];
+            }
+        }
+
+        return $ids;
     }
 
     private function getConfiguration(): Configuration
