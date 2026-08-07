@@ -16,8 +16,10 @@ use Pest\Mutate\Repositories\TelemetryRepository;
 use Pest\Mutate\Support\Configuration\Configuration;
 use Pest\Mutate\Support\FileFinder;
 use Pest\Mutate\Support\MutationGenerator;
+use Pest\Plugins\Shard;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
+use Pest\TestSuite;
 use Psr\SimpleCache\CacheInterface;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\Data\ProcessedCodeCoverageData;
@@ -137,7 +139,13 @@ class MutationTestRunner implements MutationTestRunnerContract
         /** @var MutationGenerator $generator */
         $generator = Container::getInstance()->get(MutationGenerator::class);
 
+        $shardFiles = $this->shardFiles();
+
         foreach ($files as $file) {
+            if ($shardFiles !== null && ! isset($shardFiles[$file->getRealPath()])) {
+                continue;
+            }
+
             $linesToMutate = [];
 
             if ($this->getConfiguration()->coveredOnly) {
@@ -185,6 +193,14 @@ class MutationTestRunner implements MutationTestRunnerContract
         }
 
         $mutationSuite->repository->saveResults();
+
+        $this->writeJsonLog($mutationSuite);
+
+        // A suite cut short by --bail or --stop-on-* holds partial durations, which would
+        // make for a badly balanced shards file.
+        if (! $this->stop) {
+            Shard::useTimings($mutationSuite->repository->units(TestSuite::getInstance()->rootPath));
+        }
 
         Facade::instance()->emitter()->finishMutationSuite($mutationSuite);
 
@@ -245,6 +261,72 @@ class MutationTestRunner implements MutationTestRunnerContract
         }
 
         return $ids;
+    }
+
+    /**
+     * Writes this run's results, so that sharded runs can be added up afterwards.
+     *
+     * Shards own disjoint sets of mutations, so summing the counters of every shard
+     * reproduces the score of a single unsharded run exactly.
+     */
+    private function writeJsonLog(MutationSuite $mutationSuite): void
+    {
+        $path = $this->getConfiguration()->logJson;
+
+        if ($path === null) {
+            return;
+        }
+
+        $repository = $mutationSuite->repository;
+
+        $directory = dirname($path);
+
+        if (! is_dir($directory)) {
+            mkdir($directory, 0755, true);
+        }
+
+        file_put_contents($path, json_encode([
+            'tested' => $repository->tested(),
+            'untested' => $repository->untested(),
+            'timeout' => $repository->timedOut(),
+            'uncovered' => $repository->uncovered(),
+            'not_run' => $repository->notRun(),
+            'total' => $repository->total(),
+            'score' => round($repository->score(), 2),
+        ], JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR)."\n");
+    }
+
+    /**
+     * Returns the absolute paths of the mutated files this shard owns, or null when the
+     * run is not sharded.
+     *
+     * The restriction is applied here rather than through `--path` or `--class`, because
+     * passing either of those lifts the `__pest_mutate_only` group and makes every shard
+     * run the whole test suite instead of only the tests declaring `covers()`.
+     *
+     * @return array<string, true>|null
+     */
+    private function shardFiles(): ?array
+    {
+        $units = Shard::selectedUnits();
+
+        if ($units === []) {
+            return null;
+        }
+
+        $root = rtrim(TestSuite::getInstance()->rootPath, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+
+        $files = [];
+
+        foreach ($units as $unit) {
+            $path = realpath(str_starts_with($unit, DIRECTORY_SEPARATOR) ? $unit : $root.$unit);
+
+            if ($path !== false) {
+                $files[$path] = true;
+            }
+        }
+
+        return $files;
     }
 
     private function getConfiguration(): Configuration
