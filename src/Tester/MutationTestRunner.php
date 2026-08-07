@@ -96,9 +96,10 @@ class MutationTestRunner implements MutationTestRunnerContract
 
     public function run(): int
     {
-        Container::getInstance()->get(TelemetryRepository::class)->initialTestSuiteDuration( // @phpstan-ignore-line
-            microtime(true) - $this->startTime
-        );
+        /** @var TelemetryRepository $telemetryRepository */
+        $telemetryRepository = Container::getInstance()->get(TelemetryRepository::class);
+
+        $telemetryRepository->initialTestSuiteDuration($this->initialTestSuiteDuration());
 
         if (! Coverage::isAvailable() || ! file_exists($reportPath = Coverage::getPath())) {
             Container::getInstance()->get(Printer::class)->reportError('No coverage report found, aborting mutation testing.'); // @phpstan-ignore-line
@@ -199,7 +200,10 @@ class MutationTestRunner implements MutationTestRunnerContract
         // A suite cut short by --bail or --stop-on-* holds partial durations, which would
         // make for a badly balanced shards file.
         if (! $this->stop) {
-            Shard::useTimings($mutationSuite->repository->units(TestSuite::getInstance()->rootPath));
+            Shard::useTimings(
+                $mutationSuite->repository->units(TestSuite::getInstance()->rootPath),
+                ['suite_time' => round($telemetryRepository->getInitialTestSuiteDuration(), 4)],
+            );
         }
 
         Facade::instance()->emitter()->finishMutationSuite($mutationSuite);
@@ -261,6 +265,32 @@ class MutationTestRunner implements MutationTestRunnerContract
         }
 
         return $ids;
+    }
+
+    /**
+     * Returns the duration a mutation's test run is measured against.
+     *
+     * Each mutation is given a timeout derived from this, so it has to describe the same
+     * amount of work whether or not the suite is sharded. A shard only runs part of the
+     * suite, so its own initial run is shorter, and mutations that are killed honestly on
+     * a full run would be cut off as timeouts instead. The reference duration recorded by
+     * the unsharded `--update-shards` run is therefore preferred whenever it is longer.
+     *
+     * Only ever called once, at the start of the mutation suite: it measures from the
+     * start of the process, so calling it again later would fold the mutation suite's own
+     * duration into the reference.
+     */
+    private function initialTestSuiteDuration(): float
+    {
+        $measured = microtime(true) - $this->startTime;
+
+        $reference = Shard::metadata()['suite_time'] ?? null;
+
+        if (is_numeric($reference) && (float) $reference > $measured) {
+            return (float) $reference;
+        }
+
+        return $measured;
     }
 
     /**
