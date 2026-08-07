@@ -39,6 +39,16 @@ class FileFinder
             if (! str_starts_with($path, DIRECTORY_SEPARATOR)) {
                 $path = getcwd().DIRECTORY_SEPARATOR.$path;
             }
+
+            if (str_contains($path, '*')) {
+                $expanded = glob($path, GLOB_ONLYDIR);
+                if ($expanded !== false) {
+                    $dirs = [...$dirs, ...$expanded];
+                }
+    
+                continue;
+            }
+    
             if (is_dir($path)) {
                 $dirs[] = $path;
             } elseif (is_file($path)) {
@@ -46,7 +56,7 @@ class FileFinder
                 $files[] = new SplFileInfo($file->getPathname(), $file->getPath(), $file->getFilename());
             }
         }
-
+    
         return ['directories' => $dirs, 'files' => $files];
     }
 
