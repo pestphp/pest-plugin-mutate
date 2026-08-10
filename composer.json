@@ -27,12 +27,13 @@
         "php": "^8.4",
         "nikic/php-parser": "^5.8.0",
         "pestphp/pest-plugin": "^5.0.0",
+        "phpunit/php-code-coverage": "^14.3.0",
         "psr/simple-cache": "^3.0.0"
     },
     "require-dev": {
-        "pestphp/pest": "^5.0.3",
+        "pestphp/pest": "^5.0.4",
         "pestphp/pest-dev-tools": "^5.0.0",
-        "pestphp/pest-plugin-type-coverage": "^5.0.0"
+        "pestphp/pest-plugin-type-coverage": "^5.0.2"
     },
     "conflict": {
         "pestphp/pest": "<5.0.0"

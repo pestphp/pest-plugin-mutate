@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
-it('has escaped mutants', function (int $age, bool $isAdult) {
-    expect(\Tests\Fixtures\Classes\AgeHelper::isAdult($age))
-        ->toBe($isAdult);
+use Tests\Fixtures\Classes\SizeHelper;
+
+mutates(SizeHelper::class);
+
+it('has escaped mutants', function (int $size, bool $isBig) {
+    expect(SizeHelper::isBig($size))
+        ->toBe($isBig);
 })->with([
     [10, false],
-    [17, false],
-    [25, true],
+    [500, true],
 ]);

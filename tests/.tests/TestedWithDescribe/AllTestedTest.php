@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-use Tests\Fixtures\Classes\AgeHelper;
+use Tests\Fixtures\Classes\SizeHelper;
 
-describe('catches all', function(){
-    it('catches all the mutants', function (int $age, bool $isAdult) {
-        expect(AgeHelper::isAdult($age))
-            ->toBe($isAdult);
+mutates(SizeHelper::class);
+
+describe('catches all', function () {
+    it('catches all the mutants', function (int $size, bool $isBig) {
+        expect(SizeHelper::isBig($size))
+            ->toBe($isBig);
     })->with([
-        [10, false],
-        [17, false],
-        [18, true],
-        [25, true],
+        [99, false],
+        [100, true],
+        [101, true],
     ]);
 });

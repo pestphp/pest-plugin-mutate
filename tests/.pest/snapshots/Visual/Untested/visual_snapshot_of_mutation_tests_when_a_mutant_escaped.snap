@@ -1,3 +1,54 @@
 
-   INFO  No tests found.
+  ..
+
+  Tests:    2 passed (2 assertions)
+  Duration: xxx
+
+  Mutating application files...
+  4 Mutations for 1 Files created
+
+   RUN  tests/Fixtures/Classes/SizeHelper.php
+  ⨯ Line 15: GreaterOrEqualToGreater
+  ✓ Line 15: GreaterOrEqualToSmaller
+  ⨯ Line 15: DecrementInteger
+  ⨯ Line 15: IncrementInteger
+  ----------------------------------------------------------------------------  
+   UNTESTED  tests/Fixtures/Classes/SizeHelper.php  > Line 15: GreaterOrEqualToGreater - ID: xxx
+
+       use SizeHelperTrait;
+       public static function isBig(int $size): bool
+       {
+  -        return $size >= 100;
+  +        return $size > 100;
+       }
+   }
+  
+
+  ----------------------------------------------------------------------------  
+   UNTESTED  tests/Fixtures/Classes/SizeHelper.php  > Line 15: DecrementInteger - ID: xxx
+
+       use SizeHelperTrait;
+       public static function isBig(int $size): bool
+       {
+  -        return $size >= 100;
+  +        return $size >= 99;
+       }
+   }
+  
+
+  ----------------------------------------------------------------------------  
+   UNTESTED  tests/Fixtures/Classes/SizeHelper.php  > Line 15: IncrementInteger - ID: xxx
+
+       use SizeHelperTrait;
+       public static function isBig(int $size): bool
+       {
+  -        return $size >= 100;
+  +        return $size >= 101;
+       }
+   }
+  
+
+  Mutations: 3 untested, 1 tested
+  Score:     25.00%
+  Duration: xxx
 

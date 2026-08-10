@@ -1,3 +1,18 @@
 
-   INFO  Test file "tests/.tests/SuccessDescribe" not found.
+  ...
+
+  Tests:    3 passed (3 assertions)
+  Duration: xxx
+
+  Mutating application files...
+  4 Mutations for 1 Files created
+
+   RUN  tests/Fixtures/Classes/SizeHelper.php
+  ✓ Line 15: GreaterOrEqualToGreater
+  ✓ Line 15: GreaterOrEqualToSmaller
+  ✓ Line 15: DecrementInteger
+  ✓ Line 15: IncrementInteger
+  Mutations: 4 tested
+  Score:     100.00%
+  Duration: xxx
 

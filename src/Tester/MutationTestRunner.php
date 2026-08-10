@@ -130,8 +130,7 @@ class MutationTestRunner implements MutationTestRunnerContract
             }
         }
 
-        $coveredLines = array_map(fn (array $lines): array => array_filter($lines, fn (?array $tests): bool => $tests !== [] && $tests !== null), $coverageData->lineCoverage());
-        $coveredLines = array_filter($coveredLines, fn (array $lines): bool => $lines !== []);
+        $coveredLines = $this->coveredLines($coverageData);
 
         $files = FileFinder::files($this->getConfiguration()->paths, $this->getConfiguration()->pathsToIgnore);
 
@@ -190,6 +189,34 @@ class MutationTestRunner implements MutationTestRunnerContract
         Facade::instance()->emitter()->finishMutationSuite($mutationSuite);
 
         return $this->isMinScoreIsReached($mutationSuite) ? 0 : 1;
+    }
+
+    /**
+     * Maps every covered line to the ids of the test cases that executed it.
+     *
+     * @return array<string, array<int, array<int, string>>>
+     */
+    private function coveredLines(ProcessedCodeCoverageData $coverageData): array
+    {
+        // since phpunit/php-code-coverage 14.3, test case ids are interned: the hit map of a
+        // line is keyed by test index, and `testIds()` resolves an index back to its id
+        $testIds = $coverageData->testIds();
+
+        $coveredLines = [];
+
+        foreach ($coverageData->lineCoverage() as $file => $lines) {
+            foreach ($lines as $line => $tests) {
+                $tests = array_values(array_intersect_key($testIds, $tests ?? []));
+
+                if ($tests === []) {
+                    continue;
+                }
+
+                $coveredLines[$file][$line] = $tests;
+            }
+        }
+
+        return $coveredLines;
     }
 
     private function getConfiguration(): Configuration

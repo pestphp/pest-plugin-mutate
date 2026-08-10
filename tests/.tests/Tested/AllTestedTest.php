@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
-it('catches all the mutants', function (int $age, bool $isAdult) {
-    expect(\Tests\Fixtures\Classes\AgeHelper::isAdult($age))
-        ->toBe($isAdult);
+use Tests\Fixtures\Classes\SizeHelper;
+
+mutates(SizeHelper::class);
+
+it('catches all the mutants', function (int $size, bool $isBig) {
+    expect(SizeHelper::isBig($size))
+        ->toBe($isBig);
 })->with([
-    [10, false],
-    [17, false],
-    [18, true],
-    [25, true],
+    [99, false],
+    [100, true],
+    [101, true],
 ]);
