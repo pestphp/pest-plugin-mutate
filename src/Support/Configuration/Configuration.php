@@ -30,5 +30,6 @@ class Configuration
         public readonly ?string $mutationId,
         public readonly bool $retry,
         public readonly bool $everything,
+        public readonly ?string $logJson,
     ) {}
 }

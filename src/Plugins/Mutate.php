@@ -40,6 +40,7 @@ use Pest\Mutate\Support\Printers\DefaultPrinter;
 use Pest\Mutate\Support\StreamWrapper;
 use Pest\Plugins\Concerns\HandleArguments;
 use Pest\Plugins\Parallel;
+use Pest\Plugins\Shard;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
 use Psr\SimpleCache\CacheInterface;
@@ -124,6 +125,10 @@ class Mutate implements AddsOutput, Bootable, HandlesArguments
 
         $mutationTestRunner->enable();
         $this->ensurePrinterIsRegistered();
+
+        // Mutation time does not correlate with test time, so sharded mutation runs get
+        // their own timings file rather than sharing the one regular runs write.
+        Shard::useTimingsFile('mutation-shards.json');
 
         $coverageRequired = array_filter($arguments, fn (string $argument): bool => str_starts_with($argument, '--coverage')) !== [];
         if ($coverageRequired) {
