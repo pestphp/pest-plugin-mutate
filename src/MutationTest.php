@@ -9,6 +9,7 @@ use Pest\Mutate\Event\Facade;
 use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Repositories\TelemetryRepository;
 use Pest\Mutate\Support\Configuration\Configuration;
+use Pest\Mutate\Support\FilterArgument;
 use Pest\Mutate\Support\MutationTestResult;
 use Pest\Support\Container;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
@@ -17,6 +18,14 @@ use Symfony\Component\Process\Process;
 class MutationTest
 {
     private MutationTestResult $result = MutationTestResult::None;
+
+    /**
+     * Widenings already reported, so a class that had to collapse says so once per
+     * process rather than once per mutation in it.
+     *
+     * @var array<string, true>
+     */
+    private static array $reportedWidenings = [];
 
     private ?float $start = null;
 
@@ -87,12 +96,28 @@ class MutationTest
         // remove coverage arguments from the original arguments
         $filteredArguments = array_filter($originalArguments, fn (string $argument): bool => ! str_starts_with($argument, '--coverage'));
 
+        // A fragment per covering test, joined into ONE argv element, runs past the
+        // kernel's per-element cap on a widely-covered class — see FilterArgument.
+        $filter = FilterArgument::for(array_values($filters));
+
+        $notice = $filter->notice();
+
+        if ($notice !== null) {
+            $key = implode(',', array_keys($filter->widened));
+
+            if (! isset(self::$reportedWidenings[$key])) {
+                self::$reportedWidenings[$key] = true;
+
+                fwrite(STDERR, $notice.PHP_EOL);
+            }
+        }
+
         // TODO: filter arguments to remove unnecessary stuff (Teamcity, Coverage, etc.)
         $process = new Process(
             command: [
                 ...$filteredArguments,
                 '--bail',
-                '--filter="'.implode('|', $filters).'"',
+                $filter->argument,
             ],
             env: $envs,
             timeout: $this->calculateTimeout(),
