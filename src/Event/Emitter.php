@@ -6,6 +6,8 @@ namespace Pest\Mutate\Event;
 
 use Pest\Mutate\Event\Events\Test\HookMethod\BeforeFirstTestExecuted;
 use Pest\Mutate\Event\Events\Test\HookMethod\BeforeFirstTestExecutedSubscriber;
+use Pest\Mutate\Event\Events\Test\Outcome\Errored;
+use Pest\Mutate\Event\Events\Test\Outcome\ErroredSubscriber;
 use Pest\Mutate\Event\Events\Test\Outcome\Tested;
 use Pest\Mutate\Event\Events\Test\Outcome\TestedSubscriber;
 use Pest\Mutate\Event\Events\Test\Outcome\Timeout;
@@ -65,6 +67,16 @@ class Emitter
 
         foreach (Facade::instance()->subscribers()[TimeoutSubscriber::class] ?? [] as $subscriber) {
             /** @var TimeoutSubscriber $subscriber */
+            $subscriber->notify($event);
+        }
+    }
+
+    public function mutationErrored(MutationTest $test): void
+    {
+        $event = new Errored($test);
+
+        foreach (Facade::instance()->subscribers()[ErroredSubscriber::class] ?? [] as $subscriber) {
+            /** @var ErroredSubscriber $subscriber */
             $subscriber->notify($event);
         }
     }

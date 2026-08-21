@@ -17,6 +17,8 @@ use Pest\Mutate\Contracts\MutationTestRunner;
 use Pest\Mutate\Contracts\Printer;
 use Pest\Mutate\Event\Events\Test\HookMethod\BeforeFirstTestExecuted;
 use Pest\Mutate\Event\Events\Test\HookMethod\BeforeFirstTestExecutedSubscriber;
+use Pest\Mutate\Event\Events\Test\Outcome\Errored;
+use Pest\Mutate\Event\Events\Test\Outcome\ErroredSubscriber;
 use Pest\Mutate\Event\Events\Test\Outcome\Tested;
 use Pest\Mutate\Event\Events\Test\Outcome\TestedSubscriber;
 use Pest\Mutate\Event\Events\Test\Outcome\Timeout;
@@ -230,6 +232,14 @@ class Mutate implements AddsOutput, Bootable, HandlesArguments
                 public function notify(Timeout $event): void
                 {
                     $this->printer()->reportTimedOutMutation($event->test);
+                }
+            },
+
+            new class($printer) extends PrinterSubscriber implements ErroredSubscriber
+            {
+                public function notify(Errored $event): void
+                {
+                    $this->printer()->reportErroredMutation($event->test);
                 }
             },
 

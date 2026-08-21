@@ -51,6 +51,11 @@ class MutationTestCollection
         return count(array_filter($this->tests, fn (MutationTest $test): bool => $test->result() === MutationTestResult::Timeout));
     }
 
+    public function errored(): int
+    {
+        return count(array_filter($this->tests, fn (MutationTest $test): bool => $test->result() === MutationTestResult::Errored));
+    }
+
     public function uncovered(): int
     {
         return count(array_filter($this->tests, fn (MutationTest $test): bool => $test->result() === MutationTestResult::Uncovered));
