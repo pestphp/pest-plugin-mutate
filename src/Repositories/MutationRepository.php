@@ -61,6 +61,11 @@ class MutationRepository
         return array_sum(array_map(fn (MutationTestCollection $testCollection): int => $testCollection->timedOut(), $this->tests));
     }
 
+    public function errored(): int
+    {
+        return array_sum(array_map(fn (MutationTestCollection $testCollection): int => $testCollection->errored(), $this->tests));
+    }
+
     public function uncovered(): int
     {
         return array_sum(array_map(fn (MutationTestCollection $testCollection): int => $testCollection->uncovered(), $this->tests));

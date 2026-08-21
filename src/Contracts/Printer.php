@@ -20,6 +20,8 @@ interface Printer
 
     public function reportTimedOutMutation(MutationTest $test): void;
 
+    public function reportErroredMutation(MutationTest $test): void;
+
     public function reportError(string $message): void;
 
     public function reportScoreNotReached(float $scoreReached, float $scoreRequired): void;

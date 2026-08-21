@@ -71,6 +71,17 @@ class DefaultPrinter implements Printer
         $this->writeMutationTestLine('yellow', 't', $test);
     }
 
+    public function reportErroredMutation(MutationTest $test): void
+    {
+        if ($this->compact) {
+            $this->output->write('<fg=red;options=bold>e</>');
+
+            return;
+        }
+
+        $this->writeMutationTestLine('red', 'e', $test);
+    }
+
     public function printFilename(MutationTestCollection $testCollection): void
     {
         if ($this->compact) {
@@ -132,7 +143,7 @@ class DefaultPrinter implements Printer
         $this->writeMutationSuiteSummary($mutationSuite);
 
         $this->output->writeln([
-            '  <fg=gray>Mutations:</> <fg=default>'.($mutationSuite->repository->untested() !== 0 ? '<fg=red;options=bold>'.$mutationSuite->repository->untested().' untested</><fg=gray>,</> ' : '').($mutationSuite->repository->uncovered() !== 0 ? '<fg=yellow;options=bold>'.$mutationSuite->repository->uncovered().' uncovered</><fg=gray>,</> ' : '').($mutationSuite->repository->notRun() !== 0 ? '<fg=yellow;options=bold>'.$mutationSuite->repository->notRun().' pending</><fg=gray>,</> ' : '').($mutationSuite->repository->timedOut() !== 0 ? '<fg=green;options=bold>'.$mutationSuite->repository->timedOut().' timeout</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.$mutationSuite->repository->tested().' tested</>',
+            '  <fg=gray>Mutations:</> <fg=default>'.($mutationSuite->repository->untested() !== 0 ? '<fg=red;options=bold>'.$mutationSuite->repository->untested().' untested</><fg=gray>,</> ' : '').($mutationSuite->repository->errored() !== 0 ? '<fg=red;options=bold>'.$mutationSuite->repository->errored().' errored</><fg=gray>,</> ' : '').($mutationSuite->repository->uncovered() !== 0 ? '<fg=yellow;options=bold>'.$mutationSuite->repository->uncovered().' uncovered</><fg=gray>,</> ' : '').($mutationSuite->repository->notRun() !== 0 ? '<fg=yellow;options=bold>'.$mutationSuite->repository->notRun().' pending</><fg=gray>,</> ' : '').($mutationSuite->repository->timedOut() !== 0 ? '<fg=green;options=bold>'.$mutationSuite->repository->timedOut().' timeout</><fg=gray>,</> ' : '').'<fg=green;options=bold>'.$mutationSuite->repository->tested().' tested</>',
         ]);
 
         $score = number_format($mutationSuite->score(), 2);
@@ -179,7 +190,7 @@ class DefaultPrinter implements Printer
 
     private function writeMutationTestSummary(MutationTest $test): void
     {
-        if (! in_array($test->result(), [MutationTestResult::Untested, MutationTestResult::Uncovered], true)) {
+        if (! in_array($test->result(), [MutationTestResult::Untested, MutationTestResult::Uncovered, MutationTestResult::Errored], true)) {
             return;
         }
 
@@ -195,6 +206,9 @@ class DefaultPrinter implements Printer
         if ($test->result() === MutationTestResult::Untested) {
             $color = 'red';
             $label = 'UNTESTED';
+        } elseif ($test->result() === MutationTestResult::Errored) {
+            $color = 'red';
+            $label = 'ERRORED';
         } else {
             $color = 'bright-red';
             $label = 'UNCOVERED';

@@ -145,11 +145,21 @@ class MutationTest
             return true;
         }
 
+        if ($this->process->getExitCode() !== 1) {
+            $this->updateResult(MutationTestResult::Errored);
+
+            Facade::instance()->emitter()->mutationErrored($this);
+
+            $this->finish = microtime(true);
+
+            return true;
+        }
+
         $this->updateResult(MutationTestResult::Tested);
 
-        Facade::instance()->emitter()->mutationTested($this);
-
         $this->finish = microtime(true);
+
+        Facade::instance()->emitter()->mutationTested($this);
 
         return true;
     }

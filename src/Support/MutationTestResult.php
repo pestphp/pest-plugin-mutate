@@ -11,4 +11,5 @@ enum MutationTestResult: string
     case Uncovered = 'uncovered';
     case Untested = 'untested';
     case Timeout = 'timeout';
+    case Errored = 'errored';
 }
