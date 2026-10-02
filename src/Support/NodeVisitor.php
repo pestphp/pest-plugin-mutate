@@ -33,11 +33,13 @@ class NodeVisitor extends NodeVisitorAbstract
             foreach ($node->getAttribute('comments') as $comment) { // @phpstan-ignore-line
                 preg_match('/@pest-mutate-ignore(.*)/', (string) $comment->getText(), $matches); // @phpstan-ignore-line
                 if ($matches !== []) {
-                    if ($matches[1] === '') {
+                    $mutatorsToIgnore = trim($matches[1], " \t\n\r*/:");
+
+                    if ($mutatorsToIgnore === '') {
                         return NodeTraverser::DONT_TRAVERSE_CURRENT_AND_CHILDREN;
                     }
 
-                    if (in_array($this->mutator::name(), array_map(fn (string $mutatorToIgnore): string => trim($mutatorToIgnore, ' */:'), explode(',', $matches[1])), true)) {
+                    if (in_array($this->mutator::name(), array_map(fn (string $mutatorToIgnore): string => trim($mutatorToIgnore, ' */:'), explode(',', $mutatorsToIgnore)), true)) {
                         return NodeTraverser::DONT_TRAVERSE_CURRENT_AND_CHILDREN;
                     }
                 }
