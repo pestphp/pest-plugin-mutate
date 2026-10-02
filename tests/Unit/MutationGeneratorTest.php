@@ -286,3 +286,64 @@ it('ignores multiple mutators for a loop', function (): void {
     expect($mutations)
         ->toBeEmpty();
 });
+
+it('ignores all mutators for a statement when the bare annotation has trailing whitespace', function (): void {
+    // The trailing space is built explicitly so a formatter cannot strip it from the fixture.
+    $mutations = ($this->generate)(
+        "<?php\n\n// @pest-mutate-ignore \nreturn \$a >= \$b;\n",
+        [GreaterOrEqualToGreater::class],
+    );
+
+    expect($mutations)
+        ->toBeEmpty();
+});
+
+it('ignores all mutators for a function with a bare single line doc block', function (): void {
+    $mutations = ($this->generate)(<<<'PHP'
+            <?php
+
+            /** @pest-mutate-ignore */
+            function test() {
+                if($a >= $b) {
+                    return $a = $b;
+                }
+            }
+            PHP,
+        [GreaterOrEqualToGreater::class, IfNegated::class],
+    );
+
+    expect($mutations)
+        ->toBeEmpty();
+});
+
+it('does not carry a mutator list over to a later bare annotation', function (): void {
+    $mutations = ($this->generate)(<<<'PHP'
+            <?php
+
+            if($a > $b) { // @pest-mutate-ignore: IfNegated
+                $a = $b;
+            }
+
+            return $a >= $b; // @pest-mutate-ignore
+            PHP,
+        [GreaterOrEqualToGreater::class, IfNegated::class],
+    );
+
+    expect($mutations)
+        ->toBeEmpty();
+});
+
+it('does not ignore a mutator that is not named', function (string $annotation): void {
+    $mutations = ($this->generate)(
+        "<?php\n\n{$annotation}\nreturn \$a >= \$b;\n",
+        [GreaterOrEqualToGreater::class],
+    );
+
+    expect($mutations)
+        ->toHaveCount(1)
+        ->{0}->mutator->toBe(GreaterOrEqualToGreater::class);
+})->with([
+    'unknown name' => ['// @pest-mutate-ignore: NotAMutator'],
+    'unknown name with trailing whitespace' => ['// @pest-mutate-ignore: NotAMutator '],
+    'unknown name in a doc block' => ['/** @pest-mutate-ignore: NotAMutator */'],
+]);
