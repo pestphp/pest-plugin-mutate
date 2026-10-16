@@ -5,6 +5,7 @@ use Pest\Mutate\Mutation;
 use Pest\Mutate\Mutators\ControlStructures\IfNegated;
 use Pest\Mutate\Mutators\Equality\GreaterOrEqualToGreater;
 use Pest\Mutate\Mutators\Equality\SmallerToSmallerOrEqual;
+use Pest\Mutate\Mutators\String\NotEmptyStringToEmpty;
 use Pest\Mutate\Support\MutationGenerator;
 use Pest\Mutate\Support\PhpParserFactory;
 use Symfony\Component\Finder\SplFileInfo;
@@ -285,4 +286,20 @@ it('ignores multiple mutators for a loop', function (): void {
 
     expect($mutations)
         ->toBeEmpty();
+});
+
+it('generates mutations of a mutator requested outside the default sets', function (): void {
+    $mutations = ($this->generate)(<<<'PHP'
+            <?php
+
+            function greet(): string {
+                return 'Hello';
+            }
+            PHP,
+        [NotEmptyStringToEmpty::class],
+    );
+
+    expect($mutations)
+        ->toHaveCount(1)
+        ->and($mutations[0]->mutator)->toBe(NotEmptyStringToEmpty::class);
 });

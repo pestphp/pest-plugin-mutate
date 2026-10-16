@@ -200,13 +200,7 @@ class MutationGenerator
 
         $nodeTypes = array_unique($nodeTypes);
 
-        $mutatorsToUse = [];
-        foreach ($nodeTypes as $nodeType) {
-            foreach (MutatorMap::get()[$nodeType] ?? [] as $mutator) {
-                $mutatorsToUse[] = $mutator;
-            }
-        }
-
-        return array_intersect($mutators, $mutatorsToUse);
+        // a mutator may be requested explicitly although it is not part of any default set
+        return array_filter($mutators, fn (string $mutator): bool => array_intersect($mutator::nodesToHandle(), $nodeTypes) !== []);
     }
 }
