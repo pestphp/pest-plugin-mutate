@@ -14,6 +14,7 @@ use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Repositories\ConfigurationRepository;
 use Pest\Mutate\Repositories\TelemetryRepository;
 use Pest\Mutate\Support\Configuration\Configuration;
+use Pest\Mutate\Support\CoveragePaths;
 use Pest\Mutate\Support\FileFinder;
 use Pest\Mutate\Support\MutationGenerator;
 use Pest\Support\Container;
@@ -121,13 +122,8 @@ class MutationTestRunner implements MutationTestRunnerContract
             // since phpunit/php-code-coverage 14, `--coverage-php` writes an array instead of a
             // serialized CodeCoverage, and its file keys are relative to `basePath`
             $coverageData = $loadedCoverage['codeCoverage'];
-            $basePath = $loadedCoverage['basePath'];
 
-            if ($basePath !== '') {
-                foreach ($coverageData->coveredFiles() as $relativePath) {
-                    $coverageData->renameFile($relativePath, $basePath.DIRECTORY_SEPARATOR.$relativePath);
-                }
-            }
+            CoveragePaths::restore($coverageData, $loadedCoverage['basePath']);
         }
 
         $coveredLines = $this->coveredLines($coverageData);
