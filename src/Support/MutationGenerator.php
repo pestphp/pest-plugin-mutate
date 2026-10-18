@@ -154,11 +154,11 @@ class MutationGenerator
             $namespace = preg_quote(implode('\\', $parts));
             $classOrNamespace = preg_quote($classOrNamespace);
 
-            if (preg_match("/namespace\\s+$namespace/", $contents) === 1 && preg_match("/(?:class|trait)\\s+$class.*/", $contents) === 1) {
+            if (preg_match("/namespace\\s+$namespace/", $contents) === 1 && preg_match("/(?:class|trait|enum)\\s+$class.*/", $contents) === 1) {
                 return false;
             }
 
-            if (preg_match("/(?:class|trait)\\s+$class\[{\\s*\]/", $contents) === 1) {
+            if (preg_match("/(?:class|trait|enum)\\s+$class\[{\\s*\]/", $contents) === 1) {
                 return false;
             }
 
