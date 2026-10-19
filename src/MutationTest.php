@@ -9,6 +9,7 @@ use Pest\Mutate\Event\Facade;
 use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Repositories\TelemetryRepository;
 use Pest\Mutate\Support\Configuration\Configuration;
+use Pest\Mutate\Support\MutantArguments;
 use Pest\Mutate\Support\MutationTestResult;
 use Pest\Support\Container;
 use Symfony\Component\Process\Exception\ProcessTimedOutException;
@@ -84,12 +85,14 @@ class MutationTest
             $envs['LARAVEL_PARALLEL_TESTING'] = '1';
         }
 
-        // remove coverage arguments from the original arguments
-        $filteredArguments = array_filter($originalArguments, fn (string $argument): bool => ! str_starts_with($argument, '--coverage'));
+        $filteredArguments = MutantArguments::from($originalArguments);
 
-        // TODO: filter arguments to remove unnecessary stuff (Teamcity, Coverage, etc.)
+        // TODO: filter arguments to remove unnecessary stuff (Teamcity, etc.)
         $process = new Process(
+            // the first original argument is the Pest script, which is not executable on
+            // Windows, so the mutant is run the same way the original run was: through PHP
             command: [
+                PHP_BINARY,
                 ...$filteredArguments,
                 '--bail',
                 '--filter="'.implode('|', $filters).'"',
