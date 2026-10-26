@@ -13,6 +13,16 @@ class NodeVisitor extends NodeVisitorAbstract
     private int $nodeCount = 0; // @pest-mutate-ignore: IncrementInteger,DecrementInteger
 
     /**
+     * Nodes whose own comments carry a matching ignore marker, keyed by object id.
+     *
+     * The traverser still calls leaveNode() on a node whose enterNode() returned
+     * DONT_TRAVERSE_CURRENT_AND_CHILDREN, so the marker has to be remembered here.
+     *
+     * @var array<int, true>
+     */
+    private array $ignoredNodes = [];
+
+    /**
      * @param  array<int, int>  $linesToMutate
      * @param  array<int, array<int, string>>  $mutatorsToIgnoreByLine
      * @param  callable  $hasAlreadyMutated
@@ -34,10 +44,14 @@ class NodeVisitor extends NodeVisitorAbstract
                 preg_match('/@pest-mutate-ignore(.*)/', (string) $comment->getText(), $matches); // @phpstan-ignore-line
                 if ($matches !== []) {
                     if ($matches[1] === '') {
+                        $this->ignoredNodes[spl_object_id($node)] = true;
+
                         return NodeTraverser::DONT_TRAVERSE_CURRENT_AND_CHILDREN;
                     }
 
                     if (in_array($this->mutator::name(), array_map(fn (string $mutatorToIgnore): string => trim($mutatorToIgnore, ' */:'), explode(',', $matches[1])), true)) {
+                        $this->ignoredNodes[spl_object_id($node)] = true;
+
                         return NodeTraverser::DONT_TRAVERSE_CURRENT_AND_CHILDREN;
                     }
                 }
@@ -51,6 +65,12 @@ class NodeVisitor extends NodeVisitorAbstract
     {
         if (($this->hasAlreadyMutated)()) {
             return NodeTraverser::STOP_TRAVERSAL;
+        }
+
+        if (isset($this->ignoredNodes[spl_object_id($node)])) {
+            unset($this->ignoredNodes[spl_object_id($node)]);
+
+            return null;
         }
 
         if ($this->nodeCount++ < $this->offset) { // @pest-mutate-ignore: SmallerToSmallerOrEqual

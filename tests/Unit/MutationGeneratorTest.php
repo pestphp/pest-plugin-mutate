@@ -5,6 +5,9 @@ use Pest\Mutate\Mutation;
 use Pest\Mutate\Mutators\ControlStructures\IfNegated;
 use Pest\Mutate\Mutators\Equality\GreaterOrEqualToGreater;
 use Pest\Mutate\Mutators\Equality\SmallerToSmallerOrEqual;
+use Pest\Mutate\Mutators\Removal\RemoveEarlyReturn;
+use Pest\Mutate\Mutators\Removal\RemoveFunctionCall;
+use Pest\Mutate\Mutators\Removal\RemoveMethodCall;
 use Pest\Mutate\Support\MutationGenerator;
 use Pest\Mutate\Support\PhpParserFactory;
 use Symfony\Component\Finder\SplFileInfo;
@@ -285,4 +288,99 @@ it('ignores multiple mutators for a loop', function (): void {
 
     expect($mutations)
         ->toBeEmpty();
+});
+
+it('mutates a statement with no ignore annotation', function (): void {
+    $mutations = ($this->generate)(<<<'PHP'
+            <?php
+
+            ksort($a);
+            PHP,
+        [RemoveFunctionCall::class],
+    );
+
+    expect($mutations)
+        ->toHaveCount(1)
+        ->{0}->mutator->toBe(RemoveFunctionCall::class);
+});
+
+it('ignores a specific mutator for the statement below the annotation', function (): void {
+    $mutations = ($this->generate)(<<<'PHP'
+            <?php
+
+            // @pest-mutate-ignore: RemoveFunctionCall
+            ksort($a);
+            PHP,
+        [RemoveFunctionCall::class],
+    );
+
+    expect($mutations)
+        ->toBeEmpty();
+});
+
+it('ignores all mutators for the statement below the annotation', function (): void {
+    $mutations = ($this->generate)(<<<'PHP'
+            <?php
+
+            // @pest-mutate-ignore
+            $this->sort($a);
+            PHP,
+        [RemoveMethodCall::class],
+    );
+
+    expect($mutations)
+        ->toBeEmpty();
+});
+
+it('ignores a specific mutator for a return statement below the annotation', function (): void {
+    $mutations = ($this->generate)(<<<'PHP'
+            <?php
+
+            class Test {
+                public function test() {
+                    if($a > $b) {
+                        // @pest-mutate-ignore: RemoveEarlyReturn
+                        return $a;
+                    }
+
+                    return $b;
+                }
+            }
+            PHP,
+        [RemoveEarlyReturn::class],
+    );
+
+    expect($mutations)
+        ->toBeEmpty();
+});
+
+it('still mutates the statement below an annotation for another mutator', function (): void {
+    $mutations = ($this->generate)(<<<'PHP'
+            <?php
+
+            // @pest-mutate-ignore: RemoveMethodCall
+            ksort($a);
+            PHP,
+        [RemoveFunctionCall::class],
+    );
+
+    expect($mutations)
+        ->toHaveCount(1)
+        ->{0}->mutator->toBe(RemoveFunctionCall::class);
+});
+
+it('still mutates the statement after an annotated statement', function (): void {
+    $mutations = ($this->generate)(<<<'PHP'
+            <?php
+
+            // @pest-mutate-ignore: RemoveFunctionCall
+            ksort($a);
+            krsort($a);
+            PHP,
+        [RemoveFunctionCall::class],
+    );
+
+    expect($mutations)
+        ->toHaveCount(1)
+        ->{0}->startLine->toBe(5);
 });
