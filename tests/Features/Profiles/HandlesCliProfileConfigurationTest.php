@@ -220,3 +220,17 @@ it('enables the mutatino id filter if --id argument is passed', function (): voi
     expect($this->configuration->toArray())
         ->mutation_id->toBe('fa1234');
 });
+
+it('only mutates what changed since a revision if --changed argument is passed', function (): void {
+    $this->configuration->fromArguments(['--mutate='.ConfigurationRepository::FAKE]);
+    expect($this->configuration->toArray())
+        ->changed->toBeNull();
+
+    $this->configuration->fromArguments(['--changed']);
+    expect($this->configuration->toArray())
+        ->changed->toBe('HEAD');
+
+    $this->configuration->fromArguments(['--changed=origin/main']);
+    expect($this->configuration->toArray())
+        ->changed->toBe('origin/main');
+});

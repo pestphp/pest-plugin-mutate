@@ -13,11 +13,13 @@ use Pest\Mutate\MutationTest;
 use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Repositories\ConfigurationRepository;
 use Pest\Mutate\Repositories\TelemetryRepository;
+use Pest\Mutate\Support\ChangedScope;
 use Pest\Mutate\Support\Configuration\Configuration;
 use Pest\Mutate\Support\FileFinder;
 use Pest\Mutate\Support\MutationGenerator;
 use Pest\Support\Container;
 use Pest\Support\Coverage;
+use Pest\TestSuite;
 use Psr\SimpleCache\CacheInterface;
 use SebastianBergmann\CodeCoverage\CodeCoverage;
 use SebastianBergmann\CodeCoverage\Data\ProcessedCodeCoverageData;
@@ -134,10 +136,28 @@ class MutationTestRunner implements MutationTestRunnerContract
 
         $files = FileFinder::files($this->getConfiguration()->paths, $this->getConfiguration()->pathsToIgnore);
 
+        $scope = $this->getConfiguration()->changed === null ? null : ChangedScope::since(
+            revision: $this->getConfiguration()->changed,
+            root: TestSuite::getInstance()->rootPath,
+            sourceFiles: $files,
+            sourcePaths: $this->getConfiguration()->paths,
+            testPath: TestSuite::getInstance()->testPath,
+            testFiles: TestSuite::getInstance()->tests->getFilenames(),
+            coveredLines: $coveredLines,
+        );
+
+        if ($scope instanceof ChangedScope) {
+            Container::getInstance()->get(Printer::class)->reportChangedScope($scope); // @phpstan-ignore-line
+        }
+
         /** @var MutationGenerator $generator */
         $generator = Container::getInstance()->get(MutationGenerator::class);
 
         foreach ($files as $file) {
+            if ($scope instanceof ChangedScope && ! $scope->includes($file)) {
+                continue;
+            }
+
             $linesToMutate = [];
 
             if ($this->getConfiguration()->coveredOnly) {
@@ -237,7 +257,7 @@ class MutationTestRunner implements MutationTestRunnerContract
             return true;
         }
 
-        if ($mutationSuite->repository->count() === 0 && $configuration->ignoreMinScoreOnZeroMutations) {
+        if ($mutationSuite->repository->count() === 0 && ($configuration->ignoreMinScoreOnZeroMutations || $configuration->changed !== null)) {
             return true;
         }
 

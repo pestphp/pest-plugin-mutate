@@ -127,8 +127,7 @@ The following options are available.
 - [`mutator()`](#mutator)
 - [`except()`](#except)
 - [`coveredOnly()`](#coveredOnly)
-- [`uncommittedOnly()`](#uncommittedOnly)
-- [`changedOnly()`](#changedOnly)
+- [`changed()`](#changed)
 - [`stopOnEscaped()`](#stopOnEscaped)
 - [`stopOnNotCovered()`](#stopOnNotCovered)
 - [`bail()`](#bail)
@@ -234,27 +233,19 @@ mutate()
 ```
 
 
-<a name="options-uncommitted-only"></a>
-### `uncommittedOnly()`
-CLI: `--uncommitted-only`
+<a name="options-changed"></a>
+### `changed()`
+CLI: `--changed`
 
-Limit mutations to code that has uncommitted changes.
+Only mutate the files a change since the given git revision can affect: the source files that changed, and the code the changed test files cover or run. Without a revision, only uncommitted changes count; with one, everything since HEAD forked from it does. When a file every test depends on changes, such as a fixture or `composer.lock`, everything is mutated; a support file like `tests/Pest.php` that only gained functions doesn't count.
 
 ```php
 mutate()
-    ->uncommittedOnly();
+    ->changed(); // or ->changed('origin/main');
 ```
 
-
-<a name="options-changed-only"></a>
-### `changedOnly()`
-CLI: `--changed-only`
-
-Limit mutations to code that has changed relative to a common ancestor of the given branch (defaults to `main`).
-
-```php
-mutate()
-    ->changedOnly(); // or ->changedOnly('add-xyz');
+```bash
+vendor/bin/pest --mutate --changed=origin/main
 ```
 
 

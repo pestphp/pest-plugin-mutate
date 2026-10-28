@@ -6,6 +6,7 @@ namespace Pest\Mutate\Support\Configuration;
 
 use Pest\Mutate\Cache\NullStore;
 use Pest\Mutate\Options\BailOption;
+use Pest\Mutate\Options\ChangedOption;
 use Pest\Mutate\Options\ClassOption;
 use Pest\Mutate\Options\ClearCacheOption;
 use Pest\Mutate\Options\CoveredOnlyOption;
@@ -53,6 +54,7 @@ class CliConfiguration extends AbstractConfiguration
         ClearCacheOption::class,
         EverythingOption::class,
         CoveredOnlyOption::class,
+        ChangedOption::class,
     ];
 
     /**
@@ -158,6 +160,10 @@ class CliConfiguration extends AbstractConfiguration
 
         if ($input->hasOption(EverythingOption::ARGUMENT)) {
             $this->everything();
+        }
+
+        if ($input->hasOption(ChangedOption::ARGUMENT)) {
+            $this->changed((string) ($input->getOption(ChangedOption::ARGUMENT) ?? 'HEAD')); // @phpstan-ignore-line
         }
 
         return $arguments;

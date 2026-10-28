@@ -58,6 +58,8 @@ abstract class AbstractConfiguration implements ConfigurationContract
 
     private ?bool $everything = null;
 
+    private ?string $changed = null;
+
     /**
      * {@inheritDoc}
      */
@@ -194,7 +196,17 @@ abstract class AbstractConfiguration implements ConfigurationContract
     }
 
     /**
-     * @return array{covered_only?: bool, paths?: string[], paths_to_ignore?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, processes?: int, profile?: bool, min_score?: float, ignore_min_score_on_zero_mutations?: bool, covered_only?: bool, stop_on_untested?: bool, stop_on_uncovered?: bool, mutation_id?: string, retry?: bool, everything?: bool}
+     * Only mutates what changed since the given git revision forked from HEAD.
+     */
+    public function changed(string $revision = 'HEAD'): self
+    {
+        $this->changed = $revision;
+
+        return $this;
+    }
+
+    /**
+     * @return array{covered_only?: bool, paths?: string[], paths_to_ignore?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, processes?: int, profile?: bool, min_score?: float, ignore_min_score_on_zero_mutations?: bool, covered_only?: bool, stop_on_untested?: bool, stop_on_uncovered?: bool, mutation_id?: string, retry?: bool, everything?: bool, changed?: string}
      */
     public function toArray(): array
     {
@@ -215,6 +227,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
             'mutation_id' => $this->mutationId,
             'retry' => $this->retry,
             'everything' => $this->everything,
+            'changed' => $this->changed,
         ], fn (mixed $value): bool => ! is_null($value));
     }
 

@@ -9,6 +9,7 @@ use Pest\Mutate\MutationSuite;
 use Pest\Mutate\MutationTest;
 use Pest\Mutate\MutationTestCollection;
 use Pest\Mutate\Repositories\ConfigurationRepository;
+use Pest\Mutate\Support\ChangedScope;
 use Pest\Mutate\Support\Configuration\Configuration;
 use Pest\Mutate\Support\MutationTestResult;
 use Pest\Support\Container;
@@ -98,6 +99,29 @@ class DefaultPrinter implements Printer
             '  <fg=white;bg=red;options=bold> FAIL </> <fg=gray>Mutation score below expected:</><fg=red;options=bold> '.number_format($scoreReached, 1).' %</><fg=gray>. Minimum: </><options=bold>'.number_format($scoreRequired, 1).' %</><fg=gray>.</>',
             '',
         ]);
+    }
+
+    public function reportChangedScope(ChangedScope $scope): void
+    {
+        $since = 'since '.substr($scope->base, 0, 7).($scope->revision === 'HEAD' ? '' : ' ('.$scope->revision.')');
+
+        if ($scope->everythingBecause !== null) {
+            $this->output->writeln('  <fg=gray>Mutating everything, as '.$scope->everythingBecause.' '.$since.'</>');
+
+            return;
+        }
+
+        if ($scope->files() === []) {
+            $this->output->writeln('  <fg=gray>Nothing to mutate, as no change '.$since.' affects a mutant</>');
+
+            return;
+        }
+
+        $this->output->writeln('  <fg=gray>Only mutating what changed '.$since.':</>');
+
+        foreach ($scope->files() as $file) {
+            $this->output->writeln('    <fg=gray>'.str_replace(getcwd().DIRECTORY_SEPARATOR, '', $file).'</>');
+        }
     }
 
     public function reportMutationGenerationStarted(MutationSuite $mutationSuite): void

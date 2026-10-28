@@ -7,6 +7,7 @@ namespace Pest\Mutate\Contracts;
 use Pest\Mutate\MutationSuite;
 use Pest\Mutate\MutationTest;
 use Pest\Mutate\MutationTestCollection;
+use Pest\Mutate\Support\ChangedScope;
 
 interface Printer
 {
@@ -25,6 +26,8 @@ interface Printer
     public function reportScoreNotReached(float $scoreReached, float $scoreRequired): void;
 
     public function printFilename(MutationTestCollection $testCollection): void;
+
+    public function reportChangedScope(ChangedScope $scope): void;
 
     public function reportMutationGenerationStarted(MutationSuite $mutationSuite): void;
 

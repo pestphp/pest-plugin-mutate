@@ -7,6 +7,7 @@ use Pest\Mutate\MutationSuite;
 use Pest\Mutate\MutationTest;
 use Pest\Mutate\MutationTestCollection;
 use Pest\Mutate\Mutators\Equality\EqualToIdentical;
+use Pest\Mutate\Support\ChangedScope;
 use Pest\Mutate\Support\Printers\DefaultPrinter;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Finder\SplFileInfo;
@@ -215,5 +216,28 @@ describe('mutation suite', function (): void {
 
         expect($this->out->fetch())
             ->toStartWith(PHP_EOL);
+    });
+});
+
+describe('report changed scope', function (): void {
+    it('lists the files a change can affect', function (): void {
+        $this->printer->reportChangedScope(new ChangedScope('origin/main', str_repeat('a', 40), null, [getcwd().'/src/Foo.php' => true]));
+
+        expect($this->out->fetch())
+            ->toBe('  Only mutating what changed since aaaaaaa (origin/main):'.PHP_EOL.'    src/Foo.php'.PHP_EOL);
+    });
+
+    it('says when no change affects a mutant', function (): void {
+        $this->printer->reportChangedScope(new ChangedScope('HEAD', str_repeat('a', 40), null));
+
+        expect($this->out->fetch())
+            ->toBe('  Nothing to mutate, as no change since aaaaaaa affects a mutant'.PHP_EOL);
+    });
+
+    it('says why it mutates everything', function (): void {
+        $this->printer->reportChangedScope(new ChangedScope('origin/main', str_repeat('a', 40), 'tests/Pest.php changed'));
+
+        expect($this->out->fetch())
+            ->toBe('  Mutating everything, as tests/Pest.php changed since aaaaaaa (origin/main)'.PHP_EOL);
     });
 });
