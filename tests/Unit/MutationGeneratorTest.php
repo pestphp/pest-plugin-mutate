@@ -152,7 +152,7 @@ it('ignores lines with the ignore annotation for a specific mutator', function (
 });
 
 it('ignores lines with the ignore annotation when file has LF line endings', function (): void {
-    $code = "<?php\n\n\$foo = 1;\n\$bar = 2;\nif (\$a > \$b) { // @pest-mutate-ignore: GreaterOrEqualToGreater\n    \$a = \$b;\n}\n";
+    $code = "<?php\n\n\$foo = 1;\n\$bar = 2;\nif (\$a >= \$b) { // @pest-mutate-ignore: GreaterOrEqualToGreater\n    \$a = \$b;\n}\n";
 
     $mutations = ($this->generate)($code, [GreaterOrEqualToGreater::class, IfNegated::class]);
 
