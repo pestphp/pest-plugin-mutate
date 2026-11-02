@@ -44,7 +44,7 @@ abstract class AbstractFunctionCallUnwrapMutator extends AbstractMutator
             ]);
         }
 
-        return $node->args[0]->value;
+        return $node->getArgs()[0]->value;
     }
 
     abstract public static function functionName(): string;
