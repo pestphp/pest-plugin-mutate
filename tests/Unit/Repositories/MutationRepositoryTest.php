@@ -41,12 +41,14 @@ describe('units', function () use ($addMutation): void {
         ]);
     });
 
-    it('leaves out a file no test covers', function () use ($addMutation): void {
+    it('keeps a file no test covers, so a shard still owns its mutations', function () use ($addMutation): void {
         $repository = new MutationRepository;
 
         $addMutation($repository, 'a', 0.0, []);
 
-        expect($repository->units(dirname(__DIR__, 3)))->toBe([]);
+        expect($repository->units(dirname(__DIR__, 3)))->toBe([
+            'tests/Unit/Repositories/MutationRepositoryTest.php' => ['time' => 0.0, 'tests' => []],
+        ]);
     });
 
     it('keeps an absolute path when the file is outside the root', function () use ($addMutation): void {

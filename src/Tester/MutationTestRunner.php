@@ -12,6 +12,7 @@ use Pest\Mutate\MutationSuite;
 use Pest\Mutate\MutationTest;
 use Pest\Mutate\Plugins\Mutate;
 use Pest\Mutate\Repositories\ConfigurationRepository;
+use Pest\Mutate\Repositories\MutationRepository;
 use Pest\Mutate\Repositories\TelemetryRepository;
 use Pest\Mutate\Support\Configuration\Configuration;
 use Pest\Mutate\Support\FileFinder;
@@ -140,13 +141,13 @@ class MutationTestRunner implements MutationTestRunnerContract
         /** @var MutationGenerator $generator */
         $generator = Container::getInstance()->get(MutationGenerator::class);
 
-        $shardFiles = $this->shardFiles();
+        $rootPath = TestSuite::getInstance()->rootPath;
+
+        // Every file this run considers becomes a shard unit, even when it yields no
+        // mutation, so that a sharded run can tell a file added since from one it knows.
+        $units = [];
 
         foreach ($files as $file) {
-            if ($shardFiles !== null && ! isset($shardFiles[$file->getRealPath()])) {
-                continue;
-            }
-
             $linesToMutate = [];
 
             if ($this->getConfiguration()->coveredOnly) {
@@ -157,6 +158,16 @@ class MutationTestRunner implements MutationTestRunnerContract
 
                 $linesToMutate = array_keys($coveredLines[$file->getRealPath()]);
             }
+
+            // The restriction is applied here rather than through `--path` or `--class`,
+            // because passing either of those lifts the `__pest_mutate_only` group and
+            // makes every shard run the whole suite instead of only the tests declaring
+            // `covers()`.
+            if (! Shard::owns($unit = MutationRepository::relativePath($file->getRealPath(), $rootPath))) {
+                continue;
+            }
+
+            $units[$unit] = ['time' => 0.0, 'tests' => []];
 
             foreach ($generator->generate(
                 file: $file,
@@ -198,13 +209,12 @@ class MutationTestRunner implements MutationTestRunnerContract
         $this->writeJsonLog($mutationSuite);
 
         // A suite cut short by --bail or --stop-on-* holds partial durations, which would
-        // make for a badly balanced shards file.
-        if (! $this->stop) {
-            Shard::useTimings(
-                $mutationSuite->repository->units(TestSuite::getInstance()->rootPath),
-                ['suite_time' => round($telemetryRepository->getInitialTestSuiteDuration(), 4)],
-            );
-        }
+        // make for a badly balanced shards file, so it supplies no units and nothing is
+        // written.
+        Shard::useTimings(
+            $this->stop ? [] : [...$units, ...$mutationSuite->repository->units($rootPath)],
+            ['suite_time' => round($telemetryRepository->getInitialTestSuiteDuration(), 4)],
+        );
 
         Facade::instance()->emitter()->finishMutationSuite($mutationSuite);
 
@@ -296,39 +306,6 @@ class MutationTestRunner implements MutationTestRunnerContract
             'total' => $repository->total(),
             'score' => round($repository->score(), 2),
         ], JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR)."\n");
-    }
-
-    /**
-     * Returns the absolute paths of the mutated files this shard owns, or null when the
-     * run is not sharded.
-     *
-     * The restriction is applied here rather than through `--path` or `--class`, because
-     * passing either of those lifts the `__pest_mutate_only` group and makes every shard
-     * run the whole test suite instead of only the tests declaring `covers()`.
-     *
-     * @return array<string, true>|null
-     */
-    private function shardFiles(): ?array
-    {
-        $units = Shard::selectedUnits();
-
-        if ($units === []) {
-            return null;
-        }
-
-        $root = rtrim(TestSuite::getInstance()->rootPath, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
-
-        $files = [];
-
-        foreach ($units as $unit) {
-            $path = realpath(str_starts_with($unit, DIRECTORY_SEPARATOR) ? $unit : $root.$unit);
-
-            if ($path !== false) {
-                $files[$path] = true;
-            }
-        }
-
-        return $files;
     }
 
     private function getConfiguration(): Configuration

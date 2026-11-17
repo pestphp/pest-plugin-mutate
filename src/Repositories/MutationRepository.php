@@ -20,9 +20,7 @@ class MutationRepository
 
     public function add(Mutation $mutation): void
     {
-        if (! isset($this->tests[$mutation->file->getRealPath()])) {
-            $this->tests[$mutation->file->getRealPath()] = new MutationTestCollection($mutation->file);
-        }
+        $this->tests[$mutation->file->getRealPath()] ??= new MutationTestCollection($mutation->file);
 
         $test = new MutationTest($mutation);
         $this->tests[$mutation->file->getRealPath()]->add($test);
@@ -120,11 +118,7 @@ class MutationRepository
                 }
             }
 
-            if ($tests === []) {
-                continue;
-            }
-
-            $units[$this->relativePath($file, $rootPath)] = [
+            $units[self::relativePath($file, $rootPath)] = [
                 'time' => round($time, 4),
                 'tests' => array_keys($tests),
             ];
@@ -137,7 +131,7 @@ class MutationRepository
      * Makes a mutated file's path relative to the root, so the units survive being
      * written on one machine and read on another.
      */
-    private function relativePath(string $file, string $rootPath): string
+    public static function relativePath(string $file, string $rootPath): string
     {
         $prefix = rtrim($rootPath, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
 

@@ -20,6 +20,16 @@ it('reads the fully qualified test class out of a coverage identifier', function
     'no separator' => ['Tests\Unit\FooTest', 'Tests\Unit\FooTest'],
 ]);
 
+it('keeps the options of the whole run away from a mutation\'s own test run', function (): void {
+    $test = new MutationTest(new Mutation(new SplFileInfo(__FILE__, '', ''), 'id', 'SomeMutator', 1, 2, '', ''));
+
+    $method = new ReflectionClass($test)->getMethod('subprocessArguments');
+
+    expect($method->invoke($test, [
+        'vendor/bin/pest', '--shard=1/4', '--shard', '2/4', '--update-shards', '--coverage-php=/tmp/c.php', '--compact',
+    ]))->toBe(['vendor/bin/pest', '--compact']);
+});
+
 it('has no covering test classes before it starts', function (): void {
     $test = new MutationTest(new Mutation(new SplFileInfo(__FILE__, '', ''), 'id', 'SomeMutator', 1, 2, '', ''));
 

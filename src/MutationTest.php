@@ -96,13 +96,10 @@ class MutationTest
             $envs['LARAVEL_PARALLEL_TESTING'] = '1';
         }
 
-        // remove coverage arguments from the original arguments
-        $filteredArguments = array_filter($originalArguments, fn (string $argument): bool => ! str_starts_with($argument, '--coverage'));
-
         // TODO: filter arguments to remove unnecessary stuff (Teamcity, Coverage, etc.)
         $process = new Process(
             command: [
-                ...$filteredArguments,
+                ...$this->subprocessArguments($originalArguments),
                 '--bail',
                 '--filter="'.implode('|', $filters).'"',
             ],
@@ -117,6 +114,45 @@ class MutationTest
         $this->process = $process;
 
         return true;
+    }
+
+    /**
+     * Removes the arguments that only make sense for the run as a whole.
+     *
+     * Coverage is not collected again, and the sharding options must not reach a
+     * mutation's own test run: `--shard` would split the tests covering the mutation
+     * a second time and run only a part of them, and `--update-shards` would record
+     * the timings of that partial run.
+     *
+     * @param  array<int, string>  $arguments
+     * @return array<int, string>
+     */
+    private function subprocessArguments(array $arguments): array
+    {
+        $filtered = [];
+        $skipNext = false;
+
+        foreach ($arguments as $argument) {
+            if ($skipNext) {
+                $skipNext = false;
+
+                continue;
+            }
+
+            if ($argument === '--shard') {
+                $skipNext = true;
+
+                continue;
+            }
+
+            if ($argument === '--update-shards' || str_starts_with($argument, '--shard=') || str_starts_with($argument, '--coverage')) {
+                continue;
+            }
+
+            $filtered[] = $argument;
+        }
+
+        return $filtered;
     }
 
     /**
