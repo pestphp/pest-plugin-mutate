@@ -57,9 +57,7 @@ class ConfigurationRepository
     {
         $name ??= $this->profile;
 
-        if (! isset($this->globalConfigurations[$name])) {
-            $this->globalConfigurations[$name] = new GlobalConfiguration;
-        }
+        $this->globalConfigurations[$name] ??= new GlobalConfiguration;
 
         return $this->globalConfigurations[$name];
     }
@@ -68,9 +66,7 @@ class ConfigurationRepository
     {
         $name ??= $this->profile;
 
-        if (! isset($this->fakeTestConfigurations[$name])) {
-            $this->fakeTestConfigurations[$name] = new TestConfiguration;
-        }
+        $this->fakeTestConfigurations[$name] ??= new TestConfiguration;
 
         return $this->fakeTestConfigurations[$name];
     }
