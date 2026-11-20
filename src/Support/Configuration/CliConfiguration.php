@@ -13,6 +13,7 @@ use Pest\Mutate\Options\EverythingOption;
 use Pest\Mutate\Options\ExceptOption;
 use Pest\Mutate\Options\IgnoreMinScoreOnZeroMutationsOption;
 use Pest\Mutate\Options\IgnoreOption;
+use Pest\Mutate\Options\LogJsonOption;
 use Pest\Mutate\Options\MinScoreOption;
 use Pest\Mutate\Options\MutateOption;
 use Pest\Mutate\Options\MutationIdOption;
@@ -44,6 +45,7 @@ class CliConfiguration extends AbstractConfiguration
         ParallelOption::class,
         ProcessesOption::class,
         ProfileOption::class,
+        LogJsonOption::class,
         StopOnUntestedOption::class,
         StopOnUncoveredOption::class,
         BailOption::class,
@@ -116,6 +118,10 @@ class CliConfiguration extends AbstractConfiguration
 
         if ($input->hasOption(ProfileOption::ARGUMENT)) {
             $this->profile($input->getOption(ProfileOption::ARGUMENT) !== 'false');
+        }
+
+        if ($input->hasOption(LogJsonOption::ARGUMENT)) {
+            $this->logJson((string) $input->getOption(LogJsonOption::ARGUMENT)); // @phpstan-ignore-line
         }
 
         if ($_SERVER['COLLISION_PRINTER_PROFILE'] ?? false) {

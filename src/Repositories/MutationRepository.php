@@ -20,9 +20,7 @@ class MutationRepository
 
     public function add(Mutation $mutation): void
     {
-        if (! isset($this->tests[$mutation->file->getRealPath()])) {
-            $this->tests[$mutation->file->getRealPath()] = new MutationTestCollection($mutation->file);
-        }
+        $this->tests[$mutation->file->getRealPath()] ??= new MutationTestCollection($mutation->file);
 
         $test = new MutationTest($mutation);
         $this->tests[$mutation->file->getRealPath()]->add($test);
@@ -92,6 +90,52 @@ class MutationRepository
         usort($allTests, fn (MutationTest $a, MutationTest $b): int => $b->duration() <=> $a->duration());
 
         return array_slice($allTests, 0, 10);
+    }
+
+    /**
+     * Returns the shard units, one per mutated file.
+     *
+     * A file is the unit of mutation work: every mutation belongs to exactly one, and
+     * the tests covering it must run in the same shard for the result to be honest.
+     * Sharding test classes instead would regenerate a file's mutations in every shard
+     * holding one of its covering tests, and report the ones killed elsewhere as escaped.
+     *
+     * @return array<string, array{time: float, tests: list<string>}>
+     */
+    public function units(string $rootPath): array
+    {
+        $units = [];
+
+        foreach ($this->tests as $file => $testCollection) {
+            $time = 0.0;
+            $tests = [];
+
+            foreach ($testCollection->tests() as $test) {
+                $time += $test->duration();
+
+                foreach ($test->coveringTestClasses() as $class) {
+                    $tests[$class] = true;
+                }
+            }
+
+            $units[self::relativePath($file, $rootPath)] = [
+                'time' => round($time, 4),
+                'tests' => array_keys($tests),
+            ];
+        }
+
+        return $units;
+    }
+
+    /**
+     * Makes a mutated file's path relative to the root, so the units survive being
+     * written on one machine and read on another.
+     */
+    public static function relativePath(string $file, string $rootPath): string
+    {
+        $prefix = rtrim($rootPath, DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR;
+
+        return str_starts_with($file, $prefix) ? substr($file, strlen($prefix)) : $file;
     }
 
     public function sortByEscapedFirst(): void

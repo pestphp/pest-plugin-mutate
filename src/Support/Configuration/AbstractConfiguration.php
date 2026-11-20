@@ -58,6 +58,8 @@ abstract class AbstractConfiguration implements ConfigurationContract
 
     private ?bool $everything = null;
 
+    private ?string $logJson = null;
+
     /**
      * {@inheritDoc}
      */
@@ -144,6 +146,17 @@ abstract class AbstractConfiguration implements ConfigurationContract
         return $this;
     }
 
+    /**
+     * Writes the results of this run to the given file, so that sharded runs can be
+     * added up into one report afterwards.
+     */
+    public function logJson(string $path): self
+    {
+        $this->logJson = $path;
+
+        return $this;
+    }
+
     public function stopOnUntested(bool $stopOnUntested = true): self
     {
         $this->stopOnUntested = $stopOnUntested;
@@ -194,7 +207,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
     }
 
     /**
-     * @return array{covered_only?: bool, paths?: string[], paths_to_ignore?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, processes?: int, profile?: bool, min_score?: float, ignore_min_score_on_zero_mutations?: bool, covered_only?: bool, stop_on_untested?: bool, stop_on_uncovered?: bool, mutation_id?: string, retry?: bool, everything?: bool}
+     * @return array{covered_only?: bool, paths?: string[], paths_to_ignore?: string[], mutators?: class-string<Mutator>[], excluded_mutators?: class-string<Mutator>[], classes?: string[], parallel?: bool, processes?: int, profile?: bool, min_score?: float, ignore_min_score_on_zero_mutations?: bool, covered_only?: bool, stop_on_untested?: bool, stop_on_uncovered?: bool, mutation_id?: string, retry?: bool, everything?: bool, log_json?: string}
      */
     public function toArray(): array
     {
@@ -215,6 +228,7 @@ abstract class AbstractConfiguration implements ConfigurationContract
             'mutation_id' => $this->mutationId,
             'retry' => $this->retry,
             'everything' => $this->everything,
+            'log_json' => $this->logJson,
         ], fn (mixed $value): bool => ! is_null($value));
     }
 

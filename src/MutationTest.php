@@ -22,6 +22,13 @@ class MutationTest
 
     private ?float $finish = null;
 
+    /**
+     * The test classes covering this mutation.
+     *
+     * @var array<int, string>
+     */
+    private array $coveringTestClasses = [];
+
     private Process $process;
 
     public function __construct(public readonly Mutation $mutation) {}
@@ -49,11 +56,14 @@ class MutationTest
     {
         // TODO: we should pass the tests to run in another way, maybe via cache, mutation or env variable
         $filters = [];
+        $coveringTestClasses = [];
         foreach (range($this->mutation->startLine, $this->mutation->endLine) as $lineNumber) {
             foreach ($coveredLines[$this->mutation->file->getRealPath()][$lineNumber] ?? [] as $test) {
                 if (preg_match('/\\\\([a-zA-Z0-9]*)::(__pest_evaluable_)?([^#]*)"?/', $test, $matches) !== 1) {
                     continue;
                 }
+
+                $coveringTestClasses[] = $this->testClass($test);
 
                 if ($matches[2] === '__pest_evaluable_') {
                     $filters[] = $matches[1].'::(.*)'.str_replace(['__', '_'], ['.{1,2}', '.'], $matches[3]);
@@ -63,6 +73,8 @@ class MutationTest
             }
         }
         $filters = array_unique($filters);
+
+        $this->coveringTestClasses = array_values(array_unique($coveringTestClasses));
 
         if ($filters === []) {
             $this->updateResult(MutationTestResult::Uncovered);
@@ -84,13 +96,10 @@ class MutationTest
             $envs['LARAVEL_PARALLEL_TESTING'] = '1';
         }
 
-        // remove coverage arguments from the original arguments
-        $filteredArguments = array_filter($originalArguments, fn (string $argument): bool => ! str_starts_with($argument, '--coverage'));
-
         // TODO: filter arguments to remove unnecessary stuff (Teamcity, Coverage, etc.)
         $process = new Process(
             command: [
-                ...$filteredArguments,
+                ...$this->subprocessArguments($originalArguments),
                 '--bail',
                 '--filter="'.implode('|', $filters).'"',
             ],
@@ -105,6 +114,71 @@ class MutationTest
         $this->process = $process;
 
         return true;
+    }
+
+    /**
+     * Removes the arguments that only make sense for the run as a whole.
+     *
+     * Coverage is not collected again, and the sharding options must not reach a
+     * mutation's own test run: `--shard` would split the tests covering the mutation
+     * a second time and run only a part of them, and `--update-shards` would record
+     * the timings of that partial run.
+     *
+     * @param  array<int, string>  $arguments
+     * @return array<int, string>
+     */
+    private function subprocessArguments(array $arguments): array
+    {
+        $filtered = [];
+        $skipNext = false;
+
+        foreach ($arguments as $argument) {
+            if ($skipNext) {
+                $skipNext = false;
+
+                continue;
+            }
+
+            if ($argument === '--shard') {
+                $skipNext = true;
+
+                continue;
+            }
+
+            if ($argument === '--update-shards' || str_starts_with($argument, '--shard=') || str_starts_with($argument, '--coverage')) {
+                continue;
+            }
+
+            $filtered[] = $argument;
+        }
+
+        return $filtered;
+    }
+
+    /**
+     * Returns the test classes covering this mutation.
+     *
+     * @return array<int, string>
+     */
+    public function coveringTestClasses(): array
+    {
+        return $this->coveringTestClasses;
+    }
+
+    /**
+     * Extracts the fully qualified class name from a code coverage test identifier.
+     *
+     * The filter above keeps only the last segment of the name, which is all a
+     * `--filter` pattern needs. Sharding matches against the fully qualified names
+     * `--list-tests` reports, so it needs the whole thing, minus Pest's `P\` prefix.
+     */
+    private function testClass(string $test): string
+    {
+        $separator = strpos($test, '::');
+
+        $class = $separator === false ? $test : substr($test, 0, $separator);
+
+        return preg_replace('/^P\\\\/', '', $class) ?? $class;
     }
 
     private function calculateTimeout(): int

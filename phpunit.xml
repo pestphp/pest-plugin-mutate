@@ -5,7 +5,7 @@
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutOutputDuringTests="true"
          bootstrap="vendor/autoload.php"
-         cacheResult="false"
+         recordTestRunHistory="false"
          colors="true"
          failOnRisky="true"
          failOnWarning="true"
