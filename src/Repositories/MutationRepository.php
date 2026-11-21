@@ -20,9 +20,7 @@ class MutationRepository
 
     public function add(Mutation $mutation): void
     {
-        if (! isset($this->tests[$mutation->file->getRealPath()])) {
-            $this->tests[$mutation->file->getRealPath()] = new MutationTestCollection($mutation->file);
-        }
+        $this->tests[$mutation->file->getRealPath()] ??= new MutationTestCollection($mutation->file);
 
         $test = new MutationTest($mutation);
         $this->tests[$mutation->file->getRealPath()]->add($test);
