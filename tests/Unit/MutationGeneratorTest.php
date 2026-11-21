@@ -29,7 +29,7 @@ beforeEach(function (): void {
 
 it('generates mutations for the given file', function (): void {
     $mutations = $this->generator->generate(
-        $file = new SplFileInfo(dirname(__DIR__).'/Fixtures/Classes/AgeHelper.php', '', ''),
+        $file = new SplFileInfo(__DIR__.'/../Fixtures/Classes/AgeHelper.php', '', ''),
         [GreaterOrEqualToGreater::class, SmallerToSmallerOrEqual::class],
         []
     );
@@ -57,7 +57,7 @@ it('generates mutations for the given file', function (): void {
 
 it('ignores lines with no line coverage', function (): void {
     $mutations = $this->generator->generate(
-        new SplFileInfo(dirname(__DIR__).'/Fixtures/Classes/AgeHelper.php', '', ''),
+        new SplFileInfo(__DIR__.'/../Fixtures/Classes/AgeHelper.php', '', ''),
         [GreaterOrEqualToGreater::class],
         [1, 2]
     );
@@ -69,7 +69,7 @@ it('ignores lines with no line coverage', function (): void {
 
 it('generates mutations for the given file if it has line coverage', function (): void {
     $mutations = $this->generator->generate(
-        new SplFileInfo(dirname(__DIR__).'/Fixtures/Classes/AgeHelper.php', '', ''),
+        new SplFileInfo(__DIR__.'/../Fixtures/Classes/AgeHelper.php', '', ''),
         [GreaterOrEqualToGreater::class],
         [10, 11]
     );
@@ -81,7 +81,7 @@ it('generates mutations for the given file if it has line coverage', function ()
 
 it('generates mutations for the given file if it contains the given class', function (array $classes, int $expectedCount): void {
     $mutations = $this->generator->generate(
-        file: new SplFileInfo(dirname(__DIR__).'/Fixtures/Classes/AgeHelper.php', '', ''),
+        file: new SplFileInfo(__DIR__.'/../Fixtures/Classes/AgeHelper.php', '', ''),
         mutators: [GreaterOrEqualToGreater::class],
         classesToMutate: $classes,
     );
@@ -105,7 +105,7 @@ it('generates mutations for the given file if it contains the given class', func
 
 it('generates mutations for the given file if it contains the given trait', function (array $classes, int $expectedCount): void {
     $mutations = $this->generator->generate(
-        file: new SplFileInfo(dirname(__DIR__).'/Fixtures/Traits/SizeHelperTrait.php', '', ''),
+        file: new SplFileInfo(__DIR__.'/../Fixtures/Traits/SizeHelperTrait.php', '', ''),
         mutators: [SmallerToSmallerOrEqual::class],
         classesToMutate: $classes,
     );

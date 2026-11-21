@@ -32,9 +32,7 @@ class Emitter
 
     public static function instance(): self
     {
-        if (! isset(self::$instance)) {
-            self::$instance = new self;
-        }
+        self::$instance ??= new self;
 
         return self::$instance;
     }
