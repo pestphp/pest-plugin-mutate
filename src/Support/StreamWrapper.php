@@ -179,7 +179,14 @@ class StreamWrapper
 
     public function stream_lock(int $operation): bool
     {
-        return flock($this->resource, LOCK_SH);
+        $operation &= LOCK_SH | LOCK_EX | LOCK_UN | LOCK_NB;
+
+        // PHP first calls this with 0 to ask whether the stream supports locking, which flock() rejects.
+        if (($operation & ~LOCK_NB) === 0) {
+            return true;
+        }
+
+        return flock($this->resource, $operation);
     }
 
     public function stream_metadata(string $path, int $option, mixed $value): bool
