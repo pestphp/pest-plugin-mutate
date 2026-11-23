@@ -31,6 +31,7 @@
         "psr/simple-cache": "^3.0.0"
     },
     "require-dev": {
+        "antecedent/patchwork": "^2.2.5",
         "pestphp/pest": "^5.0.4",
         "pestphp/pest-dev-tools": "^5.0.0",
         "pestphp/pest-plugin-type-coverage": "^5.0.2"
