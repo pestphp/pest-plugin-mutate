@@ -4,5 +4,10 @@ parameters:
         - src
     scanDirectories:
         - vendor/antecedent/patchwork/src
+    ignoreErrors:
+        -
+            identifier: function.alreadyNarrowedType
+            path: src/Support/StreamWrapper.php
+            count: 1
 
     reportUnmatchedIgnoredErrors: true

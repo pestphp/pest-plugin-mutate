@@ -297,6 +297,7 @@ class StreamWrapper
     private function patchworkChainsToThisWrapper(): bool
     {
         return class_exists(PatchworkStream::class, false)
+            && method_exists(PatchworkStream::class, 'getOtherWrapper')
             && PatchworkStream::getOtherWrapper(null) instanceof self;
     }
 }
