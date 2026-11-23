@@ -6,6 +6,7 @@ namespace Pest\Mutate\Support;
 
 use Closure;
 use InvalidArgumentException;
+use Patchwork\CodeManipulation\Stream as PatchworkStream;
 use Pest\Mutate\Exceptions\StreamWrapperException;
 use RuntimeException;
 
@@ -123,28 +124,16 @@ class StreamWrapper
 
     public function mkdir(string $path, int $mode, int $options): bool
     {
-        self::disable();
-
-        try {
-            $return = mkdir($path, $mode, (bool) ($options & STREAM_MKDIR_RECURSIVE));
-        } finally {
-            self::enable();
-        }
-
-        return $return;
+        return $this->withOriginalWrapper(
+            fn (): bool => mkdir($path, $mode, (bool) ($options & STREAM_MKDIR_RECURSIVE))
+        );
     }
 
     public function rename(string $path_from, string $path_to): bool
     {
-        self::disable();
-
-        try {
-            $return = rename($path_from, $path_to);
-        } finally {
-            self::enable();
-        }
-
-        return $return;
+        return $this->withOriginalWrapper(
+            fn (): bool => rename($path_from, $path_to)
+        );
     }
 
     public function rmdir(string $path): bool
@@ -290,12 +279,24 @@ class StreamWrapper
      */
     private function withOriginalWrapper(callable $callback): mixed
     {
+        $patchworkChainsToThisWrapper = $this->patchworkChainsToThisWrapper();
+
         self::disable();
 
-        $result = $callback();
+        try {
+            return $callback();
+        } finally {
+            if ($patchworkChainsToThisWrapper) {
+                PatchworkStream::wrap();
+            } else {
+                self::enable();
+            }
+        }
+    }
 
-        self::enable();
-
-        return $result;
+    private function patchworkChainsToThisWrapper(): bool
+    {
+        return class_exists(PatchworkStream::class, false)
+            && PatchworkStream::getOtherWrapper(null) instanceof self;
     }
 }
