@@ -84,8 +84,9 @@ class MutationTest
             $envs['LARAVEL_PARALLEL_TESTING'] = '1';
         }
 
-        // remove coverage arguments from the original arguments
-        $filteredArguments = array_filter($originalArguments, fn (string $argument): bool => ! str_starts_with($argument, '--coverage'));
+        $filteredArguments = $this->withoutRunFilter(
+            array_filter($originalArguments, fn (string $argument): bool => ! str_starts_with($argument, '--coverage')),
+        );
 
         // TODO: filter arguments to remove unnecessary stuff (Teamcity, Coverage, etc.)
         $process = new Process(
@@ -105,6 +106,38 @@ class MutationTest
         $this->process = $process;
 
         return true;
+    }
+
+    /**
+     * @param  array<int, string>  $arguments
+     * @return array<int, string>
+     */
+    private function withoutRunFilter(array $arguments): array
+    {
+        $kept = [];
+        $skipValue = false;
+
+        foreach ($arguments as $argument) {
+            if ($skipValue) {
+                $skipValue = false;
+
+                continue;
+            }
+
+            if ($argument === '--filter') {
+                $skipValue = true;
+
+                continue;
+            }
+
+            if (str_starts_with($argument, '--filter=')) {
+                continue;
+            }
+
+            $kept[] = $argument;
+        }
+
+        return $kept;
     }
 
     private function calculateTimeout(): int
