@@ -113,6 +113,17 @@ class Mutation
         return $path;
     }
 
+    /**
+     * Whether the modified source of every mutation is still on disk. A cached mutation whose
+     * file was removed cannot be applied, so the caller regenerates it instead of running it.
+     *
+     * @param  array<int, self>  $mutations
+     */
+    public static function modifiedSourcesExist(array $mutations): bool
+    {
+        return array_all($mutations, fn (self $mutation): bool => is_file($mutation->modifiedSourcePath));
+    }
+
     public function modifiedSource(): string
     {
         $source = file_get_contents($this->modifiedSourcePath);
