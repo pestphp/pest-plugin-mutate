@@ -13,10 +13,10 @@ use Symfony\Component\Process\Process;
  * Runs the mutation test suite of the given fixture, and returns its output
  * without the bits that change from machine to machine.
  */
-function mutationTestOutput(string $fixture): string
+function mutationTestOutput(string $fixture, string ...$arguments): string
 {
     $process = new Process(
-        ['php', 'vendor/bin/pest', 'tests/.tests/'.$fixture, '--mutate'],
+        ['php', 'vendor/bin/pest', 'tests/.tests/'.$fixture, '--mutate', ...$arguments],
         dirname(__DIR__),
         ['COLUMNS' => 80, 'XDEBUG_MODE' => 'coverage', 'PEST_PLUGIN_INTERNAL_TEST_SUITE' => 1],
     );

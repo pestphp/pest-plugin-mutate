@@ -16,6 +16,8 @@ use Symfony\Component\Process\Process;
 
 class MutationTest
 {
+    private const array RUN_FILTER_OPTION_NAMES = ['--fi', '--fil', '--filt', '--filte', '--filter'];
+
     private MutationTestResult $result = MutationTestResult::None;
 
     private ?float $start = null;
@@ -48,23 +50,22 @@ class MutationTest
     public function start(array $coveredLines, Configuration $configuration, array $originalArguments, ?int $processId = null): bool
     {
         // TODO: we should pass the tests to run in another way, maybe via cache, mutation or env variable
-        $filters = [];
+        $methodsByClass = [];
         foreach (range($this->mutation->startLine, $this->mutation->endLine) as $lineNumber) {
             foreach ($coveredLines[$this->mutation->file->getRealPath()][$lineNumber] ?? [] as $test) {
-                if (preg_match('/\\\\([a-zA-Z0-9]*)::(__pest_evaluable_)?([^#]*)"?/', $test, $matches) !== 1) {
+                if (preg_match('/^([^:#]*\\\\[a-zA-Z0-9]*)::(__pest_evaluable_)?([^#]*)"?/', $test, $matches) !== 1) {
                     continue;
                 }
 
                 if ($matches[2] === '__pest_evaluable_') {
-                    $filters[] = $matches[1].'::(.*)'.str_replace(['__', '_'], ['.{1,2}', '.'], $matches[3]);
+                    $methodsByClass[preg_quote((string) preg_replace('/^P\\\\/', '', $matches[1]), '"')][] = str_replace(['__', '_'], ['.{1,2}', '.'], $matches[3]);
                 } else {
-                    $filters[] = $matches[1].'::(.*)'.$matches[3];
+                    $methodsByClass[preg_quote($matches[1], '"')][] = $matches[3];
                 }
             }
         }
-        $filters = array_unique($filters);
 
-        if ($filters === []) {
+        if ($methodsByClass === []) {
             $this->updateResult(MutationTestResult::Uncovered);
 
             Facade::instance()->emitter()->mutationUncovered($this);
@@ -84,15 +85,14 @@ class MutationTest
             $envs['LARAVEL_PARALLEL_TESTING'] = '1';
         }
 
-        // remove coverage arguments from the original arguments
-        $filteredArguments = array_filter($originalArguments, fn (string $argument): bool => ! str_starts_with($argument, '--coverage'));
+        $filteredArguments = $this->childArguments($originalArguments);
 
         // TODO: filter arguments to remove unnecessary stuff (Teamcity, Coverage, etc.)
         $process = new Process(
             command: [
                 ...$filteredArguments,
                 '--bail',
-                '--filter="'.implode('|', $filters).'"',
+                ...$this->filterArguments($methodsByClass),
             ],
             env: $envs,
             timeout: $this->calculateTimeout(),
@@ -105,6 +105,63 @@ class MutationTest
         $this->process = $process;
 
         return true;
+    }
+
+    /**
+     * @param  array<string, array<int, string>>  $methodsByClass
+     * @return array<int, string>
+     */
+    private function filterArguments(array $methodsByClass): array
+    {
+        $testsOfEachClass = [];
+        foreach ($methodsByClass as $class => $methods) {
+            $testsOfEachClass[] = $class.'::(?:'.implode('|', array_unique($methods)).')';
+        }
+
+        foreach ([
+            '"^(?:'.implode('|', $testsOfEachClass).')(?: with data set .*)?$"',
+            '"^(?:'.implode('|', array_keys($methodsByClass)).')::"',
+        ] as $filter) {
+            if (@preg_match($filter, '') !== false) {
+                return ['--filter='.$filter];
+            }
+        }
+
+        return [];
+    }
+
+    /**
+     * @param  array<int, string>  $originalArguments
+     * @return array<int, string>
+     */
+    private function childArguments(array $originalArguments): array
+    {
+        $kept = [];
+        $skipValue = false;
+
+        foreach ($originalArguments as $argument) {
+            if ($skipValue) {
+                $skipValue = false;
+
+                continue;
+            }
+
+            $parts = explode('=', trim($argument));
+
+            if (in_array($parts[0], self::RUN_FILTER_OPTION_NAMES, true)) {
+                $skipValue = ($parts[1] ?? '') === '';
+
+                continue;
+            }
+
+            if (str_starts_with(trim($argument), '--coverage')) {
+                continue;
+            }
+
+            $kept[] = $argument;
+        }
+
+        return $kept;
     }
 
     private function calculateTimeout(): int
