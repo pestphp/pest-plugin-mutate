@@ -119,8 +119,8 @@ class MutationTest
         }
 
         foreach ([
-            '"(?:'.implode('|', $testsOfEachClass).')(?: with data set .*)?$"',
-            '"(?:'.implode('|', array_keys($methodsByClass)).')::"',
+            '"^(?:'.implode('|', $testsOfEachClass).')(?: with data set .*)?$"',
+            '"^(?:'.implode('|', array_keys($methodsByClass)).')::"',
         ] as $filter) {
             if (@preg_match($filter, '') !== false) {
                 return ['--filter='.$filter];

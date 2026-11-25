@@ -20,6 +20,11 @@ test('a mutant runs only the tests of the class and name that cover it', functio
         ->toContain('Mutations: 3 untested, 1 tested');
 });
 
+test('a mutant runs only the class that covers it, not a class whose name ends with it', function (): void {
+    expect(mutationTestOutput('SharedSuffix', '--filter=^Tests\\\\tests\\\\SharedSuffix\\\\SizeTest::'))
+        ->toContain('Mutations: 3 untested, 1 tested');
+});
+
 test('a mutant covered by many tests of one class runs them', function (): void {
     expect(mutationTestOutput('ManyCoveringTests'))
         ->toContain('Mutations: 3 untested, 1 tested');
