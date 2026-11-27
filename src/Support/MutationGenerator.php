@@ -45,7 +45,7 @@ class MutationGenerator
         }
 
         $mutatorsToIgnoreByLine = [];
-        $lines = preg_split('/\R/', $contents) ?: [];
+        $lines = preg_split('/\r\n|\n|\r/', $contents) ?: [];
         foreach ($lines as $lineNumber => $line) {
             if (str_contains($line, '@pest-mutate-ignore')) {
                 if (Str::after($line, '@pest-mutate-ignore:') !== $line) {
