@@ -5,6 +5,9 @@ on: ['push', 'pull_request']
 permissions:
   contents: read
 
+env:
+  COMPOSER_ROOT_VERSION: 5.x-dev
+
 jobs:
   static:
     name: Static Tests
@@ -26,7 +29,7 @@ jobs:
         coverage: none
 
     - name: Install Dependencies
-      run: composer update --prefer-stable --no-interaction --no-progress --ansi
+      run: composer update --${{ matrix.dependency-version }} --no-interaction --no-progress --ansi
 
     - name: Types
       run: composer test:types

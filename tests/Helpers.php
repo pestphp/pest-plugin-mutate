@@ -18,7 +18,7 @@ function mutationTestOutput(string $fixture): string
     $process = new Process(
         ['php', 'vendor/bin/pest', 'tests/.tests/'.$fixture, '--mutate'],
         dirname(__DIR__),
-        ['COLUMNS' => 80, 'XDEBUG_MODE' => 'coverage', 'PEST_PLUGIN_INTERNAL_TEST_SUITE' => 1],
+        ['COLUMNS' => 80, 'XDEBUG_MODE' => 'coverage', 'PEST_PLUGIN_INTERNAL_TEST_SUITE' => 1, 'PARATEST' => false],
     );
 
     $process->run();

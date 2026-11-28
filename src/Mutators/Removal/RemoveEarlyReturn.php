@@ -44,7 +44,7 @@ class RemoveEarlyReturn extends AbstractMutator
             if ($classMethod instanceof ClassMethod) {
                 break;
             }
-        } while ($classMethod !== null);
+        } while ($classMethod instanceof Node);
 
         if (! $classMethod instanceof ClassMethod) {
             return false;
