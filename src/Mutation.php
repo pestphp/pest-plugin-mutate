@@ -10,6 +10,7 @@ use PhpParser\Node;
 use PhpParser\Node\Param;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\PrettyPrinter\Standard;
+use RuntimeException;
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\StrictUnifiedDiffOutputBuilder;
 use Symfony\Component\Console\Formatter\OutputFormatter;
@@ -48,8 +49,7 @@ class Mutation
         array $modifiedAst,
     ): self {
         $modifiedSource = (new Standard)->prettyPrintFile($modifiedAst);
-        $modifiedSourcePath = self::TMP_FOLDER.DIRECTORY_SEPARATOR.hash('xxh3', $modifiedSource);
-        file_put_contents($modifiedSourcePath, $modifiedSource);
+        $modifiedSourcePath = self::writeModifiedSource(self::TMP_FOLDER, $modifiedSource);
 
         $parser = PhpParserFactory::make();
         $orignalAst = $parser->parse($file->getContents());
@@ -79,6 +79,52 @@ class Mutation
             self::diff($newlyRenderedOriginalSource, $modifiedSource),
             $modifiedSourcePath,
         );
+    }
+
+    /**
+     * Writes the modified source into the given directory, creating the directory when it is
+     * missing, and returns the path of the written file. A failed create or write throws:
+     * a mutation whose source was never written cannot be applied, and the run would still
+     * count it as tested.
+     */
+    public static function writeModifiedSource(string $directory, string $modifiedSource): string
+    {
+        $path = $directory.DIRECTORY_SEPARATOR.hash('xxh3', $modifiedSource);
+        $reason = 'unknown error';
+
+        set_error_handler(static function (int $level, string $message) use (&$reason): bool {
+            $reason = $message;
+
+            return true;
+        });
+
+        try {
+            if (! is_dir($directory) && ! mkdir($directory, 0777, true) && ! is_dir($directory)) {
+                throw new RuntimeException(sprintf('Unable to create the mutations directory [%s]: %s', $directory, $reason));
+            }
+
+            if (file_put_contents($path, $modifiedSource) === false) {
+                throw new RuntimeException(sprintf('Unable to write the modified source to [%s]: %s', $path, $reason));
+            }
+        } finally {
+            restore_error_handler();
+        }
+
+        return $path;
+    }
+
+    /**
+     * Whether the modified source of every mutation is still on disk and complete. Each file is
+     * named after the hash of the source written to it, so a file whose contents no longer hash
+     * to its name was removed, truncated or overwritten. Such a cached mutation cannot be applied
+     * as generated, so the caller regenerates it instead of running it.
+     *
+     * @param  array<int, self>  $mutations
+     */
+    public static function modifiedSourcesAreIntact(array $mutations): bool
+    {
+        return array_all($mutations, fn (self $mutation): bool => is_file($mutation->modifiedSourcePath)
+            && hash_file('xxh3', $mutation->modifiedSourcePath) === basename($mutation->modifiedSourcePath));
     }
 
     public function modifiedSource(): string

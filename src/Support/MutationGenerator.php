@@ -61,8 +61,12 @@ class MutationGenerator
 
         $cache = MutationCache::instance();
         foreach ($mutators as $mutator) {
-            if ($cache->has($file, $contents, $linesToMutate, $mutator)) {
-                $newMutations = $cache->get($file, $contents, $linesToMutate, $mutator);
+            $cachedMutations = $cache->has($file, $contents, $linesToMutate, $mutator)
+                ? $cache->get($file, $contents, $linesToMutate, $mutator)
+                : null;
+
+            if ($cachedMutations !== null && Mutation::modifiedSourcesAreIntact($cachedMutations)) {
+                $newMutations = $cachedMutations;
             } else {
                 $newMutations = [];
 
