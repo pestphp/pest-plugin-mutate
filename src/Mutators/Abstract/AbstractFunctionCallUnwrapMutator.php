@@ -42,7 +42,7 @@ abstract class AbstractFunctionCallUnwrapMutator extends AbstractMutator
     {
         assert($node instanceof FuncCall);
 
-        $argument = $node->args[0];
+        $argument = $node->args[0] ?? null;
 
         if ($argument instanceof VariadicPlaceholder) {
             return new ArrowFunction([
