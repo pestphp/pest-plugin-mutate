@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Pest\Mutate\Mutators\Abstract;
 
 use PhpParser\Node;
+use PhpParser\Node\Arg;
 use PhpParser\Node\Expr\ArrowFunction;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\Variable;
@@ -30,21 +31,29 @@ abstract class AbstractFunctionCallUnwrapMutator extends AbstractMutator
             return false;
         }
 
-        return $node->name->getParts() === [static::functionName()];
+        if ($node->name->getParts() !== [static::functionName()]) {
+            return false;
+        }
+
+        return $node->isFirstClassCallable() || ($node->args[0] ?? null) instanceof Arg;
     }
 
     public static function mutate(Node $node): Node
     {
         assert($node instanceof FuncCall);
 
-        if ($node->args[0] instanceof VariadicPlaceholder) {
+        $argument = $node->args[0];
+
+        if ($argument instanceof VariadicPlaceholder) {
             return new ArrowFunction([
                 'params' => [new Param(new Variable('value'))],
                 'expr' => new Variable('value'),
             ]);
         }
 
-        return $node->getArgs()[0]->value;
+        assert($argument instanceof Arg);
+
+        return $argument->value;
     }
 
     abstract public static function functionName(): string;
