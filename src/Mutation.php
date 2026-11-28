@@ -114,14 +114,17 @@ class Mutation
     }
 
     /**
-     * Whether the modified source of every mutation is still on disk. A cached mutation whose
-     * file was removed cannot be applied, so the caller regenerates it instead of running it.
+     * Whether the modified source of every mutation is still on disk and complete. Each file is
+     * named after the hash of the source written to it, so a file whose contents no longer hash
+     * to its name was removed, truncated or overwritten. Such a cached mutation cannot be applied
+     * as generated, so the caller regenerates it instead of running it.
      *
      * @param  array<int, self>  $mutations
      */
-    public static function modifiedSourcesExist(array $mutations): bool
+    public static function modifiedSourcesAreIntact(array $mutations): bool
     {
-        return array_all($mutations, fn (self $mutation): bool => is_file($mutation->modifiedSourcePath));
+        return array_all($mutations, fn (self $mutation): bool => is_file($mutation->modifiedSourcePath)
+            && hash_file('xxh3', $mutation->modifiedSourcePath) === basename($mutation->modifiedSourcePath));
     }
 
     public function modifiedSource(): string

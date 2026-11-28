@@ -71,6 +71,20 @@ describe('with the mutation cache', function (): void {
             ->and($second[0]->modifiedSourcePath)->toBeFile();
     });
 
+    it('generates a cached mutation again when its modified source is truncated', function (): void {
+        $file = ($this->cachedFile)();
+
+        $first = $this->generator->generate($file, [GreaterOrEqualToGreater::class]);
+        $complete = $first[0]->modifiedSource();
+
+        file_put_contents($first[0]->modifiedSourcePath, substr($complete, 0, intdiv(strlen($complete), 2)));
+
+        $second = $this->generator->generate($file, [GreaterOrEqualToGreater::class]);
+
+        expect($second)->toHaveCount(1)
+            ->and($second[0]->modifiedSource())->toBe($complete);
+    });
+
     it('reuses a cached mutation while its modified source exists', function (): void {
         $file = ($this->cachedFile)();
 
